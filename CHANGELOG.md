@@ -1,11 +1,14 @@
 # 변경 이력
 
-[버전 정책](docs/VERSION_POLICY.md)을 따른다. 아래 미배포 기록을 공개 릴리스 완료로 해석하지 않는다. 이 파일 도입 전의 공개 이력은 [배포 저장소 Releases](https://github.com/socra710/paper_warrior_releases/releases)에서 확인한다.
+[버전 정책](docs/VERSION_POLICY.md)을 따른다. 이 파일 도입 전의 공개 이력은 [배포 저장소 Releases](https://github.com/socra710/paper_warrior_releases/releases)에서 확인한다.
 
 ## [Unreleased]
 
-현재 공개 버전: `0.3.0`. 기존 품질 복구만의 제안은 `0.3.1` / PATCH였으며, 아래 신규 메뉴 진입점을 함께 포함하면 `0.4.0` / MINOR를 제안한다.
-버전 확정·배포는 사용자 승인 전이다. 작업 브랜치의 검증 결과는 품질 복구 기록에서 관리하며 공개 업데이트 완료가 아니다.
+없음.
+
+## [0.4.0] - 2026-11-12
+
+업데이트 유형: MINOR. 신규 메뉴 안내 진입점과 기존 품질 개선을 하나로 묶었다.
 
 ### Added
 - 원래 컨셉 기준의 별도 전사 프로필, 얼굴·몸통/다리 연결과 대기·걷기·달리기 16프레임. 구 원형은 복구용 보존.
