@@ -2,7 +2,7 @@
 
 ## 초기 범위
 
-Godot 4와 GDScript를 사용하며 브라우저 우선으로 검증한다. 이번 단계는 프로젝트 설정과 네 화면의 전환 골격만 제공한다. 전투, 캐릭터, HUD, 데이터 로딩, 저장, 오프라인 보상, Android Export는 포함하지 않는다.
+Godot 4와 GDScript를 사용하며 브라우저 우선으로 검증한다. 현재 프로토타입은 네 화면의 역할 분리, 실제 씬/리소스 준비, 캐릭터 대기 연출과 초기 게임 HUD를 제공한다. 전투·성장·보상·저장·오프라인 보상·Android Export는 포함하지 않는다.
 
 ## 시작 화면 흐름
 
@@ -10,20 +10,28 @@ Godot 4와 GDScript를 사용하며 브라우저 우선으로 검증한다. 이�
 project.godot
   └── scenes/main/splash.tscn
         └── 1.2초 후 scenes/main/loading.tscn
-              └── 0.9초 후 scenes/main/title.tscn
+              └── Title/Game 리소스 준비 완료 후 scenes/main/title.tscn
                     └── 시작 버튼 → scenes/main/game.tscn
 ```
 
 | 씬 | 책임 | 스크립트 |
 |---|---|---|
-| `scenes/main/splash.tscn` | 프로젝트 시작 화면, Loading으로 자동 이동 | `scripts/main/splash.gd` |
-| `scenes/main/loading.tscn` | 준비 단계 표시, Title로 자동 이동 | `scripts/main/loading.gd` |
+| `scenes/main/splash.tscn` | 로고와 캐릭터의 짧은 인트로 | `scripts/main/splash.gd` |
+| `scenes/main/loading.tscn` | 독립된 종이 공방 화면, 실제 준비율/오류 표시 | `scripts/main/loading.gd` |
 | `scenes/main/title.tscn` | 게임명과 시작 버튼 표시 | `scripts/main/title.gd` |
-| `scenes/main/game.tscn` | 비어 있는 Main Game 목적지 | `scripts/main/game.gd` |
+| `scenes/main/game.tscn` | 초기 레벨·골드·스테이지, 대기 전사와 준비 중인 메뉴 | `scripts/main/game.gd` |
 
-씬 전환은 `SceneTree.change_scene_to_file`을 사용하고 반환된 오류를 출력한다. Splash/Loading의 Timer는 화면 흐름만 확인하기 위한 임시 대기이며 리소스 로더가 아니다. Main Game은 빈 `Control`만 표시한다.
+Splash의 1.2초는 인트로 표시 시간이다. Loading은 `ResourceLoader.load_threaded_request`로 Title/Game PackedScene을 요청하고 `load_threaded_get_status`의 실제 준비율 평균을 표시한다. 두 요청이 모두 완료된 경우에만 Title을 가져와 `change_scene_to_packed`로 이동한다. 완료 후 0.15초 페이드아웃 외에 가짜 진행 타이머는 없다. 로드 실패 시 진행을 멈추고 화면에 오류와 재시도 버튼을 표시한다.
 
-세 시작 씬은 `scenes/ui/start_screen.tscn`을 상속한다. 제목, 일러스트, 하단 안내와 버튼 스타일을 공유하고 각 씬에서 표시할 문구/컨트롤만 재정의한다. Splash는 일러스트 페이드인, Loading은 준비 문구 점멸을 사용한다. Title 버튼의 씬 변경은 GUI 입력 처리와 충돌하지 않게 지연 호출한다.
+Splash/Title만 `scenes/ui/start_screen.tscn`을 상속해 제목·일러스트·버튼 스타일을 공유한다. Loading은 캐릭터 원화를 반복하지 않고 접힌 종이, 진행 바, 백분율과 준비 상태를 배치한다. Game의 완료된 요청은 Title 시작 버튼에서 `load_threaded_get`으로 가져올 때까지 ResourceLoader가 유지한다. 시작하지 않고 Title을 닫으면 완료 요청을 회수해 리소스를 해제한다. Title을 단독 실행한 경우에만 일반 `load`를 사용한다. 시작 버튼의 씬 변경은 GUI 입력 처리와 충돌하지 않게 지연 호출한다.
+
+## 첫 게임 화면
+
+`PrototypeState`와 `data/growth/initial_preview.tres`는 초기 레벨 1, 골드 0, 스테이지 1-1 / 종이 숲의 입구를 제공한다. Game 씬의 exported Resource로 연결되어 씬과 함께 준비·패키징되며 런타임에서 변경하지 않는다. 저장 데이터나 실제 보상 시스템은 아니다.
+
+`scenes/ui/warrior_idle.tscn`은 키 아트의 위치를 2초 주기로 미세하게 움직이는 AnimationPlayer 대기 연출이다. 종이 숲 배경과 전투 대기 영역을 구분하고 전투/스테이지 진행은 준비 중이라고 표시한다. 첫 목표는 전사와 세 메뉴를 둘러보는 것이다.
+
+성장·장비·꾸미기는 각각 준비 중인 기능을 설명하는 안내창만 연다. 안내창 표시 중 배경 메뉴는 비활성화하고 닫기/ESC로 원래 버튼에 포커스를 복원한다. 강화·구매·장착·색상 변경이나 가짜 수치 증가는 없다.
 
 ## 웹사이트
 
@@ -49,7 +57,7 @@ project.godot
 | 경로 | 책임 |
 |---|---|
 | `scenes/main/` | 시작 화면과 이후 메인 화면 씬 |
-| `scenes/ui/` | 시작 화면의 재사용 가능한 프레젠테이션 |
+| `scenes/ui/` | 공용 시작 화면과 전사 대기 연출 |
 | `scripts/main/` | 씬별 최소 화면 흐름 제어 |
 | `assets/characters/warrior/` | 종이 전사 원화와 애니메이션 |
 | `assets/monsters/` | 몬스터 아트 |
@@ -60,11 +68,12 @@ project.godot
 | `assets/icons/` | UI 및 아이템 아이콘 |
 | `assets/audio/` | 음악과 효과음 |
 | `assets/fonts/` | Pretendard UI, Galmuri 제목 글꼴과 각각의 라이선스 |
-| `data/items/`, `data/monsters/`, `data/stages/`, `data/growth/` | 추후 밸런스/콘텐츠 데이터 |
+| `data/growth/`, `scripts/data/` | 초기 미리보기 상태 Resource와 타입 |
+| `data/items/`, `data/monsters/`, `data/stages/` | 추후 밸런스/콘텐츠 데이터 |
 | `docs/` | 기획, 아트, 기술, 작업 문서 |
 | `web/`, `scripts/web/` | 정적 랜딩/플레이 페이지와 빌드/서버 도구 |
 
-빈 콘텐츠 디렉터리는 `.gitkeep`으로 추적한다. 시작 화면과 웹의 정적 키 아트 외에 전투용 데이터나 애니메이션은 추가하지 않는다.
+빈 콘텐츠 디렉터리는 `.gitkeep`으로 추적한다. 현재 애니메이션은 프레젠테이션용 대기 연출뿐이며 전투 스프라이트나 전투용 밸런스 데이터는 추가하지 않는다.
 
 ## 렌더링 및 웹 Export
 

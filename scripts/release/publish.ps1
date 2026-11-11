@@ -82,8 +82,9 @@ if ($stagedChanges -eq 1) {
 if ($LASTEXITCODE -ne 0) { throw 'Unable to push deployment output.' }
 
 $notes = @"
-Paper Warrior presentation prototype: Splash -> Loading -> Title -> empty Main Game.
-No combat, progression, or saves yet.
+Paper Warrior prototype: short logo/warrior Splash -> real resource Loading -> Title -> first game preview.
+Includes an animated idle warrior, stage/combat waiting area, initial level/gold HUD, and clearly labeled upcoming growth/equipment/decoration menus.
+No combat, progression, rewards, or saves yet. Preview counters do not increase.
 
 Website: https://socra710.github.io/paper_warrior_releases/
 Source: https://github.com/socra710/paper_warrior/commit/$sourceCommit
