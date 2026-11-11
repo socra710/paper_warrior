@@ -10,4 +10,4 @@ mouse_filter = 2
 script = ExtResource("1_preview")
 
 [node name="WarriorSprite" parent="." instance=ExtResource("2_warrior")]
-scale = Vector2(3, 3)
+scale = Vector2(1.5, 1.5)

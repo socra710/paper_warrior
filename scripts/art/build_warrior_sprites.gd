@@ -5,6 +5,10 @@ const DATA_PATH := "res://data/presentation/warrior_animation.json"
 const SVG_PATH := "res://assets/characters/warrior/warrior_idle_walk.svg"
 const PNG_PATH := "res://assets/characters/warrior/warrior_idle_walk.png"
 const SCENE_PATH := "res://scenes/characters/warrior_sprite.tscn"
+const ORIGINAL_RENDER_ORDER := [
+	"left_leg", "right_leg", "torso", "left_arm", "right_arm",
+	"head", "face", "sword", "shield",
+]
 
 
 func _initialize() -> void:
@@ -30,10 +34,14 @@ func _generate() -> int:
 	var anchor: Dictionary = spec.get("anchor", {})
 	var center_x := int(anchor.get("center_x", -1))
 	var baseline_y := int(anchor.get("ground_baseline_y", -1))
-	if frame_width != 48 or frame_height != 48:
-		return _fail("Warrior frames must remain 48x48")
-	if center_x != 24 or baseline_y != 44:
-		return _fail("Warrior center and ground baseline must remain x=24, y=44")
+	if spec.get("reference_profile", "") != "original_geometry_96":
+		return _fail("Expected the explicit original_geometry_96 reference profile")
+	if spec.get("source_view_box", []) != [64.0, 50.0, 336.0, 336.0]:
+		return _fail("Original geometry must use source viewBox 64 50 336 336")
+	if frame_width != 96 or frame_height != 96:
+		return _fail("Original-reference warrior frames must remain 96x96")
+	if center_x != 48 or baseline_y != 88:
+		return _fail("Warrior center and ground baseline must remain x=48, y=88")
 
 	var animations: Dictionary = spec.get("animations", {})
 	var animation_order: Array = spec.get("animation_order", [])
@@ -43,8 +51,10 @@ func _generate() -> int:
 		return _fail("Only the idle and walk animations are defined by this source")
 	if render_order.is_empty():
 		return _fail("Warrior part render order is empty")
-	if render_order.size() != render_order.duplicate().size():
+	if not _has_unique_names(render_order):
 		return _fail("Warrior part render order contains duplicate names")
+	if render_order != ORIGINAL_RENDER_ORDER:
+		return _fail("Shared parts must preserve the original anatomy draw order")
 	if part_origins.size() != render_order.size():
 		return _fail("Each shared part needs one named pivot/origin")
 	for part_name in render_order:
@@ -75,8 +85,8 @@ func _generate() -> int:
 		return _fail("Warrior scene root must be named WarriorSprite")
 	if str(node.get("default_animation", "")) != "idle":
 		return _fail("WarriorSprite must autoplay idle")
-	if node.get("scale", []) != [1.5, 1.5]:
-		return _fail("WarriorSprite scale must remain 1.5")
+	if node.get("scale", []) != [0.75, 0.75]:
+		return _fail("Original-reference WarriorSprite scale must remain 0.75 (72px)")
 
 	var parts_source := FileAccess.get_file_as_string(PARTS_PATH)
 	var defs_start := parts_source.find("<defs>")
@@ -88,12 +98,12 @@ func _generate() -> int:
 	var palette_order: Array = spec.get("palette_order", [])
 	if palette.is_empty():
 		return _fail("Warrior palette is empty")
-	if palette_order.size() != palette.size() or palette_order.size() != palette_order.duplicate().size():
+	if palette_order.size() != palette.size() or not _has_unique_names(palette_order):
 		return _fail("Palette order must name every palette color exactly once")
 	var palette_values: Dictionary = {}
 	for palette_name in palette:
 		var color := str(palette[palette_name]).to_lower()
-		if not defs.contains("fill=\"%s\"" % color):
+		if not defs.contains("=\"%s\"" % color):
 			return _fail("Palette color %s is not used by the shared parts" % color)
 		palette_values[color] = true
 	for palette_name in palette_order:
@@ -101,7 +111,7 @@ func _generate() -> int:
 			return _fail("Palette order contains an unknown color %s" % str(palette_name))
 
 	var fill_regex := RegEx.new()
-	if fill_regex.compile("fill=\"(#[0-9a-fA-F]{6})\"") != OK:
+	if fill_regex.compile("(?:fill|stroke|stop-color)=\"(#[0-9a-fA-F]{6})\"") != OK:
 		return _fail("Could not compile SVG palette validation")
 	for color_match in fill_regex.search_all(defs):
 		if not palette_values.has(color_match.get_string(1).to_lower()):
@@ -124,12 +134,21 @@ func _generate() -> int:
 					return _fail("Part positions must be two-element integer translations")
 				if not _is_integer_translation(position[0]) or not _is_integer_translation(position[1]):
 					return _fail("Part positions must be integer translations")
-			var variants: Dictionary = frame.get("variants", {})
-			for part_name in variants:
-				if not render_order.has(part_name):
-					return _fail("Part variant is not present in the render order")
-				if not defs.contains("id=\"%s\"" % str(variants[part_name])):
-					return _fail("Shared parts are missing variant %s" % str(variants[part_name]))
+				if abs(float(position[0])) > 2 or float(position[1]) < -1 or float(position[1]) > 0:
+					return _fail("Reference animation permits only small translations, never geometry changes")
+				if animation_name == "idle":
+					if position[0] != 0:
+						return _fail("Idle motion must remain a vertical 0/1px micro translation")
+					if part_name in ["left_leg", "right_leg"] and position != [0.0, 0.0]:
+						return _fail("Idle feet must remain planted")
+			if not frame.get("variants", {}).is_empty():
+				return _fail("Original-reference animation does not permit face or part variants")
+			if frame_parts["face"] != frame_parts["head"] or frame_parts["head"] != frame_parts["torso"]:
+				return _fail("The original face, head and torso must move together")
+			if frame_parts["sword"] != frame_parts["left_arm"] or frame_parts["shield"] != frame_parts["right_arm"]:
+				return _fail("Equipment must move with its gripping arm")
+			if frame_parts["left_leg"][1] != 0 and frame_parts["right_leg"][1] != 0:
+				return _fail("Every frame must keep one foot at the original ground baseline")
 
 	var svg := _build_svg(spec, defs, animations, animation_order, render_order, total_frames)
 	var write_error := _write_text(SVG_PATH, svg)
@@ -142,7 +161,13 @@ func _generate() -> int:
 		return _fail("Could not rasterize generated SVG (error %d)" % load_error)
 	if image.get_width() != frame_width * total_frames or image.get_height() != frame_height:
 		return _fail("Generated SVG raster has unexpected dimensions")
-	_finalize_raster(image, palette, palette_order)
+	_finalize_raster(image)
+	for frame_index in range(total_frames):
+		var bounds := image.get_region(Rect2i(frame_index * frame_width, 0, frame_width, frame_height)).get_used_rect()
+		if bounds.size == Vector2i.ZERO or bounds.position.x <= 0 or bounds.position.y <= 0:
+			return _fail("Frame %d is empty or touches the top/left frame boundary" % frame_index)
+		if bounds.end.x >= frame_width or bounds.end.y != baseline_y:
+			return _fail("Frame %d must fit the frame and retain ground baseline %d" % [frame_index, baseline_y])
 	var png_path := ProjectSettings.globalize_path(PNG_PATH)
 	var png_error := image.save_png(png_path)
 	if png_error != OK:
@@ -179,14 +204,14 @@ func _build_svg(
 	for palette_name in palette_order:
 		palette_description.append("%s %s" % [palette_name, palette[palette_name]])
 
-	var svg := "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 %d %d\" shape-rendering=\"crispEdges\">\n" % [
+	var svg := "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 %d %d\">\n" % [
 		width * total_frames,
 		height,
 		width * total_frames,
 		height,
 	]
 	svg += "  <title>Paper Warrior idle and walk sprite sheet</title>\n"
-	svg += "  <desc>%d transparent %dx%d frames; idle then walk. Center x=%d, ground baseline y=%d. Palette: %s.</desc>\n" % [
+	svg += "  <desc>Original geometry reference profile; %d transparent %dx%d frames; idle then walk. Center x=%d, ground baseline y=%d. Original colors and gradients (not quantized): %s.</desc>\n" % [
 		total_frames,
 		width,
 		height,
@@ -231,7 +256,7 @@ func _build_scene(
 ) -> String:
 	var node: Dictionary = spec.get("node", {})
 	var node_name := str(node.get("name", "WarriorSprite"))
-	var scale: Array = node.get("scale", [1.5, 1.5])
+	var scale: Array = node.get("scale", [0.75, 0.75])
 	var default_animation := str(node.get("default_animation", "idle"))
 	var scene := "[gd_scene load_steps=%d format=3]\n\n" % (total_frames + 3)
 	scene += "[ext_resource type=\"Texture2D\" path=\"res://assets/characters/warrior/warrior_idle_walk.png\" id=\"1_sheet\"]\n"
@@ -302,13 +327,17 @@ func _is_integer_translation(value: Variant) -> bool:
 	return is_finite(number) and number == floor(number)
 
 
-func _finalize_raster(image: Image, palette: Dictionary, palette_order: Array) -> void:
-	image.convert(Image.FORMAT_RGBA8)
-	var palette_colors := PackedColorArray()
-	for palette_name in palette_order:
-		var color := Color.from_string(str(palette[palette_name]), Color.BLACK)
-		palette_colors.append(Color(color.r, color.g, color.b, 1.0))
+func _has_unique_names(names: Array) -> bool:
+	var seen: Dictionary = {}
+	for name in names:
+		if seen.has(name):
+			return false
+		seen[name] = true
+	return true
 
+
+func _finalize_raster(image: Image) -> void:
+	image.convert(Image.FORMAT_RGBA8)
 	for y in range(image.get_height()):
 		for x in range(image.get_width()):
 			var source_color := image.get_pixel(x, y)
@@ -316,14 +345,5 @@ func _finalize_raster(image: Image, palette: Dictionary, palette_order: Array) -
 				image.set_pixel(x, y, Color.TRANSPARENT)
 				continue
 
-			var nearest_color: Color = palette_colors[0]
-			var nearest_distance := INF
-			for palette_color in palette_colors:
-				var red_delta := source_color.r - palette_color.r
-				var green_delta := source_color.g - palette_color.g
-				var blue_delta := source_color.b - palette_color.b
-				var distance := red_delta * red_delta + green_delta * green_delta + blue_delta * blue_delta
-				if distance < nearest_distance:
-					nearest_distance = distance
-					nearest_color = palette_color
-			image.set_pixel(x, y, nearest_color)
+			source_color.a = 1.0
+			image.set_pixel(x, y, source_color)
