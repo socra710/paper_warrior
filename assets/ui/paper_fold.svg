@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="24" viewBox="0 0 96 24">
+  <title>Paper-folding workshop animation sheet</title>
+  <desc>Four transparent 24 by 24 pixel-paper folding frames showing one sheet being creased into a neat folded square, without a progress indicator.</desc>
+  <g transform="translate(0 0)">
+    <path d="M4 5h16v14H4z" fill="#2d495b"/>
+    <path d="M5 6h14v12H5z" fill="#f7f4e9"/>
+    <path d="M5 6h7v12H5z" fill="#cce4d8"/>
+    <path d="M12 6h7v5h-7z" fill="#f7f4e9"/>
+    <path d="M11 6h2v12h-2z" fill="#a5cebc"/>
+    <path d="M3 4h2v2H3zM19 18h2v2h-2z" fill="#f2cd7e"/>
+  </g>
+  <g transform="translate(24 0)">
+    <path d="M4 5h16v14H4z" fill="#2d495b"/>
+    <path d="M5 6h14v12H5z" fill="#f7f4e9"/>
+    <path d="M5 6h6v12H5z" fill="#cce4d8"/>
+    <path d="M11 6h8v6h-8z" fill="#f7f4e9"/>
+    <path d="M11 6h2v12h-2z" fill="#a5cebc"/>
+    <path d="M12 11h7v2h-7z" fill="#d3e6ee"/>
+    <path d="M3 4h2v2H3zM19 18h2v2h-2z" fill="#f2cd7e"/>
+  </g>
+  <g transform="translate(48 0)">
+    <path d="M4 5h16v14H4z" fill="#2d495b"/>
+    <path d="M5 6h14v12H5z" fill="#f7f4e9"/>
+    <path d="M5 6h6v12H5z" fill="#cce4d8"/>
+    <path d="M11 6h8v6h-8z" fill="#f7f4e9"/>
+    <path d="M11 6h2v12h-2z" fill="#a5cebc"/>
+    <path d="M11 11h8v2h-8z" fill="#d3e6ee"/>
+    <path d="M12 13h6v4h-6z" fill="#a5cebc"/>
+    <path d="M3 4h2v2H3zM19 18h2v2h-2z" fill="#f2cd7e"/>
+  </g>
+  <g transform="translate(72 0)">
+    <path d="M4 5h16v14H4z" fill="#2d495b"/>
+    <path d="M5 6h14v12H5z" fill="#f7f4e9"/>
+    <path d="M5 6h6v12H5z" fill="#cce4d8"/>
+    <path d="M11 6h8v6h-8z" fill="#f7f4e9"/>
+    <path d="M11 6h2v12h-2z" fill="#a5cebc"/>
+    <path d="M11 11h8v2h-8z" fill="#d3e6ee"/>
+    <path d="M12 13h6v4h-6z" fill="#a5cebc"/>
+    <path d="M12 13h6v2h-6z" fill="#cce4d8"/>
+    <path d="M3 4h2v2H3zM19 18h2v2h-2z" fill="#f2cd7e"/>
+  </g>
+</svg>

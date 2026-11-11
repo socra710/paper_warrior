@@ -2,7 +2,7 @@
 
 ## 초기 범위
 
-Godot 4와 GDScript를 사용하며 브라우저 우선으로 검증한다. 현재 프로토타입은 네 화면의 역할 분리, 실제 씬/리소스 준비, 캐릭터 대기 연출과 초기 게임 HUD를 제공한다. 전투·성장·보상·저장·오프라인 보상·Android Export는 포함하지 않는다.
+Godot 4와 GDScript를 사용하며 브라우저 우선으로 검증한다. 현재 프로토타입은 네 화면의 역할 분리, 실제 씬/리소스 준비, 픽셀 캐릭터 대기/맵 이동 연출과 초기 게임 HUD를 제공한다. 이동은 맵을 둘러보는 연출이며 전투·성장·보상·저장·오프라인 보상·Android Export는 포함하지 않는다.
 
 ## 시작 화면 흐름
 
@@ -21,24 +21,35 @@ project.godot
 | `scenes/main/title.tscn` | 게임명과 시작 버튼 표시 | `scripts/main/title.gd` |
 | `scenes/main/game.tscn` | 초기 레벨·골드·스테이지, 대기 전사와 준비 중인 메뉴 | `scripts/main/game.gd` |
 
-Splash의 1.2초는 인트로 표시 시간이다. Loading은 `ResourceLoader.load_threaded_request`로 Title/Game PackedScene을 요청하고 `load_threaded_get_status`의 실제 준비율 평균을 표시한다. 두 요청이 모두 완료된 경우에만 Title을 가져와 `change_scene_to_packed`로 이동한다. 완료 후 0.15초 페이드아웃 외에 가짜 진행 타이머는 없다. 로드 실패 시 진행을 멈추고 화면에 오류와 재시도 버튼을 표시한다.
+Splash의 1.2초는 인트로 표시 시간이며 씬 소유의 processing으로 관리해 화면 제거 후 타이머가 전환을 실행하지 않는다. Loading은 `ResourceLoader.load_threaded_request`로 Title/Game PackedScene을 요청하고 `load_threaded_get_status`의 실제 준비율 평균을 표시한다. 두 요청이 모두 완료된 경우에만 Title을 가져와 `change_scene_to_packed`로 이동한다. 완료 후 0.15초 페이드아웃 외에 가짜 진행 타이머는 없다.
 
-Splash/Title만 `scenes/ui/start_screen.tscn`을 상속해 제목·일러스트·버튼 스타일을 공유한다. Loading은 캐릭터 원화를 반복하지 않고 접힌 종이, 진행 바, 백분율과 준비 상태를 배치한다. Game의 완료된 요청은 Title 시작 버튼에서 `load_threaded_get`으로 가져올 때까지 ResourceLoader가 유지한다. 시작하지 않고 Title을 닫으면 완료 요청을 회수해 리소스를 해제한다. Title을 단독 실행한 경우에만 일반 `load`를 사용한다. 시작 버튼의 씬 변경은 GUI 입력 처리와 충돌하지 않게 지연 호출한다.
+Loading 상태는 준비/전환/실패로 구분한다. 실패 또는 20초 응답 시간 초과 시 자동 진행을 멈추고 진단 메시지를 표시한다. 일반 실패의 재시도는 실패한 요청을 회수해 실제 요청을 다시 수행하고 다른 진행 중 요청은 유지한다. 시간 초과는 취소 불가능한 엔진 요청의 타이머만 초기화하지 않는다. **처음부터 다시 시작**으로 웹은 페이지를 새로고침하고 데스크톱은 새 앱 인스턴스를 실행한 후 기존 앱을 종료한다. 재실행이 차단되면 수동 재실행 안내를 표시한다. 중복 클릭은 잠근다. 테스트는 호환 로더와 재실행 콜백으로 실패/대기/재시작을 분리 검증한다.
+
+Splash/Title만 `scenes/ui/start_screen.tscn`을 상속해 제목·픽셀 대기 전사·버튼 스타일을 공유한다. Loading은 캐릭터 원화 대신 별도의 종이 접기 스프라이트와 실제 진행 바를 사용한다. 종이 애니메이션은 진행률을 만들어내지 않는다. Game의 완료된 요청은 Title 시작 버튼에서 `load_threaded_get`으로 가져올 때까지 ResourceLoader가 유지한다. 시작하지 않고 Title을 닫으면 완료 요청을 회수해 리소스를 해제한다. Title을 단독 실행한 경우에만 일반 `load`를 사용한다. 시작 버튼은 첫 입력에서 즉시 잠그고 전환을 지연 호출하며 실패 시 안내와 함께 다시 활성화한다.
 
 ## 첫 게임 화면
 
 `PrototypeState`와 `data/growth/initial_preview.tres`는 초기 레벨 1, 골드 0, 스테이지 1-1 / 종이 숲의 입구를 제공한다. Game 씬의 exported Resource로 연결되어 씬과 함께 준비·패키징되며 런타임에서 변경하지 않는다. 저장 데이터나 실제 보상 시스템은 아니다.
 
-`scenes/ui/warrior_idle.tscn`은 키 아트의 위치를 2초 주기로 미세하게 움직이는 AnimationPlayer 대기 연출이다. 종이 숲 배경과 전투 대기 영역을 구분하고 전투/스테이지 진행은 준비 중이라고 표시한다. 첫 목표는 전사와 세 메뉴를 둘러보는 것이다.
+`scenes/characters/warrior_sprite.tscn`은 48×48 PNG 프레임을 Nearest로 표시하는 AnimatedSprite2D다. Idle 4프레임과 Walk 6프레임을 독립 관리한다. `scenes/ui/warrior_idle.tscn`은 Splash/Title의 대기 미리보기이고 `scenes/ui/map_walker.tscn`은 작은 전사를 정규화된 네 지점 사이로 이동시킨다. 맵 크기가 바뀌면 상대 위치를 유지하며 경계 안으로 제한한다. 전투/스테이지 진행은 준비 중으로 표시한다.
 
 성장·장비·꾸미기는 각각 준비 중인 기능을 설명하는 안내창만 연다. 안내창 표시 중 배경 메뉴는 비활성화하고 닫기/ESC로 원래 버튼에 포커스를 복원한다. 강화·구매·장착·색상 변경이나 가짜 수치 증가는 없다.
+
+## 버전과 화면 방향
+
+버전은 `project.godot`의 `application/config/version`을 단일 기준으로 사용한다. 모든 Godot 화면과 웹 플레이 셸에 표시하고 웹 빌드 시 같은 값으로 치환한다. 공개 배포의 `version.json`은 릴리즈 태그와 실제 원본 커밋을 별도로 추적한다.
+
+`responsive_screen.gd`는 세로 480×640, 가로 800×450의 논리 해상도를 선택한다. 시작 화면은 전사/버튼 배치를 재정렬하고 Game은 맵/사이드 메뉴로 재배치한다. 현재 씬을 재생성하지 않으므로 열린 메뉴와 초기 상태, 이동 경로가 유지된다.
+
+웹은 기본 중앙 세로 프레임을 유지하고 짧은 가로 화면에서만 16:9를 사용한다. `game-viewport.mjs`는 같은 캔버스의 내부 크기를 480×640 ↔ 960×540으로 바꾸고 resize를 알린다. Engine을 다시 생성하거나 페이지를 새로고침하지 않는다. 화면 방향 변경과 오류 후 명시적 재시도에 의한 새로고침은 서로 다른 동작이다.
 
 ## 웹사이트
 
 - `web/index.html`: 별도 설치가 필요 없는 정적 랜딩페이지. 소개, 기획 중인 특징, 현재 프로토타입 범위를 표시한다.
 - `web/play.html`: Godot 커스텀 HTML 셸. 제목 → 작은 중앙 게임 프레임 → 조작/프로토타입 안내 순서다.
 - `web/site.css`, `web/game-loader.css`: 공용 사이트 스타일과 플레이 프레임/부팅 화면 스타일.
-- `web/game-loader.mjs`: 실제 Godot 다운로드 진행률, 부팅 완료, 미지원 브라우저 및 다운로드 오류 처리. 오류는 화면에 출력하고 새로고침 재시도를 제공한다.
+- `web/game-loader.mjs`: 엔진 JavaScript 다운로드부터 실제 게임 시작까지 공유하는 90초 제한, 실제 다운로드 진행률과 실패 처리. 엔진 스크립트는 재시도 핸들러 설치 후 비동기로 요청한다. 같은 캔버스의 중복 부팅을 막고 실패 뒤 늦은 다운로드/진행 콜백을 무시한다. 재시도는 페이지 새로고침으로 부분 초기화 상태를 제거한다.
+- `web/game-viewport.mjs`: 페이지/엔진 재시작 없는 가로·세로 캔버스 변경.
 - `scripts/web/build.mjs`: Godot import/Export 후 정적 웹 파일과 에셋을 `build/web/`에 복사한다. Node 내장 기능만 사용한다.
 - `scripts/web/serve.mjs`: MIME 형식을 지원하는 로컬 전용 HTTP 서버. 기본 주소는 `127.0.0.1:8000`, 포트는 `PORT`로 변경한다.
 

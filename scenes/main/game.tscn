@@ -1,12 +1,13 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scripts/main/game.gd" id="1_script"]
 [ext_resource type="Theme" path="res://assets/fonts/theme_ui.tres" id="2_ui"]
 [ext_resource type="Theme" path="res://assets/fonts/theme_galmuri.tres" id="3_heading"]
 [ext_resource type="Resource" path="res://data/growth/initial_preview.tres" id="4_state"]
-[ext_resource type="PackedScene" path="res://scenes/ui/warrior_idle.tscn" id="5_warrior"]
+[ext_resource type="PackedScene" path="res://scenes/ui/map_walker.tscn" id="5_warrior"]
 [ext_resource type="Texture2D" path="res://assets/backgrounds/paper_forest_preview.svg" id="6_forest"]
 [ext_resource type="Texture2D" path="res://assets/branding/logo_symbol.png" id="7_logo"]
+[ext_resource type="Script" path="res://scripts/ui/version_label.gd" id="8_version"]
 
 [sub_resource type="StyleBoxFlat" id="PaperCard"]
 content_margin_left = 12.0
@@ -138,7 +139,8 @@ text = "종이전사"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.33, 0.48, 0.43, 1)
 theme_override_font_sizes/font_size = 10
-text = "첫 장 · UI 미리보기"
+script = ExtResource("8_version")
+prefix = "UI 미리보기 ·"
 
 [node name="PlayerState" type="HBoxContainer" parent="Margin/Layout"]
 layout_mode = 2
@@ -188,19 +190,26 @@ theme_override_colors/font_color = Color(0.37, 0.51, 0.45, 1)
 theme_override_font_sizes/font_size = 10
 text = "보상 준비 중"
 
-[node name="StageCard" type="PanelContainer" parent="Margin/Layout"]
+[node name="Body" type="BoxContainer" parent="Margin/Layout"]
 layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+vertical = true
+
+[node name="StageCard" type="PanelContainer" parent="Margin/Layout/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("PaperCard")
 
-[node name="StageLayout" type="VBoxContainer" parent="Margin/Layout/StageCard"]
+[node name="StageLayout" type="VBoxContainer" parent="Margin/Layout/Body/StageCard"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="StageHeader" type="HBoxContainer" parent="Margin/Layout/StageCard/StageLayout"]
+[node name="StageHeader" type="HBoxContainer" parent="Margin/Layout/Body/StageCard/StageLayout"]
 layout_mode = 2
 
-[node name="StageValue" type="Label" parent="Margin/Layout/StageCard/StageLayout/StageHeader"]
+[node name="StageValue" type="Label" parent="Margin/Layout/Body/StageCard/StageLayout/StageHeader"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -208,19 +217,19 @@ theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
 theme_override_font_sizes/font_size = 15
 text = "스테이지 준비 중"
 
-[node name="BattleStatus" type="Label" parent="Margin/Layout/StageCard/StageLayout/StageHeader"]
+[node name="BattleStatus" type="Label" parent="Margin/Layout/Body/StageCard/StageLayout/StageHeader"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.37, 0.51, 0.45, 1)
 theme_override_font_sizes/font_size = 10
 text = "전투 준비 중"
 
-[node name="BattleArea" type="Control" parent="Margin/Layout/StageCard/StageLayout"]
+[node name="BattleArea" type="Control" parent="Margin/Layout/Body/StageCard/StageLayout"]
 custom_minimum_size = Vector2(0, 184)
 layout_mode = 2
 size_flags_vertical = 3
 clip_contents = true
 
-[node name="Forest" type="TextureRect" parent="Margin/Layout/StageCard/StageLayout/BattleArea"]
+[node name="Forest" type="TextureRect" parent="Margin/Layout/Body/StageCard/StageLayout/BattleArea"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -230,21 +239,13 @@ texture = ExtResource("6_forest")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="IdleWarrior" parent="Margin/Layout/StageCard/StageLayout/BattleArea" instance=ExtResource("5_warrior")]
+[node name="MapWalker" parent="Margin/Layout/Body/StageCard/StageLayout/BattleArea" instance=ExtResource("5_warrior")]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -138.0
-offset_top = -108.0
-offset_right = 138.0
-offset_bottom = 108.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 
-[node name="AreaCaption" type="Label" parent="Margin/Layout/StageCard/StageLayout/BattleArea"]
+[node name="AreaCaption" type="Label" parent="Margin/Layout/Body/StageCard/StageLayout/BattleArea"]
 layout_mode = 0
 offset_left = 10.0
 offset_top = 6.0
@@ -252,43 +253,50 @@ theme_override_colors/font_color = Color(0.3, 0.47, 0.43, 1)
 theme_override_font_sizes/font_size = 10
 text = "작은 용사의 첫 번째 무대"
 
-[node name="BattleHint" type="Label" parent="Margin/Layout/StageCard/StageLayout"]
+[node name="BattleHint" type="Label" parent="Margin/Layout/Body/StageCard/StageLayout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.37, 0.51, 0.45, 1)
 theme_override_font_sizes/font_size = 11
-text = "지금은 대기 연출 중 · 전투와 스테이지 진행은 준비 중"
+text = "맵 둘러보기 연출 · 전투와 스테이지 진행은 준비 중"
 horizontal_alignment = 1
+autowrap_mode = 2
 
-[node name="FirstObjective" type="PanelContainer" parent="Margin/Layout"]
+[node name="Sidebar" type="VBoxContainer" parent="Margin/Layout/Body"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="FirstObjective" type="PanelContainer" parent="Margin/Layout/Body/Sidebar"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("PaperCard")
 
-[node name="Objective" type="Label" parent="Margin/Layout/FirstObjective"]
+[node name="Objective" type="Label" parent="Margin/Layout/Body/Sidebar/FirstObjective"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
 theme_override_font_sizes/font_size = 11
 text = "오늘의 목표 · 전사와 인사하고 세 메뉴를 둘러보세요."
 horizontal_alignment = 1
+autowrap_mode = 2
 
-[node name="Menus" type="HBoxContainer" parent="Margin/Layout"]
+[node name="Menus" type="BoxContainer" parent="Margin/Layout/Body/Sidebar"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 46)
 layout_mode = 2
 theme = SubResource("MenuTheme")
 theme_override_constants/separation = 8
 
-[node name="GrowthButton" type="Button" parent="Margin/Layout/Menus"]
+[node name="GrowthButton" type="Button" parent="Margin/Layout/Body/Sidebar/Menus"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "성장 · 준비 중"
 
-[node name="EquipmentButton" type="Button" parent="Margin/Layout/Menus"]
+[node name="EquipmentButton" type="Button" parent="Margin/Layout/Body/Sidebar/Menus"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "장비 · 준비 중"
 
-[node name="DecorationButton" type="Button" parent="Margin/Layout/Menus"]
+[node name="DecorationButton" type="Button" parent="Margin/Layout/Body/Sidebar/Menus"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -300,6 +308,7 @@ theme_override_colors/font_color = Color(0.37, 0.51, 0.45, 1)
 theme_override_font_sizes/font_size = 10
 text = "레벨·골드는 초기 상태예요. 전투·성장·보상·저장은 준비 중이에요."
 horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="MenuNotice" type="Control" parent="."]
 unique_name_in_owner = true

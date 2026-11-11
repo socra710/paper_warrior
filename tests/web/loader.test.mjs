@@ -71,3 +71,78 @@ test('download failures remain visible and allow retry', async () => {
   assert.equal(ui.retry.hidden, false);
   assert.match(ui.status.textContent, /Network unavailable/);
 });
+
+test('duplicate startup calls share the same engine, including after success', async () => {
+  const ui = elements();
+  let created = 0;
+  let finish;
+  class Engine {
+    static getMissingFeatures() { return []; }
+    constructor() { created++; }
+    startGame() { return new Promise((resolve) => { finish = resolve; }); }
+  }
+  const first = bootGame(Engine, {}, ui);
+  const second = bootGame(Engine, {}, ui);
+  assert.equal(created, 1);
+  finish();
+  assert.equal(await first, true);
+  assert.equal(await second, true);
+  assert.equal(await bootGame(Engine, {}, ui), true);
+  assert.equal(created, 1);
+});
+
+test('stalled startup times out and late progress cannot overwrite the error', async () => {
+  const ui = elements();
+  let progress;
+  class Engine {
+    static getMissingFeatures() { return []; }
+    startGame({ onProgress }) {
+      progress = onProgress;
+      return new Promise(() => {});
+    }
+  }
+  assert.equal(await bootGame(Engine, {}, ui, { timeoutMs: 5 }), false);
+  const failure = ui.status.textContent;
+  progress(80, 100);
+  assert.equal(ui.status.textContent, failure);
+  assert.equal(ui.overlay.hidden, false);
+  assert.equal(ui.retry.hidden, false);
+});
+
+test('a fresh attempt restores loading controls after a failure', async () => {
+  const ui = elements();
+  class Failed {
+    static getMissingFeatures() { return []; }
+    async startGame() { throw new Error('injected failure'); }
+  }
+  await bootGame(Failed, {}, ui);
+  class Recovered {
+    static getMissingFeatures() { return []; }
+    async startGame({ onProgress }) {
+      assert.equal(ui.retry.hidden, true);
+      assert.equal(ui.progress.hidden, false);
+      onProgress(50, 100);
+    }
+  }
+  assert.equal(await bootGame(Recovered, {}, ui), true);
+  assert.equal(ui.overlay.hidden, true);
+});
+
+test('engine script download shares the boot deadline and cannot start late', async () => {
+  const ui = elements();
+  let downloaded;
+  let created = 0;
+  const script = new Promise((resolve) => { downloaded = resolve; });
+  assert.equal(await bootGame(script, {}, ui, { timeoutMs: 5 }), false);
+  assert.match(ui.status.textContent, /시간/);
+  assert.equal(ui.retry.hidden, false);
+  const failure = ui.status.textContent;
+  downloaded(class Engine {
+    static getMissingFeatures() { return []; }
+    constructor() { created++; }
+    async startGame() {}
+  });
+  await Promise.resolve();
+  assert.equal(created, 0);
+  assert.equal(ui.status.textContent, failure);
+});

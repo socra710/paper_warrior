@@ -14,7 +14,7 @@ func _check() -> void:
 	root.add_child(scene)
 	await process_frame
 	await process_frame
-	var art := scene.find_child("WarriorArt") as TextureRect
+	var art := scene.find_child("WarriorArt") as Control
 	var heading := scene.find_child("GameTitle") as Label
 	var subtitle := scene.find_child("Subtitle") as Label
 	var button := scene.find_child("StartButton") as Button
@@ -37,8 +37,7 @@ func _check() -> void:
 	await process_frame
 	await process_frame
 	var arena := game.find_child("BattleArea") as Control
-	var warrior := game.find_child("WarriorVisual") as TextureRect
-	var animation := game.find_child("IdleAnimation") as AnimationPlayer
+	var warrior := game.find_child("WarriorSprite") as AnimatedSprite2D
 	var state := game.get("initial_state") as Resource
 	var game_valid := (
 		state != null
@@ -46,9 +45,10 @@ func _check() -> void:
 		and (game.find_child("GoldValue") as Label).text == "골드 0"
 		and (game.find_child("StageValue") as Label).text.contains("1-1")
 		and arena.size.y >= 184.0
-		and warrior.texture != null
-		and warrior.size.y > 140.0
-		and animation.is_playing()
+		and warrior.sprite_frames.get_frame_count("idle") == 4
+		and warrior.sprite_frames.get_frame_count("walk") == 6
+		and warrior.is_playing()
+		and warrior.scale.x <= 2.0
 		and (game.find_child("Forest") as TextureRect).texture != null
 	)
 	for name in ["LevelValue", "GoldValue", "StageValue", "BattleArea", "GrowthButton", "EquipmentButton", "DecorationButton", "PrototypeNotice"]:
@@ -58,10 +58,29 @@ func _check() -> void:
 		game_valid = game_valid and bounds.end.x <= game.size.x and bounds.end.y <= game.size.y
 	if not game_valid:
 		push_error("Exported game layout/resources are invalid: viewport=%s, arena=%s, warrior=%s, menus=%s" % [
-			game.size, arena.get_global_rect(), warrior.get_global_rect(),
+			game.size, arena.get_global_rect(), warrior.position,
 			(game.find_child("Menus") as Control).get_global_rect()
 		])
 	valid = valid and game_valid
+	var old_size := root.size
+	(game.find_child("EquipmentButton") as Button).pressed.emit()
+	root.size = Vector2i(960, 540)
+	for index in 5:
+		await process_frame
+	var landscape_valid := game.size.x > game.size.y and (game.find_child("MenuNotice") as Control).visible
+	for name in ["BattleArea", "GrowthButton", "EquipmentButton", "DecorationButton", "PrototypeNotice"]:
+		var bounds := (game.find_child(name) as Control).get_global_rect()
+		landscape_valid = landscape_valid and bounds.position.x >= 0.0 and bounds.position.y >= 0.0
+		landscape_valid = landscape_valid and bounds.end.x <= game.size.x and bounds.end.y <= game.size.y
+	if not landscape_valid:
+		push_error("Exported landscape layout/state is invalid: viewport=%s, arena=%s, menus=%s" % [
+			game.size, arena.get_global_rect(), (game.find_child("Menus") as Control).get_global_rect()
+		])
+	valid = valid and landscape_valid
+	root.size = old_size
+	for index in 3:
+		await process_frame
+	valid = valid and (game.find_child("MenuNotice") as Control).visible
 	game.queue_free()
 	await process_frame
 	quit(0 if valid else 1)

@@ -1,4 +1,4 @@
-extends Control
+extends "res://scripts/ui/responsive_screen.gd"
 
 const MENU_NOTICES := {
 	"growth": ["성장 · 준비 중", "접기와 겹치기로 성장하는 기능을 준비해요.\n지금은 레벨과 골드가 변하지 않아요."],
@@ -11,6 +11,7 @@ var _last_menu: Button
 
 
 func _ready() -> void:
+	super._ready()
 	if initial_state == null:
 		push_error("게임 화면의 초기 상태 Resource가 없습니다.")
 		%StageValue.text = "초기 상태를 읽지 못했어요"
@@ -46,3 +47,12 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if %MenuNotice.visible and event.is_action_pressed("ui_cancel"):
 		_close_notice()
 		get_viewport().set_input_as_handled()
+
+
+func _update_layout() -> void:
+	var landscape := size.x > size.y
+	$Margin/Layout/Body.vertical = not landscape
+	$Margin/Layout/Body/Sidebar.custom_minimum_size.x = 232.0 if landscape else 0.0
+	%Menus.vertical = landscape
+	for button in [%GrowthButton, %EquipmentButton, %DecorationButton]:
+		button.add_theme_font_size_override("font_size", 16 if landscape else 12)

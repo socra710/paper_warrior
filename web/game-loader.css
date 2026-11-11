@@ -11,14 +11,15 @@
 .window-chrome { border-bottom: 1px dashed #c5d5c6; }
 .window-chrome > span:last-child { color: #c19f59; }
 .game-viewport { position: relative; aspect-ratio: 3 / 4; width: 100%; overflow: hidden; }
-#canvas { display: block; width: 100%; height: 100%; border: 0; touch-action: none; }
+#canvas { display: block; width: 100%; height: 100%; border: 0; touch-action: none; image-rendering: pixelated; }
 #canvas:focus-visible { outline: 2px solid #628f85; outline-offset: -2px; }
 .window-footer { border-top: 1px dashed #c5d5c6; padding-block: 6px; font-size: 8px; }
 .boot-screen { position: absolute; inset: 0; background: #edf4ec; display: flex; flex-direction: column; align-items: center; padding: 9% 7% 7%; text-align: center; }
 [hidden] { display: none !important; }
 .boot-eyebrow { font-size: 9px; letter-spacing: 1px; color: var(--mint); }
 .boot-screen h1 { font-size: clamp(32px, 8vw, 53px); letter-spacing: -1px; margin-top: 14px; color: var(--ink); text-shadow: 2px 3px #c5dbd1; }
-.boot-art { flex: 1; min-height: 0; width: 100%; object-fit: contain; }
+.boot-art { flex: none; width: 144px; height: 144px; margin: auto; background: url('assets/warrior_idle_walk.png') 0 0 / 1440px 144px no-repeat; image-rendering: pixelated; animation: warrior-idle 1s steps(4) infinite; }
+@keyframes warrior-idle { to { background-position-x: -576px; } }
 .boot-status { width: 100%; margin-top: 10px; }
 #boot-status { font-size: 12px; color: #547870; overflow-wrap: anywhere; max-height: 120px; overflow-y: auto; }
 #boot-progress { display: block; width: 100%; height: 5px; margin-top: 17px; border: 0; accent-color: #6da696; }
@@ -32,6 +33,22 @@
 .play-description > span { display: block; font-size: 10px; color: #75867b; margin-top: 10px; }
 .play-footer { margin-top: 27px; padding-block: 15px 24px; border-top: 1px dashed #bdcebe; display: flex; justify-content: space-between; font-size: 9px; color: var(--faint); }
 .noscript-notice { position: fixed; bottom: 0; margin: 0; width: 100%; padding: 14px; text-align: center; background: #f4dfb9; color: var(--ink); }
+
+@media (orientation: landscape) and (max-height: 600px) and (min-width: 640px) {
+  .play-navigation { position: absolute; top: 8px; left: 16px; right: 16px; max-width: none; padding: 0; }
+  .player-column { width: min(960px, calc(100% - 32px), calc((100svh - 96px) * 16 / 9)); margin-top: 4px; }
+  .player-heading { justify-content: center; gap: 14px; margin-bottom: 4px; }
+  .player-heading .brand-logo { width: 90px; }
+  .window-chrome, .window-footer { padding-block: 4px; }
+  .game-viewport { aspect-ratio: 16 / 9; }
+  .boot-screen { display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: "eyebrow status" "title status" "art status"; padding: 10px 20px; }
+  .boot-eyebrow { grid-area: eyebrow; margin: 0; font-size: 8px; }
+  .boot-screen h1 { grid-area: title; font-size: 30px; margin: 0; }
+  .boot-art { grid-area: art; }
+  .boot-status { grid-area: status; margin: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) { .boot-art { animation: none; } }
 
 @media (max-width: 480px) {
   .play-navigation { padding: 17px 18px; }

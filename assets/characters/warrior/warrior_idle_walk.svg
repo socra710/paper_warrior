@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="48" viewBox="0 0 480 48" shape-rendering="crispEdges">
+  <title>Paper Warrior idle and walk sprite sheet</title>
+  <desc>10 transparent 48x48 frames; idle then walk. Center x=24, ground baseline y=44. Palette: ink #2d495b, cream #f7f4e9, mint #cce4d8, mint_fold #a5cebc, sky_silver #d3e6ee, honey #f2cd7e, shield_blue #4d7890.</desc>
+<defs>
+    <g id="head">
+      <path d="M16 4h16v2h3v16h-2v3H14v-2h-3V9h3V6h2z" fill="#2d495b"/>
+      <path d="M16 7h15v2h2v13h-2v2H15v-2h-2V10h2V8h1z" fill="#f7f4e9"/>
+      <path d="M15 9h5v13h-4v-2h-2V10h1z" fill="#cce4d8"/>
+      <path d="M16 7h14v2H20v2h-5V9h1z" fill="#a5cebc"/>
+      <path d="M20 9h2v2h-2zM22 10h2v2h-2zM24 11h2v2h-2z" fill="#a5cebc"/>
+    </g>
+    <g id="face">
+      <path d="M19 14h2v3h-2zM27 14h2v3h-2z" fill="#2d495b"/>
+      <path d="M22 19h2v1h3v-1h2v2h-3v1h-2v-1h-2z" fill="#2d495b"/>
+    </g>
+    <g id="face_blink">
+      <path d="M19 16h3v1h-3zM27 16h3v1h-3z" fill="#2d495b"/>
+      <path d="M22 19h2v1h3v-1h2v2h-3v1h-2v-1h-2z" fill="#2d495b"/>
+    </g>
+    <g id="torso">
+      <path d="M18 26h14v2h2v8h-2v2H18v-2h-2v-8h2z" fill="#2d495b"/>
+      <path d="M19 28h12v2h1v5h-2v2H19v-2h-1v-5h1z" fill="#a5cebc"/>
+      <path d="M21 29h3v2h-2v2h2v2h-3v-2h-2v-3h2z" fill="#cce4d8"/>
+      <path d="M25 29h4v2h-2v2h2v2h-4v-2h1v-2h-1z" fill="#d3e6ee"/>
+      <path d="M18 29h2v4h-2zM30 29h2v4h-2z" fill="#cce4d8"/>
+    </g>
+    <g id="left_arm">
+      <path d="M-1 -1h4v2h2v5H3v2h-4v-2h-2v-4h2z" fill="#2d495b"/>
+      <path d="M-1 0h3v2h2v3H2v2h-4V5h-1V3h2z" fill="#cce4d8"/>
+      <path d="M-2 2h2v3h-2z" fill="#a5cebc"/>
+    </g>
+    <g id="right_arm">
+      <path d="M-2 -1h4v2h2v4h-2v3h-4V6h-2V1h2z" fill="#2d495b"/>
+      <path d="M-1 0h3v2h2v3H2v2h-4V5h-1V2h2z" fill="#cce4d8"/>
+      <path d="M2 2h2v3H2z" fill="#a5cebc"/>
+    </g>
+    <g id="left_leg">
+      <path d="M-2 0h4v2h2v3h-2v2h2v2h-8V7h2V3h-1z" fill="#2d495b"/>
+      <path d="M-1 1h2v2h2v2H1v3h2v1h-6V8h2V4h-1z" fill="#cce4d8"/>
+    </g>
+    <g id="right_leg">
+      <path d="M-2 0h4v2h2v4h-2v2h3v2h-8V8h2V4h-1z" fill="#2d495b"/>
+      <path d="M-1 1h2v2h2v2H1v3h3v1h-6V8h2V4h-1z" fill="#a5cebc"/>
+    </g>
+    <g id="sword">
+      <path d="M-2 -17h3v2h2v9H1v2h-3v-2h-2v-7h2z" fill="#2d495b"/>
+      <path d="M-1 -15h1v2h2v6H0v2h-2v-2h-1v-5h2z" fill="#d3e6ee"/>
+      <path d="M-2 -12h1v5h-1z" fill="#f7f4e9"/>
+      <path d="M-5 -3h9v2H1v6h-3v-6h-3z" fill="#2d495b"/>
+      <path d="M-4 -2h7v1H0v5h-1v-5h-3z" fill="#f2cd7e"/>
+      <path d="M-1 0h2v6h-2z" fill="#2d495b"/>
+    </g>
+    <g id="shield">
+      <path d="M2 0h8v2h2v8h-2v3H8v2H4v-2H2v-3H0V2h2z" fill="#2d495b"/>
+      <path d="M3 2h6v2h2v6H9v2H7v1H5v-1H3v-2H1V4h2z" fill="#d3e6ee"/>
+      <path d="M3 3h6v2h2v5H9v2H7v1H6v-1H4v-2H2V5h1z" fill="#4d7890"/>
+      <path d="M6 4h1v2h2v1H7v2H6V7H4V6h2z" fill="#f2cd7e"/>
+    </g>
+  </defs>
+  <g id="frame_idle_0" transform="translate(0 0)">
+    <use href="#left_leg" transform="translate(20 35)"/>
+    <use href="#right_leg" transform="translate(28 34)"/>
+    <use href="#sword" transform="translate(11 31)"/>
+    <use href="#torso" transform="translate(0 0)"/>
+    <use href="#left_arm" transform="translate(17 29)"/>
+    <use href="#right_arm" transform="translate(31 29)"/>
+    <use href="#shield" transform="translate(34 26)"/>
+    <use href="#head" transform="translate(0 0)"/>
+    <use href="#face" transform="translate(0 0)"/>
+  </g>
+  <g id="frame_idle_1" transform="translate(48 0)">
+    <use href="#left_leg" transform="translate(20 35)"/>
+    <use href="#right_leg" transform="translate(28 34)"/>
+    <use href="#sword" transform="translate(11 30)"/>
+    <use href="#torso" transform="translate(0 -1)"/>
+    <use href="#left_arm" transform="translate(17 28)"/>
+    <use href="#right_arm" transform="translate(31 28)"/>
+    <use href="#shield" transform="translate(34 25)"/>
+    <use href="#head" transform="translate(0 -1)"/>
+    <use href="#face" transform="translate(0 -1)"/>
+  </g>
+  <g id="frame_idle_2" transform="translate(96 0)">
+    <use href="#left_leg" transform="translate(20 35)"/>
+    <use href="#right_leg" transform="translate(28 34)"/>
+    <use href="#sword" transform="translate(11 31)"/>
+    <use href="#torso" transform="translate(0 0)"/>
+    <use href="#left_arm" transform="translate(17 29)"/>
+    <use href="#right_arm" transform="translate(31 29)"/>
+    <use href="#shield" transform="translate(34 26)"/>
+    <use href="#head" transform="translate(0 0)"/>
+    <use href="#face_blink" transform="translate(0 0)"/>
+  </g>
+  <g id="frame_idle_3" transform="translate(144 0)">
+    <use href="#left_leg" transform="translate(20 35)"/>
+    <use href="#right_leg" transform="translate(28 34)"/>
+    <use href="#sword" transform="translate(11 30)"/>
+    <use href="#torso" transform="translate(0 -1)"/>
+    <use href="#left_arm" transform="translate(17 28)"/>
+    <use href="#right_arm" transform="translate(31 28)"/>
+    <use href="#shield" transform="translate(34 25)"/>
+    <use href="#head" transform="translate(0 -1)"/>
+    <use href="#face" transform="translate(0 -1)"/>
+  </g>
+  <g id="frame_walk_4" transform="translate(192 0)">
+    <use href="#left_leg" transform="translate(16 35)"/>
+    <use href="#right_leg" transform="translate(31 32)"/>
+    <use href="#sword" transform="translate(10 31)"/>
+    <use href="#torso" transform="translate(0 0)"/>
+    <use href="#left_arm" transform="translate(16 29)"/>
+    <use href="#right_arm" transform="translate(32 29)"/>
+    <use href="#shield" transform="translate(35 26)"/>
+    <use href="#head" transform="translate(0 0)"/>
+    <use href="#face" transform="translate(0 0)"/>
+  </g>
+  <g id="frame_walk_5" transform="translate(240 0)">
+    <use href="#left_leg" transform="translate(18 34)"/>
+    <use href="#right_leg" transform="translate(30 33)"/>
+    <use href="#sword" transform="translate(12 30)"/>
+    <use href="#torso" transform="translate(1 0)"/>
+    <use href="#left_arm" transform="translate(18 29)"/>
+    <use href="#right_arm" transform="translate(30 29)"/>
+    <use href="#shield" transform="translate(34 26)"/>
+    <use href="#head" transform="translate(1 0)"/>
+    <use href="#face" transform="translate(1 0)"/>
+  </g>
+  <g id="frame_walk_6" transform="translate(288 0)">
+    <use href="#left_leg" transform="translate(20 33)"/>
+    <use href="#right_leg" transform="translate(32 34)"/>
+    <use href="#sword" transform="translate(12 31)"/>
+    <use href="#torso" transform="translate(0 -1)"/>
+    <use href="#left_arm" transform="translate(18 30)"/>
+    <use href="#right_arm" transform="translate(30 28)"/>
+    <use href="#shield" transform="translate(33 25)"/>
+    <use href="#head" transform="translate(0 -1)"/>
+    <use href="#face" transform="translate(0 -1)"/>
+  </g>
+  <g id="frame_walk_7" transform="translate(336 0)">
+    <use href="#left_leg" transform="translate(19 34)"/>
+    <use href="#right_leg" transform="translate(30 34)"/>
+    <use href="#sword" transform="translate(10 30)"/>
+    <use href="#torso" transform="translate(-1 0)"/>
+    <use href="#left_arm" transform="translate(16 29)"/>
+    <use href="#right_arm" transform="translate(32 29)"/>
+    <use href="#shield" transform="translate(36 26)"/>
+    <use href="#head" transform="translate(-1 0)"/>
+    <use href="#face" transform="translate(-1 0)"/>
+  </g>
+  <g id="frame_walk_8" transform="translate(384 0)">
+    <use href="#left_leg" transform="translate(18 35)"/>
+    <use href="#right_leg" transform="translate(29 32)"/>
+    <use href="#sword" transform="translate(10 29)"/>
+    <use href="#torso" transform="translate(0 0)"/>
+    <use href="#left_arm" transform="translate(16 28)"/>
+    <use href="#right_arm" transform="translate(31 30)"/>
+    <use href="#shield" transform="translate(34 27)"/>
+    <use href="#head" transform="translate(0 0)"/>
+    <use href="#face" transform="translate(0 0)"/>
+  </g>
+  <g id="frame_walk_9" transform="translate(432 0)">
+    <use href="#left_leg" transform="translate(17 34)"/>
+    <use href="#right_leg" transform="translate(30 33)"/>
+    <use href="#sword" transform="translate(11 30)"/>
+    <use href="#torso" transform="translate(0 0)"/>
+    <use href="#left_arm" transform="translate(17 29)"/>
+    <use href="#right_arm" transform="translate(31 29)"/>
+    <use href="#shield" transform="translate(35 26)"/>
+    <use href="#head" transform="translate(0 0)"/>
+    <use href="#face" transform="translate(0 0)"/>
+  </g>
+</svg>

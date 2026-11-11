@@ -1,4 +1,4 @@
-import { copyFile, mkdir, rm, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
@@ -32,7 +32,12 @@ for (const args of [
   if (result.status !== 0) process.exit(result.status || 1);
 }
 
-for (const name of ['index.html', 'site.css', 'game-loader.css', 'game-loader.mjs']) {
+const project = await readFile(path.join(root, 'project.godot'), 'utf8');
+const version = project.match(/^config\/version="([0-9]+\.[0-9]+\.[0-9]+)"$/m)?.[1];
+if (!version) throw new Error('project.godot에 올바른 application/config/version이 필요합니다.');
+const playerPath = path.join(output, 'play.html');
+await writeFile(playerPath, (await readFile(playerPath, 'utf8')).replaceAll('%GAME_VERSION%', version));
+for (const name of ['index.html', 'site.css', 'game-loader.css', 'game-loader.mjs', 'game-viewport.mjs']) {
   await copyFile(path.join(root, 'web', name), path.join(output, name));
 }
 for (const name of ['Pretendard-Regular.otf', 'Galmuri11-Bold.ttf', 'LICENSE-Galmuri.txt', 'LICENSE-Pretendard.txt']) {
@@ -41,6 +46,10 @@ for (const name of ['Pretendard-Regular.otf', 'Galmuri11-Bold.ttf', 'LICENSE-Gal
 await copyFile(
   path.join(root, 'assets', 'characters', 'warrior', 'warrior_key_art.svg'),
   path.join(output, 'assets', 'warrior_key_art.svg'),
+);
+await copyFile(
+  path.join(root, 'assets', 'characters', 'warrior', 'warrior_idle_walk.png'),
+  path.join(output, 'assets', 'warrior_idle_walk.png'),
 );
 for (const name of [
   'logo_symbol.png', 'logo_wordmark.png', 'favicon_16.png', 'favicon_32.png',

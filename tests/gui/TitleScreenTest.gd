@@ -11,17 +11,23 @@ func test_title_uses_galmuri_heading_and_pretendard_ui() -> void:
 	assert_that(start_button.get_theme_default_font().resource_path.get_file()).is_equal("Pretendard-Regular.otf")
 
 
-func test_title_shows_warrior_art_and_prototype_notice() -> void:
+func test_title_shows_animated_pixel_warrior_version_and_prototype_notice() -> void:
 	var runner := scene_runner("res://scenes/main/title.tscn")
 	var scene := runner.scene()
-	var illustration := scene.find_child("WarriorArt") as TextureRect
+	var illustration := scene.find_child("WarriorSprite") as AnimatedSprite2D
 	var notice := scene.find_child("PrototypeNotice") as Label
 
 	assert_that(illustration).is_not_null()
 	assert_that(notice).is_not_null()
 	if illustration == null or notice == null:
 		return
-	assert_that(illustration.texture).is_not_null()
+	assert_that(illustration.is_playing()).is_true()
+	assert_that(illustration.animation).is_equal(&"idle")
+	await assert_func(illustration, "get_frame").wait_until(1800).is_equal(1)
+	var version := scene.find_child("VersionLabel") as Label
+	assert_that(version).is_not_null()
+	if version != null:
+		assert_that(version.text).is_equal("v%s" % ProjectSettings.get_setting("application/config/version"))
 	assert_that(notice.text).contains("프로토타입")
 
 
@@ -73,6 +79,18 @@ func test_galmuri_import_uses_outlines_for_web_rendering() -> void:
 	assert_that(font_import.get_value("params", "disable_embedded_bitmaps")).is_equal(true)
 
 
+func test_start_press_immediately_locks_duplicate_transitions() -> void:
+	var runner := scene_runner("res://scenes/main/title.tscn")
+	var scene := runner.scene()
+	get_tree().current_scene = scene
+	var button := scene.find_child("StartButton") as Button
+	button.pressed.emit()
+	assert_that(button.disabled).is_true()
+	button.pressed.emit()
+	await runner.simulate_frames(2)
+	assert_that(_current_scene_path()).is_equal("res://scenes/main/game.tscn")
+
+
 func test_start_button_enters_game_with_player_state_and_idle_warrior() -> void:
 	var runner := scene_runner("res://scenes/main/title.tscn")
 	var title_scene := runner.scene()
@@ -87,7 +105,7 @@ func test_start_button_enters_game_with_player_state_and_idle_warrior() -> void:
 	assert_that(main_game.scene_file_path).is_equal("res://scenes/main/game.tscn")
 	var level := main_game.find_child("LevelValue") as Label
 	var gold := main_game.find_child("GoldValue") as Label
-	var idle := main_game.find_child("IdleAnimation") as AnimationPlayer
+	var idle := main_game.find_child("WarriorSprite") as AnimatedSprite2D
 	assert_that(level).is_not_null()
 	assert_that(gold).is_not_null()
 	assert_that(idle).is_not_null()
