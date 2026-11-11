@@ -71,7 +71,9 @@ godot --headless --editor --path . --import
 
 ## Web · Windows 릴리즈
 
-PowerShell 7에서 변경 사항을 검증·커밋한 뒤, 깨끗한 소스 작업 트리에서 버전 태그와 Godot 실행 파일을 지정해 빌드한다.
+[버전 정책](docs/VERSION_POLICY.md)과 [변경 이력](CHANGELOG.md)을 먼저 확인한다. 사용자 승인 없이 정식 버전을 확정하거나 배포하지 않는다. 아래 `v0.3.0`은 기존 명령 예시이며 같은 버전을 다시 게시하라는 지시가 아니다.
+
+PowerShell 7에서 변경 사항을 검증·커밋한 뒤, 승인받은 버전과 일치하는 깨끗한 소스 작업 트리에서 버전 태그와 Godot 실행 파일을 지정해 빌드한다.
 
 ```powershell
 .\scripts\release\build.ps1 -Version v0.3.0 -Godot "C:\Tools\Godot\Godot_v4.4.1-stable_win64_console.exe"
@@ -100,6 +102,9 @@ GdUnit4 v5.1.1의 SceneRunner로 글꼴, 실제 리소스 준비, 로딩 실패/
 
 ## 프로젝트 문서
 
+- [버전 관리 정책](docs/VERSION_POLICY.md)
+- [변경 이력](CHANGELOG.md)
+- [화면·캐릭터 품질 복구 조사 및 검증](docs/VISUAL_QUALITY_RECOVERY.md)
 - [종합 게임 기획서](docs/GAME_DESIGN.md)
 - [아트 가이드](docs/ART_GUIDE.md)
 - [캐릭터 스프라이트 제작 지침](docs/CHARACTER_SPRITE_STANDARD.md)
