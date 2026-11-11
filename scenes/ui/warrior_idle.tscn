@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/warrior_preview.gd" id="1_preview"]
-[ext_resource type="PackedScene" path="res://scenes/characters/warrior_sprite.tscn" id="2_warrior"]
+[ext_resource type="PackedScene" path="res://scenes/characters/concept_warrior.tscn" id="2_warrior"]
 
 [node name="IdleWarrior" type="Control"]
 layout_mode = 3

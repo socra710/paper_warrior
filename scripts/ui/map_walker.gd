@@ -2,6 +2,7 @@ extends Control
 
 const WAYPOINTS := [Vector2(0.25, 0.65), Vector2(0.72, 0.45), Vector2(0.62, 0.78), Vector2(0.28, 0.4)]
 const WALK_SPEED := 36.0
+const RUN_SPEED := 60.0
 
 var _target_index := 1
 var _pause_remaining := 0.0
@@ -38,8 +39,9 @@ func _process(delta: float) -> void:
 	var direction := target - warrior.position
 	if absf(direction.x) > 0.1:
 		warrior.flip_h = direction.x < 0.0
-	warrior.play("walk")
-	warrior.position = warrior.position.move_toward(target, WALK_SPEED * delta)
+	var running := _target_index == 2
+	warrior.play("run" if running else "walk")
+	warrior.position = warrior.position.move_toward(target, (RUN_SPEED if running else WALK_SPEED) * delta)
 	if warrior.position.distance_to(target) < 0.5:
 		_target_index = (_target_index + 1) % WAYPOINTS.size()
 		_pause_remaining = 0.65

@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "asset_key": "concept_idle_walk_run",
+  "reference": "docs/images/paper-warrior-concept-sheet.png: large left hero",
+  "reference_profile": "concept_pixel_96",
+  "frame_size": {"width": 96, "height": 96},
+  "frame_count": 16,
+  "anchor": {"center_x": 48, "ground_baseline_y": 88},
+  "node": {"name": "WarriorSprite", "scale": [0.75, 0.75], "default_animation": "idle"},
+  "transform_format": "[integer dx, integer dy, integer angle_degrees]; rotation around named integer pivot, then translation",
+  "attachment": "Thigh pivots move with hip_offset under the overlapping tunic hem; boots swing under thighs, never directly from head. Sword and shield use the identical shoulder transform as their gripping arm. The face only translates rigidly with the head.",
+  "face_validation": {
+    "roi": [42, 31, 24, 22],
+    "eyes": [[45, 34, 3, 7], [59, 35, 3, 7]],
+    "smile_ink_samples": [[48, 45], [51, 47], [55, 49], [59, 46]],
+    "paper_samples": [[60, 34], [52, 44], [55, 46], [55, 50], [48, 54], [48, 57]]
+  },
+  "palette": {
+    "ink": "#26354a",
+    "cape_fold": "#5390b3",
+    "paper_blue": "#78b8cf",
+    "mint": "#a5ddd8",
+    "mint_light": "#c6e8d8",
+    "cream_fold": "#e4edcf",
+    "cream": "#fff3cf",
+    "cream_light": "#fff8df",
+    "steel_fold": "#a6b8ce",
+    "guard": "#efbd67",
+    "gold_light": "#ffe2a0",
+    "grip": "#ad8158",
+    "shield_blue": "#6688c1",
+    "shield_light": "#91b8de"
+  },
+  "render_order": ["cape", "left_thigh", "right_thigh", "left_boot", "right_boot", "torso", "left_arm", "right_arm", "head", "face", "sword", "shield"],
+  "part_pivots": {
+    "cape": [33, 54],
+    "left_thigh": [39, 72],
+    "right_thigh": [57, 72],
+    "left_boot": [39, 78],
+    "right_boot": [57, 78],
+    "torso": [48, 72],
+    "left_arm": [32, 58],
+    "right_arm": [65, 58],
+    "sword": [32, 58],
+    "head": [48, 35],
+    "face": [48, 35],
+    "shield": [65, 58]
+  },
+  "animation_order": ["idle", "walk", "run"],
+  "animations": {
+    "idle": {
+      "fps": 4,
+      "loop": true,
+      "frames": [
+        {"pose":"idle_0","flight":false,"hip_offset":[0,0],"parts":{
+          "cape":[0,0,0],"left_thigh":[0,0,0],"right_thigh":[0,0,0],"left_boot":[0,0,0],"right_boot":[0,0,0],
+          "torso":[0,0,0],"left_arm":[0,0,0],"right_arm":[0,0,0],"sword":[0,0,0],"head":[0,0,0],"face":[0,0,0],"shield":[0,0,0]}},
+        {"pose":"idle_1","flight":false,"hip_offset":[0,-1],"parts":{
+          "cape":[0,-1,0],"left_thigh":[0,-1,0],"right_thigh":[0,-1,0],"left_boot":[0,0,0],"right_boot":[0,0,0],
+          "torso":[0,-1,0],"left_arm":[0,-1,0],"right_arm":[0,-1,0],"sword":[0,-1,0],"head":[0,-1,0],"face":[0,-1,0],"shield":[0,-1,0]}},
+        {"pose":"idle_2","flight":false,"hip_offset":[0,-1],"parts":{
+          "cape":[0,-1,1],"left_thigh":[0,-1,0],"right_thigh":[0,-1,0],"left_boot":[0,0,0],"right_boot":[0,0,0],
+          "torso":[0,-1,0],"left_arm":[0,-1,1],"right_arm":[0,-1,-1],"sword":[0,-1,1],"head":[0,-1,0],"face":[0,-1,0],"shield":[0,-1,-1]}},
+        {"pose":"idle_3","flight":false,"hip_offset":[0,0],"parts":{
+          "cape":[0,0,1],"left_thigh":[0,0,0],"right_thigh":[0,0,0],"left_boot":[0,0,0],"right_boot":[0,0,0],
+          "torso":[0,0,0],"left_arm":[0,0,1],"right_arm":[0,0,-1],"sword":[0,0,1],"head":[0,0,0],"face":[0,0,0],"shield":[0,0,-1]}}
+      ]
+    },
+    "walk": {
+      "fps": 8,
+      "loop": true,
+      "frames": [
+        {"pose":"walk_0","flight":false,"hip_offset":[0,0],"parts":{
+          "cape":[-1,0,2],"left_thigh":[0,0,0],"right_thigh":[0,0,0],"left_boot":[-3,0,0],"right_boot":[3,-2,0],
+          "torso":[0,0,0],"left_arm":[-1,0,-3],"right_arm":[1,0,3],"sword":[-1,0,-3],"head":[0,0,0],"face":[0,0,0],"shield":[1,0,3]}},
+        {"pose":"walk_1","flight":false,"hip_offset":[0,-1],"parts":{
+          "cape":[-1,-1,3],"left_thigh":[0,-1,0],"right_thigh":[0,-1,0],"left_boot":[-1,0,0],"right_boot":[1,-3,0],
+          "torso":[0,-1,0],"left_arm":[0,-1,-2],"right_arm":[0,-1,2],"sword":[0,-1,-2],"head":[0,-1,0],"face":[0,-1,0],"shield":[0,-1,2]}},
+        {"pose":"walk_2","flight":false,"hip_offset":[0,-1],"parts":{
+          "cape":[0,-1,2],"left_thigh":[0,-1,0],"right_thigh":[0,-1,0],"left_boot":[2,-2,0],"right_boot":[-2,0,0],
+          "torso":[0,-1,0],"left_arm":[1,-1,2],"right_arm":[-1,-1,-2],"sword":[1,-1,2],"head":[0,-1,0],"face":[0,-1,0],"shield":[-1,-1,-2]}},
+        {"pose":"walk_3","flight":false,"hip_offset":[0,0],"parts":{
+          "cape":[0,0,1],"left_thigh":[0,0,0],"right_thigh":[0,0,0],"left_boot":[3,-2,0],"right_boot":[-3,0,0],
+          "torso":[0,0,0],"left_arm":[1,0,3],"right_arm":[-1,0,-3],"sword":[1,0,3],"head":[0,0,0],"face":[0,0,0],"shield":[-1,0,-3]}},
+        {"pose":"walk_4","flight":false,"hip_offset":[0,-1],"parts":{
+          "cape":[-1,-1,1],"left_thigh":[0,-1,0],"right_thigh":[0,-1,0],"left_boot":[1,-3,0],"right_boot":[-1,0,0],
+          "torso":[0,-1,0],"left_arm":[0,-1,2],"right_arm":[0,-1,-2],"sword":[0,-1,2],"head":[0,-1,0],"face":[0,-1,0],"shield":[0,-1,-2]}},
+        {"pose":"walk_5","flight":false,"hip_offset":[0,-1],"parts":{
+          "cape":[-1,-1,2],"left_thigh":[0,-1,0],"right_thigh":[0,-1,0],"left_boot":[-2,0,0],"right_boot":[2,-2,0],
+          "torso":[0,-1,0],"left_arm":[-1,-1,-2],"right_arm":[1,-1,2],"sword":[-1,-1,-2],"head":[0,-1,0],"face":[0,-1,0],"shield":[1,-1,2]}}
+      ]
+    },
+    "run": {
+      "fps": 12,
+      "loop": true,
+      "frames": [
+        {"pose":"run_0","flight":false,"hip_offset":[0,0],"parts":{
+          "cape":[-2,-1,8],"left_thigh":[0,0,0],"right_thigh":[0,0,0],"left_boot":[-6,0,0],"right_boot":[5,-4,0],
+          "torso":[1,0,-5],"left_arm":[0,-1,-7],"right_arm":[2,-1,7],"sword":[0,-1,-7],"head":[2,-1,0],"face":[2,-1,0],"shield":[2,-1,7]}},
+        {"pose":"run_1","flight":false,"hip_offset":[0,-2],"parts":{
+          "cape":[-2,-2,10],"left_thigh":[0,-2,0],"right_thigh":[0,-2,0],"left_boot":[-3,0,0],"right_boot":[3,-5,0],
+          "torso":[1,-2,-5],"left_arm":[1,-3,-5],"right_arm":[1,-3,5],"sword":[1,-3,-5],"head":[2,-3,0],"face":[2,-3,0],"shield":[1,-3,5]}},
+        {"pose":"run_2","flight":true,"hip_offset":[0,-3],"parts":{
+          "cape":[-1,-3,8],"left_thigh":[0,-3,0],"right_thigh":[0,-3,0],"left_boot":[3,-4,0],"right_boot":[-3,-3,0],
+          "torso":[1,-3,-5],"left_arm":[2,-4,5],"right_arm":[0,-4,-5],"sword":[2,-4,5],"head":[2,-4,0],"face":[2,-4,0],"shield":[0,-4,-5]}},
+        {"pose":"run_3","flight":false,"hip_offset":[0,0],"parts":{
+          "cape":[-1,0,6],"left_thigh":[0,0,0],"right_thigh":[0,0,0],"left_boot":[6,-4,0],"right_boot":[-5,0,0],
+          "torso":[1,0,-5],"left_arm":[2,-1,7],"right_arm":[0,-1,-7],"sword":[2,-1,7],"head":[2,-1,0],"face":[2,-1,0],"shield":[0,-1,-7]}},
+        {"pose":"run_4","flight":false,"hip_offset":[0,-2],"parts":{
+          "cape":[-2,-1,6],"left_thigh":[0,-2,0],"right_thigh":[0,-2,0],"left_boot":[3,-5,0],"right_boot":[-3,0,0],
+          "torso":[1,-2,-5],"left_arm":[1,-3,5],"right_arm":[1,-3,-5],"sword":[1,-3,5],"head":[2,-3,0],"face":[2,-3,0],"shield":[1,-3,-5]}},
+        {"pose":"run_5","flight":true,"hip_offset":[0,-3],"parts":{
+          "cape":[-2,-2,8],"left_thigh":[0,-3,0],"right_thigh":[0,-3,0],"left_boot":[-3,-3,0],"right_boot":[3,-4,0],
+          "torso":[1,-3,-5],"left_arm":[0,-4,-5],"right_arm":[2,-4,5],"sword":[0,-4,-5],"head":[2,-4,0],"face":[2,-4,0],"shield":[2,-4,5]}}
+      ]
+    }
+  }
+}

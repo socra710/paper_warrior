@@ -68,6 +68,25 @@ func test_small_pixel_warrior_walks_inside_the_map() -> void:
 	assert_that(warrior.is_playing()).is_true()
 
 
+func test_preview_supports_run_and_grounded_idle_without_gameplay_changes() -> void:
+	var runner := scene_runner("res://scenes/main/game.tscn")
+	await runner.simulate_frames(3)
+	var walker := runner.scene().find_child("MapWalker") as Control
+	var warrior := walker.get_node("WarriorSprite") as AnimatedSprite2D
+	walker.set("_pause_remaining", 0.0)
+	walker.set("_target_index", 2)
+	walker.call("_process", 0.05)
+	assert_that(warrior.animation).is_equal("run")
+	walker.set("_pause_remaining", 0.5)
+	walker.call("_process", 0.05)
+	assert_that(warrior.animation).is_equal("idle")
+	var shadow := warrior.get_node_or_null("FootShadow") as CanvasItem
+	assert_that(shadow).is_not_null()
+	if shadow:
+		assert_that(shadow.show_behind_parent).is_true()
+	assert_that((runner.scene().find_child("GoldValue") as Label).text).is_equal("골드 0")
+
+
 func test_rotation_preserves_game_and_open_menu_with_no_clipped_controls() -> void:
 	var runner := scene_runner("res://scenes/main/game.tscn")
 	var scene := runner.scene()

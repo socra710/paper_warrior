@@ -1,0 +1,313 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1536" height="96" viewBox="0 0 1536 96" shape-rendering="crispEdges">
+  <title>Concept-sheet Paper Warrior: idle 4, walk 6, run 6</title>
+  <desc>Shared integer-pivot anatomy. Center 48, foot baseline 88. Face rigid; folded tunic overlaps fixed hip roots; equipment follows gripping arms. PNG is palette-snapped binary-alpha pixel master. No baked shadow.</desc>
+<defs>
+    <g id="cape">
+      <path fill="#26354a" d="M29 50H37V64H34V69H31V75H28V80H24V82H18V80H15V77H12V74H9V70H12V67H16V63H20V59H24V54H29Z"/>
+      <path fill="#78b8cf" d="M30 53H34V63H31V68H28V73H25V78H20V77H17V74H14V71H17V68H21V64H25V60H28V56H30Z"/>
+      <path fill="#5390b3" d="M30 53H34V63H31V68H28V73H25V78H22V74H24V69H26V64H28V58H30Z"/>
+      <path fill="#a5ddd8" d="M14 71H17V68H21V64H24V65H22V69H19V73H16V74H14Z"/>
+    </g>
+    <g id="left_thigh">
+      <path fill="#26354a" d="M34 69H46V82H33V76H34Z"/>
+      <path fill="#78b8cf" d="M36 71H44V80H35V76H36Z"/>
+      <path fill="#a5ddd8" d="M36 72H40V79H35V76H36Z"/>
+    </g>
+    <g id="right_thigh">
+      <path fill="#26354a" d="M51 69H63V76H65V82H52Z"/>
+      <path fill="#5390b3" d="M53 71H61V77H63V80H54Z"/>
+      <path fill="#78b8cf" d="M56 72H61V77H63V80H56Z"/>
+    </g>
+    <g id="left_boot">
+      <path fill="#26354a" d="M33 76H46V81H45V83H43V85H42V88H29V85H30V83H31V81H32V79H33Z"/>
+      <path fill="#78b8cf" d="M35 78H43V80H42V82H41V84H40V86H32V84H33V82H34V80H35Z"/>
+      <path fill="#a5ddd8" d="M35 78H39V80H38V82H36V84H35V86H32V84H33V82H34V80H35Z"/>
+    </g>
+    <g id="right_boot">
+      <path fill="#26354a" d="M52 76H64V81H65V88H52V84H51V80H52Z"/>
+      <path fill="#78b8cf" d="M54 78H62V82H63V85H55V82H54Z"/>
+      <path fill="#a5ddd8" d="M58 78H62V82H63V85H58Z"/>
+    </g>
+    <g id="torso">
+      <path fill="#26354a" d="M35 51H61V55H63V62H65V68H67V77H29V73H30V68H32V60H34V55H35Z"/>
+      <path fill="#78b8cf" d="M37 54H59V57H61V64H63V70H64V74H33V70H34V64H36V57H37Z"/>
+      <path fill="#a5ddd8" d="M37 59H51V62H47V65H42V68H37V71H34V68H35V63H37Z"/>
+      <path fill="#e4edcf" d="M51 58H59V63H61V68H63V74H42V68H46V65H50V62H51Z"/>
+      <path fill="#fff3cf" d="M56 60H59V64H61V69H63V74H55V66H56Z"/>
+      <path fill="#5390b3" d="M36 54H60V57H52V59H43V60H36Z"/>
+      <path fill="#c6e8d8" d="M35 71H42V73H63V74H34V73H35Z"/>
+      <path fill="#26354a" d="M33 74H65V77H32V75H33Z"/>
+    </g>
+    <g id="left_arm">
+      <path fill="#26354a" d="M27 53H34V56H37V64H34V67H25V64H22V57H24V54H27Z"/>
+      <path fill="#a5ddd8" d="M27 56H32V58H34V63H32V64H27V62H25V58H27Z"/>
+      <path fill="#78b8cf" d="M25 59H28V62H33V64H27V62H25Z"/>
+      <path fill="#fff3cf" d="M27 56H31V58H27Z"/>
+    </g>
+    <g id="right_arm">
+      <path fill="#26354a" d="M60 53H69V55H73V58H75V64H71V67H64V64H58V56H60Z"/>
+      <path fill="#a5ddd8" d="M61 56H66V62H61Z"/>
+      <path fill="#a5ddd8" d="M65 56H68V58H71V60H72V62H69V64H65V62H64V58H65Z"/>
+      <path fill="#78b8cf" d="M64 60H67V62H70V64H65V62H64Z"/>
+    </g>
+    <g id="sword">
+      <path fill="#26354a" d="M12 25H15V27H18V29H20V34H22V39H24V44H26V49H29V54H25V57H21V52H19V47H17V42H15V37H12V32H11V28H12Z"/>
+      <path fill="#fff3cf" d="M14 29H16V31H18V35H20V40H22V45H24V50H26V52H23V49H21V44H19V39H17V35H14Z"/>
+      <path fill="#e4edcf" d="M14 34H17V39H19V44H21V49H23V53H22V50H20V45H18V40H16V36H14Z"/>
+      <path fill="#a6b8ce" d="M14 35H16V39H18V44H20V49H22V53H20V49H18V44H16V39H14Z"/>
+      <path fill="#26354a" d="M24 55H29V59H31V64H26V62H24V58H23V56Z"/>
+      <path fill="#ad8158" d="M26 57H28V60H29V62H27V60H26Z"/>
+      <path fill="#26354a" d="M29 49H32V54H30V56H26V58H22V60H17V55H19V53H24V51H29Z"/>
+      <path fill="#efbd67" d="M29 52H30V53H28V55H24V57H19V56H21V55H25V53H29Z"/>
+      <path fill="#ffe2a0" d="M25 53H29V54H25V55H21V56H19V55H21V54H25Z"/>
+    </g>
+    <g id="head">
+      <path fill="#26354a" d="M29 12H36V19H34V39H32V57H25V55H22V52H20V45H19V34H17V28H20V25H23V21H26V17H29Z"/>
+      <path fill="#5390b3" d="M29 17H32V28H30V45H29V53H26V52H24V48H23V40H22V32H21V29H24V26H27V22H29Z"/>
+      <path fill="#78b8cf" d="M29 18H31V27H29V36H27V46H25V39H24V32H23V29H26V26H28V22H29Z"/>
+      <path fill="#26354a" d="M31 12H43V13H55V15H67V17H71V39H70V59H57V57H43V55H29V30H30V16H31Z"/>
+      <path fill="#fff3cf" d="M33 15H43V16H55V18H67V20H68V38H67V57H57V55H43V53H32V30H33Z"/>
+      <path fill="#e4edcf" d="M44 16H55V18H59V56H57V55H43V53H40V29H42V18H44Z"/>
+      <path fill="#c6e8d8" d="M33 15H41V16H44V27H43V40H42V53H32V30H33Z"/>
+      <path fill="#a5ddd8" d="M33 16H36V17H35V34H34V51H32V30H33Z"/>
+      <path fill="#fff8df" d="M44 16H55V18H67V20H55V19H44Z"/>
+      <path fill="#e4edcf" d="M59 51H64V55H67V57H58V55H54V54H59Z"/>
+    </g>
+    <g id="face">
+      <path fill="#26354a" d="M45 34H48V41H45ZM59 35H62V42H59ZM48 44H50V46H53V47H58V45H60V48H58V50H53V49H50V48H48Z"/>
+    </g>
+    <g id="shield">
+      <path fill="#26354a" d="M72 51H77V53H81V56H85V59H86V67H84V73H81V77H77V80H73V78H69V75H66V71H64V58H67V55H72Z"/>
+      <path fill="#e4edcf" d="M72 54H76V56H80V58H82V60H83V67H81V72H78V76H75V77H73V75H70V72H68V68H67V59H70V57H72Z"/>
+      <path fill="#a6b8ce" d="M67 59H69V67H70V71H73V74H76V76H75V77H73V75H70V72H68V68H67Z"/>
+      <path fill="#6688c1" d="M73 57H75V58H78V60H80V62H80V67H78V71H76V73H74V73H72V71H71V67H70V61H72V59H73Z"/>
+      <path fill="#91b8de" d="M73 57H75V58H78V60H79V62H77V60H74V61H72V65H71V61H72V59H73Z"/>
+      <path fill="#ffe2a0" d="M75 61H76V64H77V65H80V67H77V68H76V72H74V69H73V68H71V66H74V64H75Z"/>
+      <path fill="#fff8df" d="M75 62H76V65H78V66H76V69H75V67H73V66H75Z"/>
+    </g>
+  </defs>
+  <g id="idle_0" transform="translate(0 0)">
+    <use href="#cape" transform="translate(0 0) rotate(0 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 0) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 0) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(0 0) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(0 0) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(0 0) rotate(0 48 72)"/>
+    <use href="#left_arm" transform="translate(0 0) rotate(0 32 58)"/>
+    <use href="#right_arm" transform="translate(0 0) rotate(0 65 58)"/>
+    <use href="#head" transform="translate(0 0) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(0 0) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(0 0) rotate(0 32 58)"/>
+    <use href="#shield" transform="translate(0 0) rotate(0 65 58)"/>
+  </g>
+  <g id="idle_1" transform="translate(96 0)">
+    <use href="#cape" transform="translate(0 -1) rotate(0 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 -1) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 -1) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(0 0) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(0 0) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(0 -1) rotate(0 48 72)"/>
+    <use href="#left_arm" transform="translate(0 -1) rotate(0 32 58)"/>
+    <use href="#right_arm" transform="translate(0 -1) rotate(0 65 58)"/>
+    <use href="#head" transform="translate(0 -1) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(0 -1) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(0 -1) rotate(0 32 58)"/>
+    <use href="#shield" transform="translate(0 -1) rotate(0 65 58)"/>
+  </g>
+  <g id="idle_2" transform="translate(192 0)">
+    <use href="#cape" transform="translate(0 -1) rotate(1 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 -1) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 -1) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(0 0) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(0 0) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(0 -1) rotate(0 48 72)"/>
+    <use href="#left_arm" transform="translate(0 -1) rotate(1 32 58)"/>
+    <use href="#right_arm" transform="translate(0 -1) rotate(-1 65 58)"/>
+    <use href="#head" transform="translate(0 -1) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(0 -1) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(0 -1) rotate(1 32 58)"/>
+    <use href="#shield" transform="translate(0 -1) rotate(-1 65 58)"/>
+  </g>
+  <g id="idle_3" transform="translate(288 0)">
+    <use href="#cape" transform="translate(0 0) rotate(1 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 0) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 0) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(0 0) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(0 0) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(0 0) rotate(0 48 72)"/>
+    <use href="#left_arm" transform="translate(0 0) rotate(1 32 58)"/>
+    <use href="#right_arm" transform="translate(0 0) rotate(-1 65 58)"/>
+    <use href="#head" transform="translate(0 0) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(0 0) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(0 0) rotate(1 32 58)"/>
+    <use href="#shield" transform="translate(0 0) rotate(-1 65 58)"/>
+  </g>
+  <g id="walk_0" transform="translate(384 0)">
+    <use href="#cape" transform="translate(-1 0) rotate(2 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 0) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 0) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(-3 0) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(3 -2) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(0 0) rotate(0 48 72)"/>
+    <use href="#left_arm" transform="translate(-1 0) rotate(-3 32 58)"/>
+    <use href="#right_arm" transform="translate(1 0) rotate(3 65 58)"/>
+    <use href="#head" transform="translate(0 0) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(0 0) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(-1 0) rotate(-3 32 58)"/>
+    <use href="#shield" transform="translate(1 0) rotate(3 65 58)"/>
+  </g>
+  <g id="walk_1" transform="translate(480 0)">
+    <use href="#cape" transform="translate(-1 -1) rotate(3 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 -1) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 -1) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(-1 0) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(1 -3) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(0 -1) rotate(0 48 72)"/>
+    <use href="#left_arm" transform="translate(0 -1) rotate(-2 32 58)"/>
+    <use href="#right_arm" transform="translate(0 -1) rotate(2 65 58)"/>
+    <use href="#head" transform="translate(0 -1) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(0 -1) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(0 -1) rotate(-2 32 58)"/>
+    <use href="#shield" transform="translate(0 -1) rotate(2 65 58)"/>
+  </g>
+  <g id="walk_2" transform="translate(576 0)">
+    <use href="#cape" transform="translate(0 -1) rotate(2 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 -1) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 -1) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(2 -2) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(-2 0) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(0 -1) rotate(0 48 72)"/>
+    <use href="#left_arm" transform="translate(1 -1) rotate(2 32 58)"/>
+    <use href="#right_arm" transform="translate(-1 -1) rotate(-2 65 58)"/>
+    <use href="#head" transform="translate(0 -1) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(0 -1) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(1 -1) rotate(2 32 58)"/>
+    <use href="#shield" transform="translate(-1 -1) rotate(-2 65 58)"/>
+  </g>
+  <g id="walk_3" transform="translate(672 0)">
+    <use href="#cape" transform="translate(0 0) rotate(1 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 0) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 0) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(3 -2) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(-3 0) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(0 0) rotate(0 48 72)"/>
+    <use href="#left_arm" transform="translate(1 0) rotate(3 32 58)"/>
+    <use href="#right_arm" transform="translate(-1 0) rotate(-3 65 58)"/>
+    <use href="#head" transform="translate(0 0) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(0 0) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(1 0) rotate(3 32 58)"/>
+    <use href="#shield" transform="translate(-1 0) rotate(-3 65 58)"/>
+  </g>
+  <g id="walk_4" transform="translate(768 0)">
+    <use href="#cape" transform="translate(-1 -1) rotate(1 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 -1) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 -1) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(1 -3) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(-1 0) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(0 -1) rotate(0 48 72)"/>
+    <use href="#left_arm" transform="translate(0 -1) rotate(2 32 58)"/>
+    <use href="#right_arm" transform="translate(0 -1) rotate(-2 65 58)"/>
+    <use href="#head" transform="translate(0 -1) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(0 -1) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(0 -1) rotate(2 32 58)"/>
+    <use href="#shield" transform="translate(0 -1) rotate(-2 65 58)"/>
+  </g>
+  <g id="walk_5" transform="translate(864 0)">
+    <use href="#cape" transform="translate(-1 -1) rotate(2 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 -1) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 -1) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(-2 0) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(2 -2) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(0 -1) rotate(0 48 72)"/>
+    <use href="#left_arm" transform="translate(-1 -1) rotate(-2 32 58)"/>
+    <use href="#right_arm" transform="translate(1 -1) rotate(2 65 58)"/>
+    <use href="#head" transform="translate(0 -1) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(0 -1) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(-1 -1) rotate(-2 32 58)"/>
+    <use href="#shield" transform="translate(1 -1) rotate(2 65 58)"/>
+  </g>
+  <g id="run_0" transform="translate(960 0)">
+    <use href="#cape" transform="translate(-2 -1) rotate(8 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 0) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 0) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(-6 0) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(5 -4) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(1 0) rotate(-5 48 72)"/>
+    <use href="#left_arm" transform="translate(0 -1) rotate(-7 32 58)"/>
+    <use href="#right_arm" transform="translate(2 -1) rotate(7 65 58)"/>
+    <use href="#head" transform="translate(2 -1) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(2 -1) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(0 -1) rotate(-7 32 58)"/>
+    <use href="#shield" transform="translate(2 -1) rotate(7 65 58)"/>
+  </g>
+  <g id="run_1" transform="translate(1056 0)">
+    <use href="#cape" transform="translate(-2 -2) rotate(10 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 -2) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 -2) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(-3 0) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(3 -5) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(1 -2) rotate(-5 48 72)"/>
+    <use href="#left_arm" transform="translate(1 -3) rotate(-5 32 58)"/>
+    <use href="#right_arm" transform="translate(1 -3) rotate(5 65 58)"/>
+    <use href="#head" transform="translate(2 -3) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(2 -3) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(1 -3) rotate(-5 32 58)"/>
+    <use href="#shield" transform="translate(1 -3) rotate(5 65 58)"/>
+  </g>
+  <g id="run_2" transform="translate(1152 0)">
+    <use href="#cape" transform="translate(-1 -3) rotate(8 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 -3) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 -3) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(3 -4) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(-3 -3) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(1 -3) rotate(-5 48 72)"/>
+    <use href="#left_arm" transform="translate(2 -4) rotate(5 32 58)"/>
+    <use href="#right_arm" transform="translate(0 -4) rotate(-5 65 58)"/>
+    <use href="#head" transform="translate(2 -4) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(2 -4) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(2 -4) rotate(5 32 58)"/>
+    <use href="#shield" transform="translate(0 -4) rotate(-5 65 58)"/>
+  </g>
+  <g id="run_3" transform="translate(1248 0)">
+    <use href="#cape" transform="translate(-1 0) rotate(6 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 0) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 0) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(6 -4) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(-5 0) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(1 0) rotate(-5 48 72)"/>
+    <use href="#left_arm" transform="translate(2 -1) rotate(7 32 58)"/>
+    <use href="#right_arm" transform="translate(0 -1) rotate(-7 65 58)"/>
+    <use href="#head" transform="translate(2 -1) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(2 -1) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(2 -1) rotate(7 32 58)"/>
+    <use href="#shield" transform="translate(0 -1) rotate(-7 65 58)"/>
+  </g>
+  <g id="run_4" transform="translate(1344 0)">
+    <use href="#cape" transform="translate(-2 -1) rotate(6 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 -2) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 -2) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(3 -5) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(-3 0) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(1 -2) rotate(-5 48 72)"/>
+    <use href="#left_arm" transform="translate(1 -3) rotate(5 32 58)"/>
+    <use href="#right_arm" transform="translate(1 -3) rotate(-5 65 58)"/>
+    <use href="#head" transform="translate(2 -3) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(2 -3) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(1 -3) rotate(5 32 58)"/>
+    <use href="#shield" transform="translate(1 -3) rotate(-5 65 58)"/>
+  </g>
+  <g id="run_5" transform="translate(1440 0)">
+    <use href="#cape" transform="translate(-2 -2) rotate(8 33 54)"/>
+    <use href="#left_thigh" transform="translate(0 -3) rotate(0 39 72)"/>
+    <use href="#right_thigh" transform="translate(0 -3) rotate(0 57 72)"/>
+    <use href="#left_boot" transform="translate(-3 -3) rotate(0 39 78)"/>
+    <use href="#right_boot" transform="translate(3 -4) rotate(0 57 78)"/>
+    <use href="#torso" transform="translate(1 -3) rotate(-5 48 72)"/>
+    <use href="#left_arm" transform="translate(0 -4) rotate(-5 32 58)"/>
+    <use href="#right_arm" transform="translate(2 -4) rotate(5 65 58)"/>
+    <use href="#head" transform="translate(2 -4) rotate(0 48 35)"/>
+    <use href="#face" transform="translate(2 -4) rotate(0 48 35)"/>
+    <use href="#sword" transform="translate(0 -4) rotate(-5 32 58)"/>
+    <use href="#shield" transform="translate(2 -4) rotate(5 65 58)"/>
+  </g>
+</svg>
