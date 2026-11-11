@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/ui/start_screen.tscn" id="1_screen"]
+[ext_resource type="Script" path="res://scripts/main/loading.gd" id="2_script"]
+
+[node name="Loading" instance=ExtResource("1_screen")]
+script = ExtResource("2_script")
+
+[node name="PhaseLabel" parent="Footer" index="0"]
+text = "모험의 첫 장을 펼치는 중..."
+
+[node name="PrototypeNotice" parent="Footer" index="2"]
+text = "잠시 후 시작 화면으로 이동해요"

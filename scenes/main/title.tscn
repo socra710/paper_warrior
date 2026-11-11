@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/ui/start_screen.tscn" id="1_screen"]
+[ext_resource type="Script" path="res://scripts/main/title.gd" id="2_script"]
+
+[node name="Title" instance=ExtResource("1_screen")]
+script = ExtResource("2_script")
+
+[node name="PhaseLabel" parent="Footer" index="0"]
+visible = false
+
+[node name="StartButton" parent="Footer" index="1"]
+visible = true
+
+[node name="PrototypeNotice" parent="Footer" index="2"]
+text = "개발 중인 프로토타입 · 시작하면 빈 게임 화면으로 이동해요"

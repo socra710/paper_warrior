@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f4e9">
+  <title>종이전사 — 웹에서 플레이</title>
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="assets/favicon_32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/apple_touch_icon.png">
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="game-loader.css">
+  $GODOT_HEAD_INCLUDE
+</head>
+<body class="play-page">
+  <a class="skip-link" href="#game-area">게임으로 건너뛰기</a>
+  <nav class="play-navigation" aria-label="플레이 페이지 메뉴"><a href="./">← 게임 소개</a><a href="https://github.com/socra710/paper_warrior_releases/releases">다운로드 · 릴리즈 ↗</a></nav>
+  <main class="player-column">
+    <header class="player-heading">
+      <a class="brand" href="./" aria-label="종이전사 소개">
+        <img class="brand-logo" src="assets/logo_wordmark.png" width="704" height="224" alt="종이전사 · PAPER WARRIOR">
+      </a>
+      <span class="prototype-badge">첫 번째 접힘</span>
+    </header>
+    <section class="game-window" id="game-area" aria-label="종이전사 게임">
+      <div class="window-chrome"><span>한 장의 작은 모험</span><span aria-hidden="true">✦</span></div>
+      <div class="game-viewport">
+        <canvas id="canvas" width="480" height="640" tabindex="0" aria-label="종이전사 게임 화면">이 브라우저는 게임 캔버스를 지원하지 않습니다.</canvas>
+        <div class="boot-screen" id="boot-screen">
+          <p class="boot-eyebrow">한 장의 종이가 용기가 되는 순간</p>
+          <h1>종이전사</h1>
+          <img src="assets/warrior_key_art.svg" width="480" height="420" alt="" class="boot-art">
+          <div class="boot-status">
+            <p id="boot-status" role="status" aria-live="polite">모험을 준비하고 있어요...</p>
+            <progress id="boot-progress" aria-label="게임 다운로드 진행률"></progress>
+            <button type="button" class="button button-outline" id="retry" hidden>다시 시도하기</button>
+          </div>
+        </div>
+      </div>
+      <div class="window-footer"><span>차근차근 접어 가는 중이에요</span><span>초기 개발 버전</span></div>
+    </section>
+    <aside class="play-description" aria-label="프로토타입 안내">
+      <p class="play-tagline">한 장의 종이에서, 나만의 모험으로.</p>
+      <p>스플래시 → 로딩 → 타이틀을 지나<br><strong>모험 시작하기</strong>를 누르면 빈 게임 화면으로 이동해요.</p>
+      <span>전투 · 성장 · 저장 기능은 아직 준비 중입니다.</span>
+    </aside>
+    <footer class="play-footer"><span>© 종이전사</span><a href="./">게임 소개로 돌아가기 ↗</a></footer>
+  </main>
+  <noscript><p class="noscript-notice">게임을 실행하려면 브라우저에서 JavaScript를 허용해 주세요. <a href="./">소개로 돌아가기</a></p></noscript>
+  <script src="$GODOT_URL"></script>
+  <script type="module">
+    import { bootGame } from './game-loader.mjs';
+    const ui = {
+      canvas: document.getElementById('canvas'),
+      overlay: document.getElementById('boot-screen'),
+      progress: document.getElementById('boot-progress'),
+      status: document.getElementById('boot-status'),
+      retry: document.getElementById('retry'),
+    };
+    ui.retry.addEventListener('click', () => window.location.reload());
+    await bootGame(window.Engine, $GODOT_CONFIG, ui);
+  </script>
+</body>
+</html>

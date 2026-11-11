@@ -1,0 +1,36 @@
+; Engine configuration file.
+; Paper Warrior - initial web-first project foundation.
+
+config_version=5
+
+[application]
+
+config/name="Paper Warrior"
+config/description="A web-first 2D pixel idle RPG about a tiny folded-paper warrior."
+config/icon="res://assets/branding/logo_symbol.png"
+boot_splash/show_image=false
+boot_splash/bg_color=Color(0.929, 0.957, 0.925, 1)
+run/main_scene="res://scenes/main/splash.tscn"
+config/features=PackedStringArray("4.4", "GL Compatibility")
+
+[display]
+
+window/size/viewport_width=480
+window/size/viewport_height=640
+window/size/window_width_override=480
+window/size/window_height_override=640
+window/stretch/mode="canvas_items"
+
+[editor]
+
+export/convert_text_resources_to_binary=false
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.929, 0.957, 0.925, 1)

@@ -1,0 +1,28 @@
+name: Godot GUI Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  web-loader:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/web/loader.test.mjs
+
+  gdunit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: godot-gdunit-labs/gdUnit4-action@v1
+        with:
+          godot-version: '4.4.1'
+          version: 'v5.1.1'
+          paths: 'res://tests'
+          headless: false
+          publish-report: false
