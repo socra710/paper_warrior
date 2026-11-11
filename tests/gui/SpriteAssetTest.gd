@@ -40,6 +40,13 @@ func test_reference_pose_matches_original_anatomy_and_idle_preserves_face() -> v
 	var defs := original.substr(defs_start, original.find("</defs>") + 7 - defs_start)
 	var anatomy_start := original.find("<g stroke=")
 	var anatomy := original.substr(anatomy_start, original.find("</g>", anatomy_start) + 4 - anatomy_start)
+	var path_pattern := RegEx.create_from_string("<path\\b[^>]*>")
+	var original_paths := path_pattern.search_all(anatomy)
+	var parts := FileAccess.get_file_as_string("res://assets/characters/warrior/warrior_parts.svg")
+	var part_paths := path_pattern.search_all(parts.replace("url(#shield_gradient)", "url(#shield)"))
+	assert_that(part_paths.size()).is_equal(original_paths.size())
+	for index in mini(part_paths.size(), original_paths.size()):
+		assert_that(part_paths[index].get_string()).is_equal(original_paths[index].get_string())
 	var reference := Image.new()
 	# 동일 좌표 변환을 사용해 viewBox와 행렬의 부동소수점 경계 차이를 제외한다.
 	assert_that(reference.load_svg_from_string(
@@ -53,6 +60,7 @@ func test_reference_pose_matches_original_anatomy_and_idle_preserves_face() -> v
 			reference.set_pixel(x, y, color)
 	var png := (load("res://assets/characters/warrior/warrior_idle_walk.png") as Texture2D).get_image()
 	var mismatches := 0
+	var rounding_differences := 0
 	var alpha_mismatches := 0
 	var max_rgb_delta := 0
 	for y in 96:
@@ -61,13 +69,18 @@ func test_reference_pose_matches_original_anatomy_and_idle_preserves_face() -> v
 			var actual := png.get_pixel(x, y)
 			if expected.a != actual.a:
 				alpha_mismatches += 1
+			var rgb_delta := 0
 			if expected.a > 0 and actual.a > 0:
-				max_rgb_delta = maxi(max_rgb_delta, maxi(absi(expected.r8 - actual.r8), maxi(absi(expected.g8 - actual.g8), absi(expected.b8 - actual.b8))))
-			if expected.a != actual.a or (expected.a > 0 and expected != actual):
+				rgb_delta = maxi(absi(expected.r8 - actual.r8), maxi(absi(expected.g8 - actual.g8), absi(expected.b8 - actual.b8)))
+				max_rgb_delta = maxi(max_rgb_delta, rgb_delta)
+				if rgb_delta > 0:
+					rounding_differences += 1
+			# Windows/Linux SVG 래스터의 실측 차이는 알파 0, RGB 최대 1LSB다.
+			if expected.a != actual.a or rgb_delta > 1:
 				mismatches += 1
-				if mismatches <= 32:
+				if mismatches <= 8:
 					print("REFERENCE_DELTA %s expected=%s actual=%s" % [Vector2i(x, y), expected.to_html(), actual.to_html()])
-	print("REFERENCE_COMPARISON visible=%s alpha=%s max_rgb_byte_delta=%s" % [mismatches, alpha_mismatches, max_rgb_delta])
+	print("REFERENCE_COMPARISON significant=%s rounding=%s alpha=%s max_rgb_byte_delta=%s" % [mismatches, rounding_differences, alpha_mismatches, max_rgb_delta])
 	assert_that(mismatches).is_equal(0)
 	var face := reference.get_region(Rect2i(38, 26, 30, 23)).get_data()
 	for index in 4:
