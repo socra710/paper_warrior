@@ -53,13 +53,21 @@ func test_reference_pose_matches_original_anatomy_and_idle_preserves_face() -> v
 			reference.set_pixel(x, y, color)
 	var png := (load("res://assets/characters/warrior/warrior_idle_walk.png") as Texture2D).get_image()
 	var mismatches := 0
+	var alpha_mismatches := 0
+	var max_rgb_delta := 0
 	for y in 96:
 		for x in 96:
 			var expected := reference.get_pixel(x, y)
 			var actual := png.get_pixel(x, y)
+			if expected.a != actual.a:
+				alpha_mismatches += 1
+			if expected.a > 0 and actual.a > 0:
+				max_rgb_delta = maxi(max_rgb_delta, maxi(absi(expected.r8 - actual.r8), maxi(absi(expected.g8 - actual.g8), absi(expected.b8 - actual.b8))))
 			if expected.a != actual.a or (expected.a > 0 and expected != actual):
 				mismatches += 1
-	print("REFERENCE_COMPARISON visible pixel mismatches=%s" % mismatches)
+				if mismatches <= 32:
+					print("REFERENCE_DELTA %s expected=%s actual=%s" % [Vector2i(x, y), expected.to_html(), actual.to_html()])
+	print("REFERENCE_COMPARISON visible=%s alpha=%s max_rgb_byte_delta=%s" % [mismatches, alpha_mismatches, max_rgb_delta])
 	assert_that(mismatches).is_equal(0)
 	var face := reference.get_region(Rect2i(38, 26, 30, 23)).get_data()
 	for index in 4:

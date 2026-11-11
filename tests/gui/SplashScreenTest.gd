@@ -6,8 +6,8 @@ func test_splash_is_a_logo_intro_without_loading_or_title_controls() -> void:
 	var screen := runner.scene()
 	screen.set_process(false)
 	assert_that(screen.find_child("SplashLogo")).is_not_null()
-	for name in ["WarriorSprite", "LoadProgress", "RetryButton", "StartButton"]:
-		assert_that(screen.find_child(name)).is_null()
+	for control_name in ["WarriorSprite", "LoadProgress", "RetryButton", "StartButton"]:
+		assert_that(screen.find_child(control_name)).is_null()
 
 
 func test_failed_initial_transition_stays_visible_without_repeating() -> void:
