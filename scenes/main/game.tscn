@@ -73,7 +73,7 @@ corner_radius_bottom_right = 5
 
 [sub_resource type="Theme" id="MenuTheme"]
 default_font = null
-default_font_size = 12
+default_font_size = 16
 Button/colors/font_color = Color(0.18, 0.29, 0.36, 1)
 Button/colors/font_hover_color = Color(0.18, 0.29, 0.36, 1)
 Button/colors/font_pressed_color = Color(0.18, 0.29, 0.36, 1)
@@ -137,8 +137,8 @@ text = "종이전사"
 
 [node name="PreviewBadge" type="Label" parent="Margin/Layout/Header"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.33, 0.48, 0.43, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
+theme_override_font_sizes/font_size = 14
 script = ExtResource("8_version")
 prefix = "UI 미리보기 ·"
 
@@ -159,13 +159,13 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 19
 text = "Lv. —"
 
 [node name="Caption" type="Label" parent="Margin/Layout/PlayerState/LevelCard/Row"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.37, 0.51, 0.45, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
+theme_override_font_sizes/font_size = 14
 text = "초기 레벨"
 
 [node name="GoldCard" type="PanelContainer" parent="Margin/Layout/PlayerState"]
@@ -181,13 +181,13 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 19
 text = "골드 —"
 
 [node name="Caption" type="Label" parent="Margin/Layout/PlayerState/GoldCard/Row"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.37, 0.51, 0.45, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
+theme_override_font_sizes/font_size = 14
 text = "보상 준비 중"
 
 [node name="Body" type="BoxContainer" parent="Margin/Layout"]
@@ -214,13 +214,13 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 17
 text = "스테이지 준비 중"
 
 [node name="BattleStatus" type="Label" parent="Margin/Layout/Body/StageCard/StageLayout/StageHeader"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.37, 0.51, 0.45, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
+theme_override_font_sizes/font_size = 14
 text = "전투 준비 중"
 
 [node name="BattleArea" type="Control" parent="Margin/Layout/Body/StageCard/StageLayout"]
@@ -249,14 +249,14 @@ anchor_bottom = 1.0
 layout_mode = 0
 offset_left = 10.0
 offset_top = 6.0
-theme_override_colors/font_color = Color(0.3, 0.47, 0.43, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.25, 0.4, 0.36, 1)
+theme_override_font_sizes/font_size = 14
 text = "작은 용사의 첫 번째 무대"
 
 [node name="BattleHint" type="Label" parent="Margin/Layout/Body/StageCard/StageLayout"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.37, 0.51, 0.45, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
+theme_override_font_sizes/font_size = 14
 text = "맵 둘러보기 연출 · 전투와 스테이지 진행은 준비 중"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -272,14 +272,14 @@ theme_override_styles/panel = SubResource("PaperCard")
 [node name="Objective" type="Label" parent="Margin/Layout/Body/Sidebar/FirstObjective"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_font_sizes/font_size = 11
-text = "오늘의 목표 · 전사와 인사하고 세 메뉴를 둘러보세요."
+theme_override_font_sizes/font_size = 14
+text = "전사와 인사하고 메뉴를 둘러보세요."
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="Menus" type="BoxContainer" parent="Margin/Layout/Body/Sidebar"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 46)
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 theme = SubResource("MenuTheme")
 theme_override_constants/separation = 8
@@ -304,8 +304,8 @@ text = "꾸미기 · 준비 중"
 
 [node name="PrototypeNotice" type="Label" parent="Margin/Layout"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.37, 0.51, 0.45, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
+theme_override_font_sizes/font_size = 14
 text = "레벨·골드는 초기 상태예요. 전투·성장·보상·저장은 준비 중이에요."
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -345,7 +345,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("3_heading")
 theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_font_sizes/font_size = 22
 text = "준비 중"
 horizontal_alignment = 1
 
@@ -354,14 +354,14 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(356, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="Status" type="Label" parent="MenuNotice/Center/NoticeCard/Content"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.37, 0.51, 0.45, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
+theme_override_font_sizes/font_size = 14
 text = "아직 능력치와 골드에 영향을 주지 않아요."
 horizontal_alignment = 1
 
@@ -370,5 +370,5 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme = SubResource("MenuTheme")
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 16
 text = "알겠어요"

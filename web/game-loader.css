@@ -11,21 +11,23 @@
 .window-chrome { border-bottom: 1px dashed #c5d5c6; }
 .window-chrome > span:last-child { color: #c19f59; }
 .game-viewport { position: relative; aspect-ratio: 3 / 4; width: 100%; overflow: hidden; }
-#canvas { display: block; width: 100%; height: 100%; border: 0; touch-action: none; image-rendering: pixelated; }
-#canvas:focus-visible { outline: 2px solid #628f85; outline-offset: -2px; }
+#canvas { display: block; width: 100%; height: 100%; border: 0; touch-action: none; outline: none; }
+#canvas:focus, #canvas:focus-visible { outline: none; }
 .window-footer { border-top: 1px dashed #c5d5c6; padding-block: 6px; font-size: 8px; }
-.boot-screen { position: absolute; inset: 0; background: #e0e9e9; display: grid; place-items: center; padding: 7%; text-align: left; }
+.boot-screen { position: absolute; inset: 0; background: #e0e9e9; display: grid; place-items: center; padding: 24px; text-align: center; }
 [hidden] { display: none !important; }
-.boot-panel { width: 100%; padding: 22px; background: #fffdf2; border: 1px solid #b0c5bf; box-shadow: 4px 5px 0 #c4d6cf; }
-.boot-step { margin: 0 0 22px; font-size: 9px; letter-spacing: 1px; color: #617f7b; }
-.boot-fold { display: block; width: 28px; height: 34px; margin-bottom: 16px; background: #d3e6dc; border: 2px solid #66877f; border-right: 9px solid #a9c8c0; }
-.boot-screen h1 { font-family: Galmuri, monospace; font-size: clamp(16px, 4vw, 21px); letter-spacing: 0; margin: 0 0 12px; color: var(--ink); }
-.boot-hint { font-size: 11px; color: #768a82; line-height: 1.8; margin-bottom: 24px; }
-#boot-status { font-size: 11px; color: #547870; overflow-wrap: anywhere; max-height: 120px; overflow-y: auto; }
+.boot-panel { width: min(100%, 340px); }
+.boot-step { margin: 0 0 18px; font-size: 11px; letter-spacing: .5px; color: #45635c; }
+.boot-fold { display: block; width: 144px; height: 144px; margin: 0 auto 24px; background: url("assets/paper_fold.png") 0 0 / 1152px 144px no-repeat; image-rendering: pixelated; animation: paper-fold 1s steps(8) infinite; }
+@keyframes paper-fold { to { background-position-x: -1152px; } }
+.boot-screen h1 { font-family: Galmuri, monospace; font-size: 18px; letter-spacing: 0; margin: 0 0 12px; color: var(--ink); }
+.boot-hint { font-size: 12px; color: #45635c; line-height: 1.7; margin-bottom: 18px; }
+#boot-status { font-size: 12px; color: #304c46; overflow-wrap: anywhere; max-height: 120px; overflow-y: auto; }
 #boot-progress { display: block; width: 100%; height: 5px; margin-top: 17px; border: 0; accent-color: #6da696; }
 #boot-progress::-webkit-progress-bar { background: #cfdfd1; border-radius: 4px; }
 #boot-progress::-webkit-progress-value { background: #6da696; border-radius: 4px; }
-#retry { margin: 12px auto 0; font-size: 12px; min-height: 36px; }
+#retry { margin: 16px auto 0; font-size: 14px; min-height: 44px; }
+.boot-panel:has(#retry:not([hidden])) .boot-fold { animation-play-state: paused; }
 .play-description { text-align: center; padding: 25px 0 0; }
 .play-description .play-tagline { font-family: Galmuri, monospace; font-size: 12px; color: #52786e; margin-bottom: 11px; }
 .play-description p { font-size: 11px; color: #657f7a; line-height: 1.9; }
@@ -42,9 +44,10 @@
   .window-chrome, .window-footer { padding-block: 4px; }
   .game-viewport { aspect-ratio: 16 / 9; }
   .boot-screen { padding: 12px 20px; }
-  .boot-panel { max-width: 500px; padding: 16px 22px; }
+  .boot-panel { max-width: 440px; }
   .boot-step { margin-bottom: 10px; }
-  .boot-fold { float: left; margin: 5px 18px 10px 0; }
+  .boot-fold { width: 80px; height: 80px; margin-bottom: 10px; background-size: 640px 80px; animation-name: paper-fold-small; }
+  @keyframes paper-fold-small { to { background-position-x: -640px; } }
   .boot-screen h1 { font-size: 18px; }
   .boot-hint { display: none; }
 }

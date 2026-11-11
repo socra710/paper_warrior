@@ -3,6 +3,25 @@ extends GdUnitTestSuite
 const GAME := "res://scenes/main/game.tscn"
 
 
+func test_loading_centers_a_visible_folding_animation_without_a_card() -> void:
+	var screen: Control = auto_free(load("res://scenes/main/loading.tscn").instantiate())
+	screen.set("resource_loader", FakeLoader.new())
+	var runner := scene_runner(screen)
+	await runner.simulate_frames(3)
+	assert_that(screen.find_child("WorkCard")).is_null()
+	var content := screen.find_child("Content") as Control
+	assert_that(content.get_global_rect().get_center().distance_to(screen.size * 0.5) < 2.0).is_true()
+	var folding := screen.find_child("PaperFoldSprite") as AnimatedSprite2D
+	assert_that(folding.is_playing()).is_true()
+	assert_that(folding.sprite_frames.get_frame_count("fold")).is_equal(8)
+	var first_frame := folding.frame
+	var deadline := Time.get_ticks_msec() + 1500
+	while folding.frame == first_frame and Time.get_ticks_msec() < deadline:
+		await runner.simulate_frames(1)
+	assert_that(folding.frame != first_frame).is_true()
+	screen.set_process(false)
+
+
 class FakeLoader extends RefCounted:
 	var states: Dictionary = {}
 	var requests: Array[String] = []

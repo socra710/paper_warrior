@@ -55,4 +55,4 @@ func _update_layout() -> void:
 	$Margin/Layout/Body/Sidebar.custom_minimum_size.x = 232.0 if landscape else 0.0
 	%Menus.vertical = landscape
 	for button in [%GrowthButton, %EquipmentButton, %DecorationButton]:
-		button.add_theme_font_size_override("font_size", 16 if landscape else 12)
+		button.add_theme_font_size_override("font_size", 18 if landscape else 16)

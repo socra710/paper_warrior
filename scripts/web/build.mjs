@@ -2,6 +2,7 @@ import { copyFile, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promi
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { fingerprintWeb } from './fingerprint.mjs';
 
 const root = fileURLToPath(new URL('../..', import.meta.url));
@@ -57,6 +58,12 @@ await copyFile(
   path.join(root, 'assets', 'characters', 'warrior', 'warrior_idle_walk.png'),
   path.join(output, 'assets', 'warrior_idle_walk.png'),
 );
+const folding = await readFile(path.join(root, 'assets', 'ui', 'paper_fold.png'));
+await writeFile(path.join(output, 'assets', 'paper_fold.png'), folding);
+const foldHash = createHash('sha256').update(folding).digest('hex').slice(0, 16);
+const loaderCss = path.join(output, 'game-loader.css');
+await writeFile(loaderCss, (await readFile(loaderCss, 'utf8'))
+  .replace('assets/paper_fold.png', `assets/paper_fold.png?v=${foldHash}`));
 for (const name of [
   'logo_symbol.png', 'logo_wordmark.png', 'favicon_16.png', 'favicon_32.png',
   'favicon_48.png', 'apple_touch_icon.png',

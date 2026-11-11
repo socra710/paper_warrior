@@ -20,17 +20,18 @@ func _ready() -> void:
 
 
 func _start_preparation() -> void:
+	(find_child("PaperFoldSprite") as AnimatedSprite2D).play("fold")
 	_phase = Phase.PREPARING
 	_elapsed = 0.0
 	_timed_out = false
 	modulate.a = 1.0
 	%RetryButton.disabled = false
-	%RetryButton.text = "다시 시도하기"
+	%RetryButton.text = "다시 펼쳐 보기"
 	%RetryButton.hide()
 	%LoadProgress.value = 0.0
 	%LoadProgress.indeterminate = true
-	%LoadPercent.text = "준비 상태 확인 중"
-	%LoadPhase.text = "시작 화면과 종이 숲을 준비해요"
+	%LoadPercent.text = "조금만 기다려 주세요"
+	%LoadPhase.text = "종이 숲으로 가는 길을 열어요"
 	set_process(true)
 	for path in SCENES:
 		var status: int = resource_loader.load_threaded_get_status(path)
@@ -72,15 +73,15 @@ func _process(delta: float) -> void:
 			return
 	%LoadProgress.indeterminate = not progress_known
 	%LoadProgress.value = minf(total_progress / SCENES.size() * 100.0, 99.0)
-	%LoadPercent.text = "%d%%" % int(%LoadProgress.value) if progress_known else "리소스 준비 중"
-	%LoadPhase.text = "시작 화면과 종이 숲 준비 · %d / %d" % [completed, SCENES.size()]
+	%LoadPercent.text = "%d%%" % int(%LoadProgress.value) if progress_known else "조금만 기다려 주세요"
+	%LoadPhase.text = "종이 숲을 펼치고 있어요"
 	if completed == SCENES.size():
 		_phase = Phase.TRANSFERRING
 		set_process(false)
 		%LoadProgress.indeterminate = false
 		%LoadProgress.value = 100.0
 		%LoadPercent.text = "100%"
-		%LoadPhase.text = "준비 완료! 첫 장을 펼쳐요."
+		%LoadPhase.text = "첫 장이 준비됐어요!"
 		call_deferred("_enter_title")
 
 
@@ -101,12 +102,13 @@ func _enter_title() -> void:
 
 
 func _show_error(message: String) -> void:
+	(find_child("PaperFoldSprite") as AnimatedSprite2D).pause()
 	_phase = Phase.FAILED
 	set_process(false)
 	modulate.a = 1.0
 	%LoadProgress.indeterminate = false
 	%LoadPercent.text = "준비 중단"
-	%LoadPhase.text = "준비에 실패했어요.\n%s" % message
+	%LoadPhase.text = "준비에 시간이 조금 더 걸리고 있어요.\n처음부터 다시 펼쳐 주세요." if _timed_out else "모험을 준비하지 못했어요.\n다시 한번 펼쳐 볼까요?"
 	%RetryButton.disabled = false
 	%RetryButton.show()
 	push_error(message)
@@ -140,9 +142,9 @@ func _restart_application() -> Error:
 
 func _update_layout() -> void:
 	var landscape := size.x > size.y
-	$PaperFoldSprite.position = Vector2(size.x * 0.2, size.y * 0.53) if landscape else Vector2(size.x * 0.5, 175)
-	$WorkCard.position = Vector2(size.x * 0.4, 64) if landscape else Vector2(24, 280)
-	$WorkCard.size = Vector2(size.x * 0.6 - 32, size.y - 112) if landscape else Vector2(size.x - 48, size.y - 325)
-	$Content.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	$Content.position = $WorkCard.position + Vector2(20, 20)
-	$Content.size = $WorkCard.size - Vector2(40, 40)
+	$Center/Content.custom_minimum_size.x = minf(400, size.x - 48)
+	var side := 112.0 if landscape else 176.0
+	$Center/Content/FoldSlot/FoldBox.custom_minimum_size = Vector2.ONE * side
+	var folding := find_child("PaperFoldSprite") as AnimatedSprite2D
+	folding.position = Vector2.ONE * side * 0.5
+	folding.scale = Vector2.ONE * (2 if landscape else 3)

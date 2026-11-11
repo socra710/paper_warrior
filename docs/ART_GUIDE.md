@@ -107,7 +107,7 @@ assets/
 
 웹 게임은 기본적으로 중앙의 작은 세로형 3:4 프레임에 표시하며 위에는 제목, 아래에는 체험 범위와 설명을 둔다. 높이가 짧은 가로 화면에서는 16:9와 맵/사이드 메뉴 배치를 사용한다. 랜딩의 전사는 기술 정보 카드 안에 넣지 않고 밝은 민트/하늘색 종이 형태 위에 독립적으로 배치한다.
 
-`assets/characters/warrior/warrior_key_art.svg`는 큰 얼굴, 접힌 면, 작은 검과 별 방패를 표현한 정상 정적 키 아트다. 원본 파일은 보호하고 랜딩페이지에 사용한다. 캐릭터 공통 부품은 이 원본의 도형/색상을 그대로 분리한 것이며 첨부 콘셉트 시트를 잘라 사용하지 않는다. 미배포 품질 복구 작업에서 Splash는 로고/종이 배경, 웹 부팅은 파일 준비 패널, Loading은 하늘색 작업대와 종이 접기 UI, Title은 로고/기준 PNG 대기 전사와 시작 버튼으로 구분한다.
+`assets/characters/warrior/warrior_key_art.svg`는 큰 얼굴, 접힌 면, 작은 검과 별 방패를 표현한 정상 정적 키 아트다. 원본 파일은 보호하고 랜딩페이지에 사용한다. 캐릭터 공통 부품은 이 원본의 도형/색상을 그대로 분리한 것이며 첨부 콘셉트 시트를 잘라 사용하지 않는다. 미배포 작업에서 Splash는 로고/종이 배경, 웹 부팅과 Loading은 하늘색 전체 배경의 중앙 종이접기, Title은 로고/기준 PNG 대기 전사와 시작 버튼으로 구분한다. 로딩 전용 모달 카드는 사용하지 않는다.
 
 `assets/backgrounds/paper_forest_preview.svg`는 하늘색과 접힌 민트 종이 나무로 만든 미리보기 배경이다. 작은 전사가 맵을 둘러보는 동안 가짜 적 HP나 보상 대신 **전투 준비 중** 상태를 표시한다.
 
@@ -132,12 +132,14 @@ assets/
 | `asset_key` | `warrior_idle_walk` | `paper_fold` |
 | `category` | 캐릭터 / 프레젠테이션 | UI / 준비 연출 |
 | `source` | 보호된 정상 SVG 도형 → 공통 부품 + JSON 동작 데이터 | 픽셀 SVG 마스터 |
-| `runtime` | 투명 RGBA PNG, Nearest | SVG import 텍스처, Nearest |
-| `frame_size` | 원형 보존 예외 96×96, 가로 10칸 | 24×24, 가로 4칸 |
-| `frame_count` | Idle 4, Walk 6 | Fold 4 |
-| `anchor` | 중심 x=48, 발 기준선 y=88 | 프레임 중심 (12,12) |
+| `runtime` | 투명 RGBA PNG, Nearest | 투명 RGBA PNG, Nearest / 웹은 동일 PNG와 steps(8) |
+| `frame_size` | 원형 보존 예외 96×96, 가로 10칸 | 48×48, 가로 8칸 |
+| `frame_count` | Idle 4, Walk 6 | Fold 8, 8fps |
+| `anchor` | 중심 x=48, 발 기준선 y=88 | 프레임 중심 (24,24) |
 | `layer_order` | 맵 위 / 화면 UI 아래 | 로딩 배경 위 |
 | `unlock_source` | 시작 시 표시, 전투 기능 아님 | 리소스 준비 화면 |
+
+접기는 `assets/ui/paper_fold.svg`의 공통 `defs/use` 부품을 수정한 뒤 `scripts/art/build_paper_fold.gd`로 PNG를 재생성한다. 펼침·접힌 선·모서리·삼각 접기·누름·되펼침을 순환하며, 실제 준비가 빠르면 애니메이션을 끝까지 보여주려고 기다리지 않는다. 보통 상태는 “모험을 접고 있어요”, “첫 장을 펼치고 있어요”처럼 세계관에 맞게 쓰고 기술 진단은 오류 상황과 로그로 구분한다.
 
 Attack 5~6·Hit 2~3·Death 4~6·Victory 4~6프레임은 향후 제작 기준이며 현재 에셋/전투 구현 완료를 뜻하지 않는다. SVG는 수정 가능한 마스터와 프로토타입에 허용하되 최종 캐릭터는 PNG를 기본으로 하며 실제 SVG/PNG 렌더링과 확대 품질을 비교한다.
 

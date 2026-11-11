@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/main/loading.gd" id="1_script"]
 [ext_resource type="Theme" path="res://assets/fonts/theme_ui.tres" id="2_ui"]
@@ -7,26 +7,10 @@
 [ext_resource type="Script" path="res://scripts/ui/version_label.gd" id="5_version"]
 
 [sub_resource type="StyleBoxFlat" id="Track"]
-bg_color = Color(0.82, 0.88, 0.82, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_left = 5
-corner_radius_bottom_right = 5
+bg_color = Color(0.73, 0.83, 0.81, 1)
 
 [sub_resource type="StyleBoxFlat" id="Fill"]
-bg_color = Color(0.39, 0.62, 0.54, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_left = 5
-corner_radius_bottom_right = 5
-
-[sub_resource type="StyleBoxFlat" id="WorkCard"]
-bg_color = Color(0.985, 0.977, 0.94, 1)
-border_width_left = 3
-border_width_bottom = 4
-border_color = Color(0.68, 0.79, 0.78, 1)
-corner_radius_top_left = 4
-corner_radius_bottom_right = 4
+bg_color = Color(0.25, 0.48, 0.41, 1)
 
 [node name="Loading" type="Control"]
 layout_mode = 3
@@ -44,87 +28,73 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-color = Color(0.83, 0.9, 0.93, 1)
+color = Color(0.88, 0.93, 0.93, 1)
 
-[node name="StageLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 32.0
-offset_top = 28.0
-offset_right = 400.0
-offset_bottom = 54.0
-theme = ExtResource("3_heading")
-theme_override_colors/font_color = Color(0.29, 0.45, 0.5, 1)
-theme_override_font_sizes/font_size = 18
-text = "첫 장을 준비하는 작업대"
-
-[node name="PaperFoldSprite" parent="." instance=ExtResource("4_paper")]
-position = Vector2(240, 185)
-
-[node name="WorkCard" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 24.0
-offset_top = 280.0
-offset_right = 456.0
-offset_bottom = 595.0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("WorkCard")
-
-[node name="Content" type="VBoxContainer" parent="."]
+[node name="Center" type="CenterContainer" parent="."]
 layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
-offset_left = 44.0
-offset_top = 286.0
-offset_right = -44.0
-offset_bottom = 548.0
-theme_override_constants/separation = 12
-alignment = 1
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
 
-[node name="Heading" type="Label" parent="Content"]
+[node name="Content" type="VBoxContainer" parent="Center"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="FoldSlot" type="CenterContainer" parent="Center/Content"]
+layout_mode = 2
+
+[node name="FoldBox" type="Control" parent="Center/Content/FoldSlot"]
+custom_minimum_size = Vector2(176, 176)
+layout_mode = 2
+
+[node name="PaperFoldSprite" parent="Center/Content/FoldSlot/FoldBox" instance=ExtResource("4_paper")]
+position = Vector2(88, 88)
+
+[node name="Heading" type="Label" parent="Center/Content"]
 layout_mode = 2
 theme = ExtResource("3_heading")
 theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_font_sizes/font_size = 23
-text = "화면과 종이 숲 준비"
+theme_override_font_sizes/font_size = 22
+text = "모험을 접고 있어요"
 horizontal_alignment = 1
 
-[node name="LoadPhase" type="Label" parent="Content"]
+[node name="LoadPhase" type="Label" parent="Center/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.33, 0.48, 0.43, 1)
-theme_override_font_sizes/font_size = 13
-text = "시작 화면과 종이 숲을 준비해요"
+theme_override_colors/font_color = Color(0.22, 0.36, 0.33, 1)
+theme_override_font_sizes/font_size = 16
+text = "종이 숲으로 가는 길을 열어요"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="LoadProgress" type="ProgressBar" parent="Content"]
+[node name="LoadProgress" type="ProgressBar" parent="Center/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 12)
+custom_minimum_size = Vector2(0, 6)
 layout_mode = 2
 theme_override_styles/background = SubResource("Track")
 theme_override_styles/fill = SubResource("Fill")
 show_percentage = false
 
-[node name="LoadPercent" type="Label" parent="Content"]
+[node name="LoadPercent" type="Label" parent="Center/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.29, 0.5, 0.47, 1)
-theme_override_font_sizes/font_size = 17
-text = "준비 상태 확인 중"
+theme_override_colors/font_color = Color(0.22, 0.36, 0.33, 1)
+theme_override_font_sizes/font_size = 16
+text = "조금만 기다려 주세요"
 horizontal_alignment = 1
 
-[node name="Explanation" type="Label" parent="Content"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.44, 0.52, 0.46, 1)
-theme_override_font_sizes/font_size = 11
-text = "화면과 이미지 리소스의 실제 준비 상태예요.\n준비가 끝나면 시작 화면으로 이동해요."
-horizontal_alignment = 1
-
-[node name="RetryButton" type="Button" parent="Content"]
+[node name="RetryButton" type="Button" parent="Center/Content"]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "다시 준비하기"
+theme_override_font_sizes/font_size = 16
+text = "다시 펼쳐 보기"
 
 [node name="VersionLabel" type="Label" parent="."]
 layout_mode = 1
@@ -133,10 +103,10 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -124.0
-offset_top = -23.0
+offset_top = -27.0
 offset_right = -12.0
 offset_bottom = -3.0
-theme_override_colors/font_color = Color(0.37, 0.51, 0.45, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
+theme_override_font_sizes/font_size = 13
 horizontal_alignment = 2
 script = ExtResource("5_version")

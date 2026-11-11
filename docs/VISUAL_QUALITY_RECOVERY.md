@@ -169,3 +169,82 @@ Game의 계산·상태·이동 스크립트와 기존 세 메뉴 기능은 변�
 승인 후에는 승인 버전으로 한 번 변경하고 깨끗한 소스에서 두 ZIP을 다시 빌드한다. 원본 커밋/체크섬/태그/실제 화면 버전을 일치시킨 뒤 별도 배포 저장소에 게시하고, Pages/공개 브라우저/이전 HTML 캐시·파일 반영 여부를 확인해야 한다. 그 전에는 CHANGELOG의 Unreleased를 정식 업데이트로 전환하지 않는다.
 
 현재 96px 선택은 해상도·원형 보존의 절충이며 GPU/메모리/프레임 시간 성능 비교는 하지 않았다. 실제 기기와 iOS/Safari 검증, 비정수 브라우저 배율의 도트 품질 확인은 후속이다. 전투·성장·보상·저장과 Attack/Hit/Death/Victory, Windows 설치 마법사/서명은 여전히 미구현이다.
+
+## 5. 추가 검토: 중앙 종이접기와 글자 가독성
+
+2026-11-11 추가 요청을 실제 로컬 웹과 비교했다. 웹 파일 준비의 아이콘은 정적 CSS 도형이고 Godot 접기는 24px 네 프레임의 내부 색 변화 위주였다. 캔버스를 실제 클릭하면 `:focus-visible`의 녹색 2px 테두리가 생기는 것을 재현했다.
+
+데스크톱은 480×640 버퍼를 418×557 CSS px로, 모바일 390px/DPR 2에서는 같은 버퍼를 356×475 CSS px로 표시했다. 10px 보조 글씨는 약 7.42 CSS px가 된다. 캔버스 전체 `image-rendering: pixelated`가 글자까지 재샘플링하고, 고밀도 화면에서도 버퍼가 그대로다. 일부 보조 글씨 대비는 3.77~4.05:1이었다. 랜딩은 같은 Pretendard를 브라우저가 약 15 CSS px DOM 텍스트로 직접 그린다.
+
+### 선택한 디자인과 범위
+
+사용자가 지정한 중앙 단독 픽셀 접기를 기준으로 진행한다. 별도 질의 응답을 받을 수 없는 상태이므로 이를 새 버전·배포 승인으로 해석하지 않는다. 대안인 화면 전체 종이 넘김은 작은 프레임에서 상태 글자를 방해하므로 제외했다.
+
+- 기존 게임 프레임 안 전체 배경을 사용하며 브라우저 전체화면으로 전환하지 않는다.
+- 웹 파일 준비/Godot Loading 모두 카드 없는 중앙 8프레임 접기를 사용한다. 펼침·대각 접힘·삼각형·되펼침의 실루엣을 구분하고 공통 마스터에서 만든 PNG를 재사용한다.
+- 상태/실제 진행률/실패 후 재시도만 아래에 둔다. 가짜 진행률이나 애니메이션을 위한 강제 대기를 추가하지 않는다.
+- 캔버스 외곽 포커스 선만 제거한다. 캔버스 입력, Tab/Enter/ESC와 버튼의 키보드 포커스는 유지한다.
+- 표시 크기×DPR에 맞는 버퍼와 일반 캔버스 합성을 사용한다. 캐릭터 PNG/Nearest는 그대로다. 작은 글자의 크기와 대비를 함께 보정한다.
+
+### 구현·검증 순서
+
+1. `tests/web/viewport.test.mjs`의 고밀도·크기 변경·같은 게임 상태 유지 검사와 `tests/gui/LoadingScreenTest.gd`의 중앙 배치/실제 프레임 진행 검사를 먼저 실패시킨다.
+2. `web/game-viewport.mjs`에서 ResizeObserver/창 resize로 표시 크기와 DPR를 반영하고 해제 시 리스너를 정리한다. `game-loader.css`의 전역 픽셀 합성과 외곽 포커스를 제거한다.
+3. `assets/ui/paper_fold.svg` 공통 도형, PNG 생성기, `paper_fold_sprite.tscn`을 48px/8프레임으로 구성한다. 웹 빌드에서도 같은 PNG를 복사하고 내용 해시로 캐시를 구분한다.
+4. `loading.tscn`/배치 코드를 중앙 구성으로 바꾸고 Splash/Title/Game의 작은 글자·색·행 배치를 보정한다. 게임 규칙·캐릭터 원본은 변경하지 않는다.
+5. 창 모드 GdUnit, Node, Web Export와 실제 브라우저의 양방향/DPR 1·2, 접기 프레임 진행, 클릭 포커스, 실패/재시도, 메뉴 상태 유지와 글자 잘림을 확인한다.
+
+버전은 `0.3.0` 유지, 품질 수정 제안은 기존 Unreleased/PATCH 범위에 묶는다.
+
+### 최종 글자·문구 조정
+
+초기 보정에서 글자를 일괄 확대해 화면 밀도가 과해졌다. 사용자의 추가 피드백을 반영해 대형화를 줄이고 해상도·합성·대비를 주된 개선 수단으로 유지했다. 폰트 파일과 import 설정은 바꾸지 않았다.
+
+| 역할 | 최종 기준 |
+|---|---|
+| 웹 접기 제목 / 본문 | 18 / 12 CSS px |
+| Godot Loading 제목 / 상태·재시도 / 버전 | 22 / 16 / 13 논리 px |
+| Title 부제 / 시작 버튼 | 16 / 20 논리 px |
+| Game 보조 글자 / 세로·가로 메뉴 | 14 / 16·18 논리 px |
+
+기술 단계는 내부적으로 유지하되 보통 화면에는 “모험을 접고 있어요”, “작은 종이 한 장에 용기를 담는 중이에요.”, “모험을 담고 있어요 · N%”, “첫 장을 펼치고 있어요”를 표시한다. Godot Loading은 “종이 숲을 펼치고 있어요”, 재시도는 “다시 펼쳐 보기”로 통일했다. 실제 오류 진단은 실패 상황과 로그에 남긴다.
+
+### 추가 수정 파일
+
+- UI 에셋: `assets/ui/paper_fold.{svg,png,png.import}`, `scripts/art/build_paper_fold.gd`, `scenes/ui/paper_fold_sprite.tscn`.
+- Godot 화면: `scenes/main/{loading,splash,game}.tscn`, `scenes/ui/start_screen.tscn`, `scripts/main/{loading,game}.gd`, `scripts/ui/start_screen.gd`.
+- 웹 표시·캐시: `web/{play.html,game-loader.css,game-loader.mjs,game-viewport.mjs}`, `scripts/web/build.mjs`.
+- 검사·문서: `tests/gui/LoadingScreenTest.gd`, `tests/web/viewport.test.mjs`, README/CHANGELOG/ART_GUIDE/TECHNICAL_DESIGN/TASKS와 이 기록.
+
+캐릭터 SVG/PNG/동작 데이터는 이번 추가 작업에서 변경하지 않았다. 전투·성장·보상·저장 기능도 추가하지 않았다.
+
+### 추가 작업 전후 이미지
+
+앞선 품질 복구 직후를 이번 수정의 “전”으로 사용했다. Native는 같은 480×640 / 960×540이며, Loading의 50%는 여전히 통제된 백엔드의 **UI 미리보기**다.
+
+| 화면 | 세로 전 / 후 | 가로 전 / 후 |
+|---|---|---|
+| Splash | [전](images/quality-v040/after-splash-portrait.png) / [후](images/quality-v040/folding-splash-portrait.png) | [전](images/quality-v040/after-splash-landscape.png) / [후](images/quality-v040/folding-splash-landscape.png) |
+| Loading | [전](images/quality-v040/after-loading-portrait.png) / [후](images/quality-v040/folding-loading-portrait.png) | [전](images/quality-v040/after-loading-landscape.png) / [후](images/quality-v040/folding-loading-landscape.png) |
+| Title | [전](images/quality-v040/after-title-portrait.png) / [후](images/quality-v040/folding-title-portrait.png) | [전](images/quality-v040/after-title-landscape.png) / [후](images/quality-v040/folding-title-landscape.png) |
+| Game | [전](images/quality-v040/after-game-portrait.png) / [후](images/quality-v040/folding-game-portrait.png) | [전](images/quality-v040/after-game-landscape.png) / [후](images/quality-v040/folding-game-landscape.png) |
+
+실제 Chrome의 같은 390×844/DPR 1 비교: [Title 전](images/quality-v040/web-title-portrait.png) / [후](images/quality-v040/folding-web-title-portrait.png), [Game 전](images/quality-v040/web-game-portrait.png) / [후](images/quality-v040/folding-web-game-portrait.png). [실제 PCK 대기 중 웹 접기](images/quality-v040/folding-web-bootstrap.png)와 [방향 변경 후 같은 장비 안내](images/quality-v040/folding-web-menu-landscape.png)는 DPR 2 캡처다.
+
+### 최신 실제 검증
+
+| 실행 | 결과 |
+|---|---|
+| 창 모드 GdUnit | **23/23**, 오류·실패·orphans 0. 카드 없는 중앙 배치와 실제 접기 프레임 진행 추가 검사 |
+| Node | **13/13**. 고밀도·표시 크기·DPR 변경·동일 크기 무갱신·해제 검사 추가 |
+| Web Export | 성공. 실제 PCK Splash → Loading → Title → Game 흐름 및 HUD/양방향/메뉴 경계 검사 통과 |
+| Native 화면 캡처 | 네 화면×양방향 8장 재생성. 최종 축소 폰트와 문구 반영 |
+| Chrome DPR 1/2 | 390×844 ↔ 844×390, 실제 Title 시작·Game·장비 안내·방향 왕복·ESC 확인. 문서/Engine 1개 유지, 가로 넘침 없음 |
+| 실제 PCK 대기 | 실제 요청을 잠시 보류한 동안 PNG 수신과 CSS 접기 위치 변화, 카드 테두리 0 확인. 요청 재개 후 정상 시작 |
+| 다운로드 실패·재시도 | PCK/엔진 JS를 각각 실제 차단해 오류·재시도 표시 확인. 재시도가 새 문서를 만들고 정상 초기화 |
+| 클릭 외곽선·입력 | 캔버스가 계속 focused인 상태에서 outline none, imageRendering auto 확인. 메뉴 키보드 ESC 동작 |
+| 콘솔·로그 | 차단 실험의 예상 네트워크 오류 외 예기치 않은 브라우저 런타임 오류 없음 |
+
+브라우저 하니스가 처음에는 마우스 이동 없이 down/up만 보내거나 시작을 두 번 클릭해 Title/장비 안내를 Game으로 잘못 분류할 수 있었다. 이동·타이틀 준비 대기·단일 시작 입력으로 고치고 실제 화면을 열어 Game과 열린 메뉴를 확인했다. 이 문서에는 수정 후 최종 사진만 추가했다. 병렬 브라우저 실험 중 백그라운드 탭의 Splash 진행이 늦어진 경우도 있었으므로 엔진 실패 재시도는 단독으로 다시 실행해 실제 타이틀 입력까지 확인했다.
+
+이 추가 작업에서는 Windows 배포 EXE, 실제 휴대전화, iOS/Safari, Tab/Enter와 새 공개 배포를 검증하지 않았다. 이전 절의 Windows·Linux 결과를 이번 변경의 재실행 결과로 간주하지 않는다. 로컬 확인 주소는 `http://localhost:8000/play.html`이며, 프로젝트와 공개 버전은 `0.3.0` 유지다.
