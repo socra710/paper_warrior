@@ -77,4 +77,95 @@ node scripts\web\build.mjs "C:\Tools\Godot\Godot_v4.4.1-stable_win64_console.exe
 
 ## 4. 실제 결과
 
-이 절은 구현·실행 후 관찰한 결과만 추가한다. 현재 단계에서는 수정 전 조사와 비교 렌더만 수행했다.
+### 발견한 문제와 수정
+
+| 원인 | 실제 수정 |
+|---|---|
+| Splash/Title 공통 구도와 웹 다운로드 화면의 같은 제목/전사 | Splash를 독립 로고 씬으로 분리. 다운로드는 파일 패널, Loading은 하늘색 작업대, Title은 로고/기준 전사/버튼 |
+| 빈 progress를 0%로 처리, 진행 중 1.0도 100%로 표시 | 불확정 상태를 사용하고 미완료 값은 99% 상한. 두 요청 완료 시에만 100% |
+| 원본을 분석하지 않고 다른 머리/몸통/검/방패와 팔레트로 다시 제작 | 정상 원본 20개 경로·선 속성·두 그라데이션을 공통 부품으로 복원. 얼굴 교체와 과한 대기 변형 제거 |
+| 이전 URL의 JS/CSS/PCK 캐시가 새 파일과 섞일 가능성 | 런타임 파일명과 로더/CSS URL에 내용 해시 적용. executable/fileSizes/worklet 참조를 함께 변경 |
+| 가로 Title의 상단 선과 문구가 같은 y 좌표 | 선과 문구를 분리하고 같은 크기의 가로 렌더 재확인 |
+
+정상 `warrior_key_art.svg`의 Git blob은 참조 태그와 현재 모두 `09f5d0ee2e9213786199c9abf836398ac8fa6466`으로 동일하다. 캐릭터 변경은 별도 커밋 `84fa0d4`다. 원본 도형을 이동한 것이며 다른 캐릭터로 교체하지 않았다. 시트는 96px 예외이나 실제 맵/Title 표시 영역은 72px/144px를 유지한다.
+
+### 수정 파일
+
+| 단위 | 파일 |
+|---|---|
+| 원본 충실 캐릭터 | `assets/characters/warrior/{warrior_parts.svg,warrior_idle_walk.svg,warrior_idle_walk.png}`, `data/presentation/warrior_animation.json`, `scripts/art/build_warrior_sprites.gd`, `scenes/characters/warrior_sprite.tscn`, `scenes/ui/warrior_idle.tscn` |
+| 독립 화면·실제 상태 | `scenes/main/{splash,loading}.tscn`, `scripts/main/{splash,loading}.gd`, `scenes/ui/start_screen.tscn`, `scripts/ui/start_screen.gd`, `assets/fonts/theme_ui.tres` |
+| 웹 부팅·캐시 | `web/{play.html,game-loader.css,game-loader.mjs}`, `scripts/web/{build,fingerprint}.mjs` |
+| 회귀 검사 | `tests/gui/{SplashScreen,LoadingScreen,SpriteAsset,TitleScreen}Test.gd`, `tests/export/StartupLayoutCheck.gd`, `tests/web/{loader,fingerprint}.test.mjs`, `.github/workflows/test.yml` |
+| 에이전트 지침·기록 | `.github/copilot-instructions.md`, `README.md`, `docs/{ART_GUIDE,CHARACTER_SPRITE_STANDARD,TECHNICAL_DESIGN,TASKS,VERSION_POLICY,VISUAL_QUALITY_RECOVERY}.md`, `CHANGELOG.md`, `docs/images/quality-v040/` |
+
+Game의 계산·상태·이동 스크립트와 기존 세 메뉴 기능은 변경하지 않았다.
+
+화면·웹 구현은 `7929ec2`, 플랫폼 간 참조 비교 보강은 `868efc1`에 분리했다. 소스 `socra710`에만 반영하고 main과 배포 저장소는 변경하지 않았다.
+
+### 화면별 변경 전후
+
+동일한 Godot 480×640 / 960×540 창에서 실제 렌더한 이미지다. Loading은 진행률을 관찰할 수 있도록 통제된 백엔드가 50%를 보고하는 **UI 미리보기**다. 이를 실제 다운로드 성능이나 실제 리소스 50%의 측정값으로 해석하지 않는다. 실제 콜드 시작 순서는 별도 패키지 검사로 확인했다.
+
+| 화면 | 세로 전 / 후 | 가로 전 / 후 |
+|---|---|---|
+| Splash | [전](images/quality-v040/before-splash-portrait.png) / [후](images/quality-v040/after-splash-portrait.png) | [전](images/quality-v040/before-splash-landscape.png) / [후](images/quality-v040/after-splash-landscape.png) |
+| Loading | [전](images/quality-v040/before-loading-portrait.png) / [후](images/quality-v040/after-loading-portrait.png) | [전](images/quality-v040/before-loading-landscape.png) / [후](images/quality-v040/after-loading-landscape.png) |
+| Title | [전](images/quality-v040/before-title-portrait.png) / [후](images/quality-v040/after-title-portrait.png) | [전](images/quality-v040/before-title-landscape.png) / [후](images/quality-v040/after-title-landscape.png) |
+| Game | [전](images/quality-v040/before-game-portrait.png) / [후](images/quality-v040/after-game-portrait.png) | [전](images/quality-v040/before-game-landscape.png) / [후](images/quality-v040/after-game-landscape.png) |
+
+![원본과 Idle/Walk 전체 프레임의 같은 표시 크기 비교](images/quality-v040/character-restored-frames.png)
+
+### 실제 Chrome 증거
+
+다음 사진은 새 로컬 Web Export를 Chrome에서 실행해 저장한 것이다. 공개 배포 사진이나 통제된 Loading UI 미리보기와 혼동하지 않는다.
+
+| 확인 | 실제 화면 |
+|---|---|
+| Title / Game | [세로 Title](images/quality-v040/web-title-portrait.png) / [세로 Game](images/quality-v040/web-game-portrait.png) |
+| 열린 메뉴·방향 변경 | [같은 게임 상태를 유지한 가로 메뉴](images/quality-v040/web-menu-landscape.png) |
+| 실제 다운로드 차단 | [엔진 JS 실패](images/quality-v040/web-engine-failure.png) / [PCK 실패](images/quality-v040/web-pack-failure.png) |
+| 같은 origin의 이전 캐시 → 새 빌드 | [이전 캐시 화면](images/quality-v040/web-cache-before.png) / [새 해시 빌드 화면](images/quality-v040/web-cache-after.png) |
+
+### 실제 실행한 검증
+
+| 검사 | 실제 결과 |
+|---|---|
+| Godot 4.4.1 에디터 import / 시트 재생성 | 성공. 재생성 전후 PNG Git hash `edd2c7eb67a5ad5e9ef0567097e8d6b62eb6e8d5` 동일 |
+| 창 모드 GdUnit | **22/22**, 오류·실패·orphans 0. Splash 독립성/전환 실패/제거된 씬 콜백, 정상·불확정·미완료 100%·실패·재시도·시간 초과 재시작, 얼굴/PNG/메뉴/방향/시작 확인 |
+| Node 웹 검사 | **12/12**. 다운로드/엔진 초기화 구분, 실패/제한 시간/중복 방지, 같은 캔버스 재배치와 캐시 참조 일치 |
+| 캐릭터 실제 비교 | 위 확대 이미지와 실제 Title/Game 크기 확인. Windows 원본 기준 포즈/PNG 가시 픽셀 차이 0. 원본 경로 20개 정확 일치, Idle 4개 얼굴 영역 동일, 10개 프레임 여백/발 y=88 유지. PNG 부분 알파 0. Linux 색상 반올림 차이는 아래 별도 기록 |
+| 실제 Web Export | 성공. 실제 PCK에서 Splash → Loading → Title → Game 네 씬 순서를 기록해 누락/반복 없음 확인. HUD/리소스/세로·가로/열린 메뉴 경계 검사 통과 |
+| 실제 Windows EXE | `build/quality-preview/PaperWarrior.exe`를 창 모드 실행. 같은 콜드 순서/HUD/방향·메뉴 유지 후 정상 종료, stdout의 흐름 확인과 stderr 오류 없음 |
+| Chrome 정상·반복 실행 | 실제 WebGL 게임 시작과 Game 진입, 390×844 ↔ 844×390 왕복, 문서/Engine 1개 유지, 열린 장비 안내/ESC, 전사 이동 확인 |
+| Chrome 다운로드 실패·재시도 | PCK 및 엔진 JS를 각각 실제 차단. 오류/재시도 표시 후 버튼이 새 문서로 재실행하고 정상 시작하는 것 확인 |
+| 실제 이전 캐시 → 새 빌드 | 로컬 전용 서버가 같은 origin에서 이전 배포 파일을 제공한 뒤 새 출력으로 전환. 캐시 비활성화 **없이** 실행. 이전 `play.js`의 서버 요청은 1회 그대로이며 실제 캐시 사용, 새 해시 JS/wasm/PCK/로더/worklet 요청과 정상 Title, 예기치 않은 런타임 오류 0 |
+| GitHub Linux CI | 코드 `868efc1`, [실행 43011418246](https://github.com/socra710/paper_warrior/actions/runs/43011418246) 성공. 창 모드 GdUnit **22/22**, 오류·실패·orphans 0 / Node **12/12** |
+| 코드 검토 | 독립된 읽기 전용 검토에서 중요한 신규 문제 없음 |
+
+불확정/실패를 주입한 GdUnit의 `push_error`는 예상 경로이며 실제 런타임 오류로 숨기지 않는다. 첫 전체 GUI 통과 실행 한 번에 엔진 종료 `ObjectDB` 경고가 있었다. `--verbose`로 22개를 다시 실행했을 때 재현되지 않았고 orphans 0/정상 종료였다. 실제 Windows/Web 실행에는 같은 경고가 없었다. 재현하지 못한 테스트 도구 종료 경고를 수정 완료로 주장하지 않는다.
+
+최초의 Windows 원본 픽셀 비교는 투명 RGB 보정과 SVG viewBox/명시 행렬의 부동소수점 경계 차이 때문에 실패했다. 같은 명시 변환으로 비교하고 Godot import가 보정하는 **보이지 않는** 투명 RGB만 제외하니 Windows 가시 픽셀 차이는 0이었다.
+
+이후 Linux CI `43010249656`에서는 엄격한 RGB 완전 일치 검사 1개가 실패했다. 진단 실행 `43011059112`로 모든 차이 좌표·색을 출력해 **27픽셀, 알파 차이 0, RGB 채널 최대 1/255**임을 측정했다. Windows에서 만든 PNG와 Linux에서 즉시 래스터화한 SVG의 8비트 반올림 차이였으며 실루엣 변경은 없었다. `868efc1`은 원본 SVG 경로 문자열/알파를 정확히 검사하고 RGB만 실측 범위인 1LSB까지 허용한다. 얼굴 영역은 여전히 Idle 4프레임 모두 완전 일치해야 한다. 재실행 Linux 결과는 유의한 차이 0 / 반올림 27 / 알파 0 / 최대 RGB 1이며 Windows는 전부 0이다. 넓은 픽셀 개수 비율이나 형태 허용 오차로 회귀를 숨기지 않는다.
+
+새 Splash 테스트의 `name` 반복 변수 경고는 수정했다. CI에는 기존 `GameScreenTest.gd`의 같은 이름 shadowing 경고가 `ERROR:` 형식으로 남아 있으나 GdUnit 집계 오류는 0이며 실제 게임 실행 오류와 구분한다. 기존 경고를 수정 완료로 보고하지 않는다.
+
+### 버전·배포 상태와 남은 확인
+
+| 보고 항목 | 상태 |
+|---|---|
+| 현재 버전 | 프로젝트·공개 `0.3.0`, 변경하지 않음 |
+| 제안 버전 / 유형 | `0.3.1` / PATCH, **미확정** |
+| 증가 사유 | 기존 화면·로딩·캐릭터 품질 회복. 새 게임 시스템/콘텐츠가 아님 |
+| 신규 기능 | 신규 게임 기능 없음 |
+| 영향받는 기존 기능 | 시작 프레젠테이션, 캐릭터 표시, 웹 에셋 캐시 |
+| 저장 데이터 호환성 | 저장 기능/데이터 포맷 변경 없음 |
+| 테스트 결과 | 위의 실행 결과만 기록. 실제 휴대전화/iOS/Safari는 미검증 |
+| 배포 가능 여부 | 로컬·Linux CI 검증 완료. **사용자 승인 대기, 새 공개 배포 미실행** |
+
+새 공식 버전·릴리스 태그·Web/Windows ZIP과 배포 `version.json`을 아직 만들지 않았다. 현재 로컬 QA 빌드도 정식 버전 확정 전이라 v0.3.0으로 표시된다. 공개 v0.3.0은 수정하지 않았으므로 이 변경이 공개 사이트에서 검증됐다고 보고하지 않는다.
+
+승인 후에는 승인 버전으로 한 번 변경하고 깨끗한 소스에서 두 ZIP을 다시 빌드한다. 원본 커밋/체크섬/태그/실제 화면 버전을 일치시킨 뒤 별도 배포 저장소에 게시하고, Pages/공개 브라우저/이전 HTML 캐시·파일 반영 여부를 확인해야 한다. 그 전에는 CHANGELOG의 Unreleased를 정식 업데이트로 전환하지 않는다.
+
+현재 96px 선택은 해상도·원형 보존의 절충이며 GPU/메모리/프레임 시간 성능 비교는 하지 않았다. 실제 기기와 iOS/Safari 검증, 비정수 브라우저 배율의 도트 품질 확인은 후속이다. 전투·성장·보상·저장과 Attack/Hit/Death/Victory, Windows 설치 마법사/서명은 여전히 미구현이다.
