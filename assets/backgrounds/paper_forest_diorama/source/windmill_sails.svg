@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144">
+  <defs>
+    <g id="sail" stroke="#a47440" stroke-width="2" stroke-linejoin="round">
+      <path d="M-5-8-10-63 13-63 9-8Z" fill="#e7b76b"/>
+      <path d="M-6-59 9-59 6-14-2-14Z" fill="#f5d894" stroke="#d7a259" stroke-width="1"/>
+      <path d="M-6-47H9M-5-33H8M1-60 2-12" fill="none" stroke="#d3a05d" stroke-width="1"/>
+    </g>
+  </defs>
+  <g transform="translate(72 72)">
+    <use href="#sail" transform="rotate(45)"/>
+    <use href="#sail" transform="rotate(135)"/>
+    <use href="#sail" transform="rotate(225)"/>
+    <use href="#sail" transform="rotate(315)"/>
+    <circle r="8" fill="#d7a25b" stroke="#a47440" stroke-width="2"/>
+    <circle r="3" fill="#edc580"/>
+  </g>
+</svg>

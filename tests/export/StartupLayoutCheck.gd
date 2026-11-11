@@ -49,6 +49,8 @@ func _check() -> void:
 		and arena.size.y >= 184.0
 		and warrior.sprite_frames.get_frame_count("idle") == 4
 		and warrior.sprite_frames.get_frame_count("walk") == 6
+		and warrior.sprite_frames.get_frame_count("run") == 6
+		and warrior.get_node_or_null("FootShadow") != null
 		and warrior.is_playing()
 		and warrior.scale.x <= 2.0
 		and game.find_child("BackgroundForest") != null
@@ -69,6 +71,10 @@ func _check() -> void:
 		game_valid = game_valid and layer != null
 		if layer:
 			game_valid = game_valid and not layer.find_children("*", "TextureRect", true, false).is_empty()
+	var sails := game.find_child("WindmillSails", true, false) as Sprite2D
+	game_valid = game_valid and sails != null
+	if sails:
+		game_valid = game_valid and sails.texture != null and not sails.texture.resource_path.is_empty()
 	if not game_valid:
 		push_error("Exported game layout/resources are invalid: viewport=%s, arena=%s, warrior=%s, menus=%s" % [
 			game.size, arena.get_global_rect(), warrior.position,

@@ -60,14 +60,14 @@ Title의 **모험 시작하기**를 누르면 원본 픽셀 전사가 독립 레
 
 ## 캐릭터 에셋 제작
 
-[캐릭터 스프라이트 제작 지침](docs/CHARACTER_SPRITE_STANDARD.md)에 SVG 허용 범위, PNG 기본 정책, 48×48 기본 규격과 원형 보존을 위한 현재 96×96 예외, 프레임 수·품질 기준을 기록했다. 정상 `warrior_key_art.svg`는 변경하지 않고 동일 도형을 공통 `warrior_parts.svg`로 분리한다. 동작은 `data/presentation/warrior_animation.json`에서 관리하고 프레임 SVG를 따로 편집하지 않는다.
+[캐릭터 스프라이트 제작 지침](docs/CHARACTER_SPRITE_STANDARD.md)에 SVG/PNG·프레임·관절 기준을 기록했다. 사용자의 원래 컨셉 재제작 승인 후 Title/맵/프로필은 새 `concept_parts.svg` + `concept_warrior_animation.json`을 사용한다. 얼굴·종이 접힘·몸통과 다리 연결을 공통 부품으로 관리하고 프레임마다 다시 그리지 않는다. 기존 `warrior_key_art.svg`/구 프로필은 복구용으로 보존한다.
 
 ```powershell
-godot --headless --path . --script res://scripts/art/build_warrior_sprites.gd
-godot --headless --editor --path . --import
+godot --headless --path . --script res://scripts/art/build_concept_warrior.gd
+godot --headless --editor --path . --import --quit
 ```
 
-생성기는 공통 부품과 동작 데이터에서 SVG 시트, 투명 PNG와 SpriteFrames 씬을 생성한다. 현재 Idle 4·Walk 6프레임만 사용하며 나머지 전투 애니메이션은 제작 기준만 문서화했다. 런타임은 PNG/Nearest를 사용하고 마스터/제작 도구는 배포 패키지에서 제외한다.
+생성기는 96px 공통 부품과 동작 데이터에서 16프레임 시트·투명 PNG·SpriteFrames 씬을 생성한다. Idle4/Walk6/Run6을 사용하고 전투 애니메이션은 미구현이다. 발밑 그림자는 별도 노드이며 PNG/Nearest는 유지한다. 구 `build_warrior_sprites.gd`는 복구용 원형만 재생성한다. [얼굴·관절 비교와 살아 있는 배경 기록](docs/CONCEPT_LIVING_WORLD.md)을 참고한다. 배경에는 느린 구름·수목 흔들림·물빛·독립 풍차 날개·작은 나비를 추가했고 제작용 원본/확대 미리보기는 패키지에서 제외한다.
 
 ## Web · Windows 릴리즈
 

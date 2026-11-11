@@ -2,6 +2,7 @@ extends Control
 
 
 const ART_PATH := "res://assets/backgrounds/paper_forest_diorama/"
+const AMBIENCE := preload("res://scripts/ui/world_ambience.gd")
 const LAYER_NAMES := [
 	"BackgroundSky",
 	"BackgroundMountains",
@@ -84,6 +85,10 @@ const PLACEMENTS := {
 
 var _textures: Dictionary[String, Texture2D] = {}
 var _layer_nodes: Dictionary[String, Control] = {}
+var _motion: Array[Dictionary] = []
+var _sails: Sprite2D
+var _details: Node2D
+var _elapsed := 0.0
 
 
 func _ready() -> void:
@@ -104,6 +109,7 @@ func refresh_layout() -> void:
 	if size.x <= 0.0 or size.y <= 0.0:
 		return
 	var object_scale := minf(size.x / 480.0, size.y / 450.0)
+	_motion.clear()
 	for layer_name: String in LAYER_NAMES:
 		var layer: Control = _layer_nodes.get(layer_name)
 		if layer == null:
@@ -122,6 +128,30 @@ func refresh_layout() -> void:
 			continue
 		for placement: Dictionary in PLACEMENTS[layer_name]:
 			_add_object(layer, placement, object_scale)
+	_details = Node2D.new()
+	_details.name = "LivingDetails"
+	_details.set_script(AMBIENCE)
+	_layer_nodes["BattleGround"].add_child(_details)
+	_animate_world()
+
+
+func _process(delta: float) -> void:
+	_elapsed += maxf(0.0, delta)
+	_animate_world()
+
+
+func _animate_world() -> void:
+	for item in _motion:
+		var sprite: Control = item["sprite"]
+		var phase: float = _elapsed * item["speed"] + item["phase"]
+		if item["kind"] == "cloud":
+			sprite.position.x = item["origin"].x + sin(phase) * 12.0
+		else:
+			sprite.rotation = sin(phase) * item["amplitude"]
+	if is_instance_valid(_sails):
+		_sails.rotation = _elapsed * 0.22
+	if is_instance_valid(_details):
+		_details.call("update_world", size, _elapsed)
 
 
 func _add_sky(layer: Control) -> void:
@@ -222,12 +252,30 @@ func _add_object(parent: Control, placement: Dictionary, object_scale: float) ->
 	sprite.flip_h = placement.get("flip", false)
 	sprite.modulate.a = placement.get("opacity", 1.0)
 	parent.add_child(sprite)
+	var part: String = placement["part"]
+	if part in ["cloud", "pine", "round_tree", "bush", "flower"]:
+		sprite.pivot_offset = Vector2(object_size.x * 0.5, object_size.y * 0.94)
+		_motion.append({
+			"sprite": sprite, "kind": part, "origin": sprite.position,
+			"phase": float(placement["x"]) * 9.0,
+			"speed": 0.045 if part == "cloud" else 0.65,
+			"amplitude": 0.012 if part in ["pine", "round_tree"] else 0.025,
+		})
+	if part == "windmill":
+		_sails = Sprite2D.new()
+		_sails.name = "WindmillSails"
+		_sails.texture = _get_texture("windmill_sails")
+		_sails.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		_sails.position = Vector2(76, 66) * factor
+		_sails.scale = Vector2.ONE * factor
+		sprite.add_child(_sails)
 
 
 func _get_texture(part_name: String) -> Texture2D:
 	if _textures.has(part_name):
 		return _textures[part_name]
-	var texture := load(ART_PATH + part_name + ".png") as Texture2D
+	var file_name := "windmill_body" if part_name == "windmill" else part_name
+	var texture := load(ART_PATH + file_name + ".png") as Texture2D
 	if texture == null:
 		push_error("종이 숲 그림 조각을 읽지 못했습니다: %s" % part_name)
 		return null

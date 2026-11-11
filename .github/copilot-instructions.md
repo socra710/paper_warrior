@@ -12,8 +12,9 @@
 - 현재 프로토타입 범위는 실제 리소스 로딩, 픽셀 캐릭터 대기/맵 이동 연출, 초기 레벨/골드/스테이지 HUD와 준비 중인 메뉴 안내다. 맵 이동은 전투나 스테이지 진행이 아닌 연출이다. 전투·성장·보상·저장 기능이나 가짜 진행 수치를 추가하지 않는다.
 - 주요 함수나 복잡한 로직에 주석이 필요하면 한국어로 간결하게 작성한다.
 - 에셋을 추가할 때 `docs/ART_GUIDE.md`를 따르고 규격, 프레임 수, 기준점, 레이어 순서 등의 메타데이터를 기록한다.
-- 캐릭터 제작은 `docs/CHARACTER_SPRITE_STANDARD.md`와 `docs/VISUAL_QUALITY_RECOVERY.md`를 따른다. 기본 48×48이지만 현재 기준 전사는 원형 보존을 위한 명시적 96×96 예외다. 공통 씬 기본 72px/Title 144px는 유지하고 인게임 리디자인의 맵 인스턴스만 96px로 표시한다. 정상 `warrior_key_art.svg`의 도형·비율·얼굴·색·장비를 임의로 재디자인/재색칠하지 않는다. SVG defs/use 공통 부품, 최종 투명 PNG와 Nearest, Idle 4·Walk 6을 유지한다. 공격/피격/사망/승리는 미구현이다. 기존 SVG 분석 및 동일 조건 실제 비교 없이 그래픽을 교체하지 않는다.
+- 캐릭터 제작은 `docs/CHARACTER_SPRITE_STANDARD.md`를 따른다. 이전 `original_geometry_96` 프로필의 SVG/PNG/동작과 `warrior_key_art.svg`는 복구용으로 보존하며 덮어쓰지 않는다. 공통 씬 기본 72px/Title 144px, 인게임 맵 96px의 표시 배율은 유지한다. 최종 캐릭터는 투명 PNG/Nearest와 공통 SVG defs/use + 동작 데이터로 관리한다. 공격/피격/사망/승리는 미구현이다. 사용자 승인 범위 밖에서 외형을 임의 변경하거나 실제 비교 없이 교체하지 않는다.
 - 인게임 UI·배경은 `docs/INGAME_REDESIGN.md`를 따른다. HUD/내비게이션/풍경과 프로필·리본·임무 패널을 분리한다. 배경 원본은 `paper_forest_diorama/source/`에 보존하고 생성기로 개별 PNG를 재생성한다. 준비 중인 경험치·임무·보상·보석·전투를 실제 수치나 전투 화면으로 꾸미지 않는다.
+- 사용자 후속 승인으로 실제 Title/맵/프로필은 `concept_pixel_96` 프로필을 사용한다. 기준은 `docs/images/paper-warrior-concept-sheet.png`, 작업 기록은 `docs/CONCEPT_LIVING_WORLD.md`다. `concept_parts.svg` + `concept_warrior_animation.json`에서 PNG와 씬을 재생성하고, 구 `original_geometry_96` 파일은 복구용으로 보존한다. 얼굴/허리/허벅지 연결·발 접지·장비 부착을 검사한다. Idle4/Walk6/Run6만 구현했으며 전투 동작은 아니다. 새 허가 없이 다시 다른 외형으로 재해석하지 않는다.
 - 캐릭터 외형은 `warrior_parts.svg`, 프레임별 위치/변형은 `data/presentation/warrior_animation.json`으로 분리한다. 공통 부품을 한 번 수정하면 생성 도구로 모든 애니메이션에 반영하며, 생성된 SVG/PNG/씬을 프레임별로 수동 재작성하지 않는다.
 - 웹 화면은 종이전사 고유의 크림·민트·하늘색·노랑 종이 공작 분위기를 사용한다. 샘플 사이트는 배치만 참고하고 색상/브랜딩/터미널 스타일을 복제하지 않는다.
 - 소스는 `socra710/paper_warrior`, 랜딩/Web 산출물과 배포 릴리즈는 `socra710/paper_warrior_releases`에서 관리한다. 두 저장소의 origin을 혼동하지 않는다.
