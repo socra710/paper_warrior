@@ -48,6 +48,24 @@ test('unknown download size stays indeterminate', async () => {
   assert.doesNotMatch(ui.status.textContent, /%/);
 });
 
+test('finished downloads do not claim the engine has finished initializing', async () => {
+  const ui = elements();
+  let finish;
+  class Engine {
+    static getMissingFeatures() { return []; }
+    startGame({ onProgress }) {
+      onProgress(100, 100);
+      return new Promise((resolve) => { finish = resolve; });
+    }
+  }
+  const result = bootGame(Engine, {}, ui);
+  assert.equal('value' in ui.progress, false);
+  assert.doesNotMatch(ui.status.textContent, /100%/);
+  assert.equal(ui.overlay.hidden, false);
+  finish();
+  assert.equal(await result, true);
+});
+
 test('unsupported browsers keep a readable error instead of a black canvas', async () => {
   const ui = elements();
   class Engine {

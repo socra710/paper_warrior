@@ -19,7 +19,7 @@ async function startGame(Engine, config, ui, timeoutMs) {
     ui.progress.hidden = false;
     ui.progress.removeAttribute('value');
     ui.retry.hidden = true;
-    ui.status.textContent = '모험을 준비하고 있어요...';
+    ui.status.textContent = '웹 실행 파일을 준비하고 있어요...';
     const deadline = new Promise((_, reject) => {
       timer = setTimeout(() => reject(new Error('게임 준비 응답 시간이 초과됐어요. 네트워크를 확인하고 다시 시도해 주세요.')), timeoutMs);
     });
@@ -36,12 +36,17 @@ async function startGame(Engine, config, ui, timeoutMs) {
       onProgress(current, total) {
         if (!active) return;
         if (Number.isFinite(total) && total > 0 && Number.isFinite(current) && current >= 0) {
-          ui.progress.max = total;
-          ui.progress.value = Math.min(current, total);
-          ui.status.textContent = `모험을 내려받는 중 · ${Math.floor(Math.min(current / total, 1) * 100)}%`;
+          if (current < total) {
+            ui.progress.max = total;
+            ui.progress.value = current;
+            ui.status.textContent = `웹 실행 파일 내려받기 · ${Math.floor(current / total * 100)}%`;
+          } else {
+            ui.progress.removeAttribute('value');
+            ui.status.textContent = '파일 수신 완료 · 웹 엔진을 열고 있어요';
+          }
         } else {
           ui.progress.removeAttribute('value');
-          ui.status.textContent = '모험을 준비하고 있어요...';
+          ui.status.textContent = '웹 실행 파일을 준비하고 있어요...';
         }
       },
     });

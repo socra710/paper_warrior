@@ -27,12 +27,13 @@
       <div class="game-viewport">
         <canvas id="canvas" width="480" height="640" tabindex="0" aria-label="종이전사 게임 화면">이 브라우저는 게임 캔버스를 지원하지 않습니다.</canvas>
         <div class="boot-screen" id="boot-screen">
-          <p class="boot-eyebrow">한 장의 종이가 용기가 되는 순간</p>
-          <h1>종이전사</h1>
-          <div class="boot-art" aria-hidden="true"></div>
-          <div class="boot-status">
-            <p id="boot-status" role="status" aria-live="polite">모험을 준비하고 있어요...</p>
-            <progress id="boot-progress" aria-label="게임 다운로드 진행률"></progress>
+          <div class="boot-panel">
+            <p class="boot-step">WEB PLAYER / 파일 준비</p>
+            <span class="boot-fold" aria-hidden="true"></span>
+            <h1>웹 플레이어 준비</h1>
+            <p class="boot-hint">웹 실행 파일을 받은 뒤<br>짧은 로고 인사가 시작돼요.</p>
+            <p id="boot-status" role="status" aria-live="polite">웹 실행 파일을 준비하고 있어요...</p>
+            <progress id="boot-progress" aria-label="웹 실행 파일 다운로드 진행률"></progress>
             <button type="button" class="button button-outline" id="retry" hidden>다시 시도하기</button>
           </div>
         </div>

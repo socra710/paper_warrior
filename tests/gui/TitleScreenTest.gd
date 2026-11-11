@@ -4,11 +4,13 @@ extends GdUnitTestSuite
 func test_title_uses_galmuri_heading_and_pretendard_ui() -> void:
 	var runner := scene_runner("res://scenes/main/title.tscn")
 	var scene := runner.scene()
-	var heading := scene.find_child("GameTitle") as Label
+	var heading := scene.find_child("Eyebrow") as Label
+	var logo := scene.find_child("GameTitle") as TextureRect
 	var start_button := scene.find_child("StartButton") as Button
 
 	assert_that(heading.get_theme_default_font().resource_path.get_file()).is_equal("Galmuri11-Bold.ttf")
 	assert_that(start_button.get_theme_default_font().resource_path.get_file()).is_equal("Pretendard-Regular.otf")
+	assert_that(logo.texture.resource_path).is_equal("res://assets/branding/logo_wordmark.png")
 
 
 func test_title_shows_animated_pixel_warrior_version_and_prototype_notice() -> void:
@@ -95,6 +97,7 @@ func test_start_button_enters_game_with_player_state_and_idle_warrior() -> void:
 	var runner := scene_runner("res://scenes/main/title.tscn")
 	var title_scene := runner.scene()
 	var start_button := title_scene.find_child("StartButton") as Button
+	await runner.simulate_frames(2)
 
 	get_tree().current_scene = title_scene
 	runner.set_mouse_position(start_button.get_global_rect().get_center())

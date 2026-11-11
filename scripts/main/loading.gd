@@ -28,7 +28,8 @@ func _start_preparation() -> void:
 	%RetryButton.text = "다시 시도하기"
 	%RetryButton.hide()
 	%LoadProgress.value = 0.0
-	%LoadPercent.text = "0%"
+	%LoadProgress.indeterminate = true
+	%LoadPercent.text = "준비 상태 확인 중"
 	%LoadPhase.text = "시작 화면과 종이 숲을 준비해요"
 	set_process(true)
 	for path in SCENES:
@@ -54,6 +55,7 @@ func _process(delta: float) -> void:
 		return
 	var total_progress := 0.0
 	var completed := 0
+	var progress_known := true
 	for path in SCENES:
 		var progress: Array = []
 		var status: int = resource_loader.load_threaded_get_status(path, progress)
@@ -61,17 +63,23 @@ func _process(delta: float) -> void:
 			total_progress += 1.0
 			completed += 1
 		elif status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-			if not progress.is_empty():
+			if not progress.is_empty() and is_finite(float(progress[0])):
 				total_progress += clampf(float(progress[0]), 0.0, 1.0)
+			else:
+				progress_known = false
 		else:
 			_show_error("리소스를 준비하지 못했습니다: %s" % path)
 			return
-	%LoadProgress.value = total_progress / SCENES.size() * 100.0
-	%LoadPercent.text = "%d%%" % int(%LoadProgress.value)
+	%LoadProgress.indeterminate = not progress_known
+	%LoadProgress.value = minf(total_progress / SCENES.size() * 100.0, 99.0)
+	%LoadPercent.text = "%d%%" % int(%LoadProgress.value) if progress_known else "리소스 준비 중"
 	%LoadPhase.text = "시작 화면과 종이 숲 준비 · %d / %d" % [completed, SCENES.size()]
 	if completed == SCENES.size():
 		_phase = Phase.TRANSFERRING
 		set_process(false)
+		%LoadProgress.indeterminate = false
+		%LoadProgress.value = 100.0
+		%LoadPercent.text = "100%"
 		%LoadPhase.text = "준비 완료! 첫 장을 펼쳐요."
 		call_deferred("_enter_title")
 
@@ -96,6 +104,8 @@ func _show_error(message: String) -> void:
 	_phase = Phase.FAILED
 	set_process(false)
 	modulate.a = 1.0
+	%LoadProgress.indeterminate = false
+	%LoadPercent.text = "준비 중단"
 	%LoadPhase.text = "준비에 실패했어요.\n%s" % message
 	%RetryButton.disabled = false
 	%RetryButton.show()
@@ -130,7 +140,9 @@ func _restart_application() -> Error:
 
 func _update_layout() -> void:
 	var landscape := size.x > size.y
-	$PaperFoldSprite.position = Vector2(size.x * 0.23, size.y * 0.5) if landscape else Vector2(size.x * 0.5, 185)
+	$PaperFoldSprite.position = Vector2(size.x * 0.2, size.y * 0.53) if landscape else Vector2(size.x * 0.5, 175)
+	$WorkCard.position = Vector2(size.x * 0.4, 64) if landscape else Vector2(24, 280)
+	$WorkCard.size = Vector2(size.x * 0.6 - 32, size.y - 112) if landscape else Vector2(size.x - 48, size.y - 325)
 	$Content.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	$Content.position = Vector2(size.x * 0.45, 42) if landscape else Vector2(44, 260)
-	$Content.size = Vector2(size.x * 0.55 - 32, size.y - 84) if landscape else Vector2(size.x - 88, size.y - 332)
+	$Content.position = $WorkCard.position + Vector2(20, 20)
+	$Content.size = $WorkCard.size - Vector2(40, 40)

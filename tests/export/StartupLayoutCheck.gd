@@ -1,5 +1,7 @@
 extends SceneTree
 
+var _observed_scenes: Array[String] = []
+
 
 func _initialize() -> void:
 	call_deferred("_check")
@@ -15,7 +17,7 @@ func _check() -> void:
 	await process_frame
 	await process_frame
 	var art := scene.find_child("WarriorArt") as Control
-	var heading := scene.find_child("GameTitle") as Label
+	var heading := scene.find_child("GameTitle") as TextureRect
 	var subtitle := scene.find_child("Subtitle") as Label
 	var button := scene.find_child("StartButton") as Button
 	var valid := (
@@ -101,6 +103,13 @@ func _check_startup_flow() -> bool:
 	var reached_game: bool = await _wait_for_scene("res://scenes/main/game.tscn")
 	if not reached_game:
 		return false
+	var expected: Array[String] = [
+		"res://scenes/main/splash.tscn", "res://scenes/main/loading.tscn",
+		"res://scenes/main/title.tscn", "res://scenes/main/game.tscn",
+	]
+	if _observed_scenes != expected:
+		push_error("Exported startup skipped or repeated a screen: %s" % [_observed_scenes])
+		return false
 	var game := current_scene
 	current_scene = null
 	game.queue_free()
@@ -112,6 +121,10 @@ func _check_startup_flow() -> bool:
 func _wait_for_scene(path: String) -> bool:
 	var deadline := Time.get_ticks_msec() + 10000
 	while Time.get_ticks_msec() < deadline:
+		if current_scene != null:
+			var observed := current_scene.scene_file_path
+			if _observed_scenes.is_empty() or _observed_scenes.back() != observed:
+				_observed_scenes.append(observed)
 		if current_scene != null and current_scene.scene_file_path == path:
 			return true
 		await process_frame

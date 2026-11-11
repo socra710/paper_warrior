@@ -1,13 +1,19 @@
-import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { fingerprintWeb } from './fingerprint.mjs';
 
 const root = fileURLToPath(new URL('../..', import.meta.url));
 const output = path.join(root, 'build', 'web');
 const godot = process.argv[2] || process.env.GODOT_BIN || 'godot';
 await mkdir(path.join(output, 'assets'), { recursive: true });
 await writeFile(path.join(root, 'build', '.gdignore'), '');
+for (const name of await readdir(output)) {
+  if (/^play-[a-f0-9]{16}\.(?:js|wasm|pck|audio(?:\.position)?\.worklet\.js)$/.test(name)) {
+    await rm(path.join(output, name));
+  }
+}
 for (const name of [
   'index.js', 'index.wasm', 'index.pck', 'index.png', 'index.icon.png',
   'index.apple-touch-icon.png', 'index.audio.worklet.js', 'index.audio.position.worklet.js',
@@ -59,4 +65,5 @@ for (const name of [
 }
 await copyFile(path.join(root, 'assets', 'branding', 'favicon.ico'), path.join(output, 'favicon.ico'));
 await writeFile(path.join(output, '.nojekyll'), '');
+await fingerprintWeb(output);
 console.log(`웹 빌드 완료: ${output}\n로컬 실행: node scripts\\web\\serve.mjs`);

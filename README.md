@@ -52,7 +52,7 @@ node scripts\web\build.mjs "C:\Tools\Godot\Godot_v4.4.1-stable_win64_console.exe
 
 두 주소는 로컬 전용이다. 공개 배포는 별도 정적 호스팅에 `build\web\` 전체를 업로드한다. HTML은 HTTP(S)로 열고 `file://`로 직접 실행하지 않는다. 기본 포트가 사용 중이면 `$env:PORT = "8001"`로 변경한다.
 
-게임 프레임은 기본 최대 420px 폭의 세로형 3:4다. 높이가 짧은 가로 화면에서는 16:9와 맵/사이드 메뉴 배치로 전환한다. 방향을 바꿔도 같은 엔진과 씬을 유지해 열린 메뉴와 상태가 보존된다. Splash는 로고와 픽셀 전사의 짧은 인사, Loading은 별도 종이 접기 화면이다. 브라우저는 실제 다운로드 바이트, 게임은 Title/Game 씬의 실제 준비율을 표시한다. 준비가 빠르면 Loading도 짧다.
+게임 프레임은 기본 최대 420px 폭의 세로형 3:4다. 높이가 짧은 가로 화면에서는 16:9와 맵/사이드 메뉴 배치로 전환한다. 방향을 바꿔도 같은 엔진과 씬을 유지해 열린 메뉴와 상태가 보존된다. 작업 브랜치의 품질 복구에서는 웹 파일 준비 패널 → 독립 로고 Splash → 하늘색 작업대 Loading → 기준 전사/시작 버튼 Title로 구분한다. 브라우저는 실제 다운로드 바이트와 엔진 초기화를 구분하고 게임은 Title/Game의 실제 준비율 또는 불확정 상태를 표시한다. 진행 중 요청은 최대 99%, 모두 준비돼야 100%다. 공개 배포는 승인 전까지 기존 v0.3.0을 유지한다.
 
 Title의 **모험 시작하기**를 누르면 작은 전사가 종이 숲을 둘러보고 스테이지 1-1, 레벨 1·골드 0과 전투 대기 영역이 표시된다. 성장·장비·꾸미기 버튼은 **준비 중** 안내만 열며 닫기나 Escape로 돌아온다. 모든 화면과 웹 셸은 `project.godot`의 버전을 표시한다.
 
@@ -60,7 +60,7 @@ Title의 **모험 시작하기**를 누르면 작은 전사가 종이 숲을 둘
 
 ## 캐릭터 에셋 제작
 
-[캐릭터 스프라이트 제작 지침](docs/CHARACTER_SPRITE_STANDARD.md)에 SVG 허용 범위, PNG 기본 정책, 48×48 규격, 모든 애니메이션 프레임 수와 품질 점검 기준을 기록했다. 외형은 공통 `warrior_parts.svg`, 동작은 `data/presentation/warrior_animation.json`에서 관리한다. 프레임 SVG를 따로 편집하지 않는다.
+[캐릭터 스프라이트 제작 지침](docs/CHARACTER_SPRITE_STANDARD.md)에 SVG 허용 범위, PNG 기본 정책, 48×48 기본 규격과 원형 보존을 위한 현재 96×96 예외, 프레임 수·품질 기준을 기록했다. 정상 `warrior_key_art.svg`는 변경하지 않고 동일 도형을 공통 `warrior_parts.svg`로 분리한다. 동작은 `data/presentation/warrior_animation.json`에서 관리하고 프레임 SVG를 따로 편집하지 않는다.
 
 ```powershell
 godot --headless --path . --script res://scripts/art/build_warrior_sprites.gd
@@ -95,7 +95,7 @@ PowerShell 7에서 변경 사항을 검증·커밋한 뒤, 승인받은 버전�
 
 ```powershell
 godot --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a res://tests
-node --test tests\web\loader.test.mjs tests\web\viewport.test.mjs
+node --test tests\web\*.test.mjs
 ```
 
 GdUnit4 v5.1.1의 SceneRunner로 글꼴, 실제 리소스 준비, 로딩 실패/재시도/시간 초과, 중복 시작 방지, PNG 프레임과 맵 이동, 버전, 메뉴와 방향 변경 시 상태 보존을 검사한다. Node 테스트는 웹 부팅 진행률/실패/시간 초과/중복 방지와 같은 캔버스의 방향 전환을 검사한다. Web/Windows 빌드는 패키지의 콜드 시작과 양방향 레이아웃을 검사한다. 브라우저의 실제 다운로드 실패·재시도와 콘솔/시각 품질은 별도 실행 확인이 필요하다.

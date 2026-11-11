@@ -16,28 +16,30 @@ project.godot
 
 | 씬 | 책임 | 스크립트 |
 |---|---|---|
-| `scenes/main/splash.tscn` | 로고와 캐릭터의 짧은 인트로 | `scripts/main/splash.gd` |
+| `scenes/main/splash.tscn` | 독립된 로고·종이 배경의 짧은 인트로, 전환 실패 안내 | `scripts/main/splash.gd` |
 | `scenes/main/loading.tscn` | 독립된 종이 공방 화면, 실제 준비율/오류 표시 | `scripts/main/loading.gd` |
-| `scenes/main/title.tscn` | 게임명과 시작 버튼 표시 | `scripts/main/title.gd` |
+| `scenes/main/title.tscn` | 로고·기준 캐릭터 대기·시작 버튼 표시 | `scripts/main/title.gd` |
 | `scenes/main/game.tscn` | 초기 레벨·골드·스테이지, 대기 전사와 준비 중인 메뉴 | `scripts/main/game.gd` |
 
-Splash의 1.2초는 인트로 표시 시간이며 씬 소유의 processing으로 관리해 화면 제거 후 타이머가 전환을 실행하지 않는다. Loading은 `ResourceLoader.load_threaded_request`로 Title/Game PackedScene을 요청하고 `load_threaded_get_status`의 실제 준비율 평균을 표시한다. 두 요청이 모두 완료된 경우에만 Title을 가져와 `change_scene_to_packed`로 이동한다. 완료 후 0.15초 페이드아웃 외에 가짜 진행 타이머는 없다.
+Splash의 1.2초는 인트로 표시 시간이며 씬 소유의 processing으로 관리해 화면 제거 후 타이머가 전환을 실행하지 않는다. 요청/실행 가드로 지연 전환이 중복 실행되지 않으며 실패 시 로고·오류를 유지한다. Loading은 `ResourceLoader.load_threaded_request`로 Title/Game PackedScene을 요청하고 `load_threaded_get_status`의 실제 준비율 평균을 표시한다. 알 수 없는 값은 불확정 상태이며 진행 중인 값은 최대 99%다. 두 요청이 모두 완료돼야 100%로 표시하고 Title을 가져와 `change_scene_to_packed`로 이동한다. 완료 후 0.15초 페이드아웃 외에 가짜 진행 타이머는 없다.
 
 Loading 상태는 준비/전환/실패로 구분한다. 실패 또는 20초 응답 시간 초과 시 자동 진행을 멈추고 진단 메시지를 표시한다. 일반 실패의 재시도는 실패한 요청을 회수해 실제 요청을 다시 수행하고 다른 진행 중 요청은 유지한다. 시간 초과는 취소 불가능한 엔진 요청의 타이머만 초기화하지 않는다. **처음부터 다시 시작**으로 웹은 페이지를 새로고침하고 데스크톱은 새 앱 인스턴스를 실행한 후 기존 앱을 종료한다. 재실행이 차단되면 수동 재실행 안내를 표시한다. 중복 클릭은 잠근다. 테스트는 호환 로더와 재실행 콜백으로 실패/대기/재시작을 분리 검증한다.
 
-Splash/Title만 `scenes/ui/start_screen.tscn`을 상속해 제목·픽셀 대기 전사·버튼 스타일을 공유한다. Loading은 캐릭터 원화 대신 별도의 종이 접기 스프라이트와 실제 진행 바를 사용한다. 종이 애니메이션은 진행률을 만들어내지 않는다. Game의 완료된 요청은 Title 시작 버튼에서 `load_threaded_get`으로 가져올 때까지 ResourceLoader가 유지한다. 시작하지 않고 Title을 닫으면 완료 요청을 회수해 리소스를 해제한다. Title을 단독 실행한 경우에만 일반 `load`를 사용한다. 시작 버튼은 첫 입력에서 즉시 잠그고 전환을 지연 호출하며 실패 시 안내와 함께 다시 활성화한다.
+Splash는 독립 씬이며 `scenes/ui/start_screen.tscn`은 Title 전용 레이아웃이다. 화면 전체 구도를 공유하지 않고 Pretendard/공통 버튼 테마를 재사용한다. Loading은 하늘색 작업대, 별도의 종이 접기 스프라이트와 실제 진행 바를 사용한다. 종이 애니메이션은 진행률을 만들어내지 않는다. Game의 완료된 요청은 Title 시작 버튼에서 `load_threaded_get`으로 가져올 때까지 ResourceLoader가 유지한다. 시작하지 않고 Title을 닫으면 완료 요청을 회수해 리소스를 해제한다. Title을 단독 실행한 경우에만 일반 `load`를 사용한다. 시작 버튼은 첫 입력에서 즉시 잠그고 전환을 지연 호출하며 실패 시 안내와 함께 다시 활성화한다.
 
 ## 첫 게임 화면
 
 `PrototypeState`와 `data/growth/initial_preview.tres`는 초기 레벨 1, 골드 0, 스테이지 1-1 / 종이 숲의 입구를 제공한다. Game 씬의 exported Resource로 연결되어 씬과 함께 준비·패키징되며 런타임에서 변경하지 않는다. 저장 데이터나 실제 보상 시스템은 아니다.
 
-`scenes/characters/warrior_sprite.tscn`은 48×48 PNG 프레임을 Nearest로 표시하는 AnimatedSprite2D다. Idle 4프레임과 Walk 6프레임을 독립 관리한다. `scenes/ui/warrior_idle.tscn`은 Splash/Title의 대기 미리보기이고 `scenes/ui/map_walker.tscn`은 작은 전사를 정규화된 네 지점 사이로 이동시킨다. 맵 크기가 바뀌면 상대 위치를 유지하며 경계 안으로 제한한다. 전투/스테이지 진행은 준비 중으로 표시한다.
+`scenes/characters/warrior_sprite.tscn`은 원본 보존 예외인 96×96 PNG 프레임을 Nearest로 표시하는 AnimatedSprite2D다. Idle 4프레임과 Walk 6프레임을 독립 관리한다. 맵 배율 0.75/Title 배율 1.5로 실제 표시 영역은 기존 72px/144px다. `scenes/ui/warrior_idle.tscn`은 Title 대기 미리보기이고 `scenes/ui/map_walker.tscn`은 작은 전사를 정규화된 네 지점 사이로 이동시킨다. 맵 크기가 바뀌면 상대 위치를 유지하며 경계 안으로 제한한다. 전투/스테이지 진행은 준비 중으로 표시한다.
 
 성장·장비·꾸미기는 각각 준비 중인 기능을 설명하는 안내창만 연다. 안내창 표시 중 배경 메뉴는 비활성화하고 닫기/ESC로 원래 버튼에 포커스를 복원한다. 강화·구매·장착·색상 변경이나 가짜 수치 증가는 없다.
 
 ## 버전과 화면 방향
 
 버전은 `project.godot`의 `application/config/version`을 단일 기준으로 사용한다. 모든 Godot 화면과 웹 플레이 셸에 표시하고 웹 빌드 시 같은 값으로 치환한다. 공개 배포의 `version.json`은 릴리즈 태그와 실제 원본 커밋을 별도로 추적한다.
+
+[버전 정책](VERSION_POLICY.md)에 따라 이번 품질 복구는 PATCH `0.3.1` 제안이다. 사용자 승인 전 프로젝트·공개 버전 `0.3.0`은 바꾸지 않고 신규 배포를 하지 않는다. 미배포 변경은 CHANGELOG의 Unreleased와 [품질 복구 기록](VISUAL_QUALITY_RECOVERY.md)에서 관리한다.
 
 `responsive_screen.gd`는 세로 480×640, 가로 800×450의 논리 해상도를 선택한다. 시작 화면은 전사/버튼 배치를 재정렬하고 Game은 맵/사이드 메뉴로 재배치한다. 현재 씬을 재생성하지 않으므로 열린 메뉴와 초기 상태, 이동 경로가 유지된다.
 
@@ -51,9 +53,12 @@ Splash/Title만 `scenes/ui/start_screen.tscn`을 상속해 제목·픽셀 대기
 - `web/game-loader.mjs`: 엔진 JavaScript 다운로드부터 실제 게임 시작까지 공유하는 90초 제한, 실제 다운로드 진행률과 실패 처리. 엔진 스크립트는 재시도 핸들러 설치 후 비동기로 요청한다. 같은 캔버스의 중복 부팅을 막고 실패 뒤 늦은 다운로드/진행 콜백을 무시한다. 재시도는 페이지 새로고침으로 부분 초기화 상태를 제거한다.
 - `web/game-viewport.mjs`: 페이지/엔진 재시작 없는 가로·세로 캔버스 변경.
 - `scripts/web/build.mjs`: Godot import/Export 후 정적 웹 파일과 에셋을 `build/web/`에 복사한다. Node 내장 기능만 사용한다.
+- `scripts/web/fingerprint.mjs`: JS/wasm/PCK/worklet 내용의 해시를 파일명에 넣고 엔진 executable/fileSizes 참조를 함께 변경한다. PCK 가상 파일명에 쿼리를 붙이지 않는다. 로더 모듈·CSS에는 내용별 쿼리를 붙여 이전 파일 캐시와 구분한다. 같은 런타임 묶음을 사용하므로 PCK 변경 시 wasm도 새 URL로 내려받는 비용이 있으며 세분화 최적화는 하지 않았다.
 - `scripts/web/serve.mjs`: MIME 형식을 지원하는 로컬 전용 HTTP 서버. 기본 주소는 `127.0.0.1:8000`, 포트는 `PORT`로 변경한다.
 
 랜딩페이지는 `/`, 플레이 페이지는 `/play.html`이다. 루트 경로를 하드코딩하지 않아 정적 호스팅의 하위 경로에서도 배포할 수 있다. Pages 배포와 다운로드 릴리즈는 별도 `socra710/paper_warrior_releases` 저장소에서 관리하고 Godot/웹 원본은 `socra710/paper_warrior`에서 관리한다. 계정/백엔드는 구성하지 않는다.
+
+웹 파일 준비 화면은 대형 게임명/캐릭터 없이 파일 패널만 표시한다. 다운로드가 끝났어도 엔진 시작 Promise가 완료되기 전에는 불확정 초기화 상태로 남는다. HTML 자체가 이전 배포로 캐시된 경우 새 파일 해시만으로 오래된 HTML을 교체할 수 없으므로 게시 후 HTML 재검증과 실제 버전 확인이 필요하다.
 
 ## 배포 저장소 분리
 
@@ -108,7 +113,7 @@ Splash/Title만 `scenes/ui/start_screen.tscn`을 상속해 제목·픽셀 대기
 
 ```powershell
 godot --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a res://tests
-node --test tests\web\loader.test.mjs
+node --test tests\web\*.test.mjs
 ```
 
 ## 실행·검증
@@ -120,11 +125,11 @@ node scripts\web\build.mjs
 node scripts\web\serve.mjs
 ```
 
-로컬 서버가 준비된 후 `/`의 소개/플레이 링크와 `/play.html`의 Splash → Loading → Title → 시작 버튼 → 빈 Main Game 순서를 확인한다. 데스크톱/모바일에서 가로 넘침과 게임 비율도 확인한다. 브라우저나 Web Export 검사 결과는 실제 실행한 경우에만 성공으로 기록한다.
+로컬 서버가 준비된 후 `/`의 소개/플레이 링크와 `/play.html`의 Splash → Loading → Title → 시작 버튼 → HUD/작은 전사 Game 순서를 확인한다. 데스크톱/모바일에서 가로 넘침과 게임 비율도 확인한다. 브라우저나 Web Export 검사 결과는 실제 실행한 경우에만 성공으로 기록한다.
 
 ## 글꼴
 
-`assets/fonts/theme_ui.tres`는 일반 UI에 Pretendard Regular를 적용하고, `theme_galmuri.tres`는 게임 제목에 Galmuri 11 Bold 아웃라인 글꼴을 적용한다. Web 호환성을 위해 임베디드 비트맵 글리프가 아닌 스케일러블 글리프를 사용한다. Splash/Title의 제목은 Galmuri, 버튼과 Loading UI는 Pretendard를 사용한다. 두 글꼴의 라이선스 전문은 각 `LICENSE-*.txt` 파일에 보존한다.
+`assets/fonts/theme_ui.tres`는 일반 UI에 Pretendard Regular와 재사용 가능한 버튼 스타일을 적용하고, `theme_galmuri.tres`는 픽셀 강조에 Galmuri 11 Bold 아웃라인 글꼴을 적용한다. 로고 PNG의 글자도 기존 Galmuri 합성 원본이다. Web 호환성을 위해 임베디드 비트맵 글리프가 아닌 스케일러블 글리프를 사용한다. 두 글꼴의 라이선스 전문은 각 `LICENSE-*.txt` 파일에 보존한다.
 
 ## 향후 구조 원칙
 
