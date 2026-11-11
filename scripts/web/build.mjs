@@ -1,13 +1,20 @@
-import { copyFile, mkdir, rm, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { fingerprintWeb } from './fingerprint.mjs';
 
 const root = fileURLToPath(new URL('../..', import.meta.url));
 const output = path.join(root, 'build', 'web');
 const godot = process.argv[2] || process.env.GODOT_BIN || 'godot';
 await mkdir(path.join(output, 'assets'), { recursive: true });
 await writeFile(path.join(root, 'build', '.gdignore'), '');
+for (const name of await readdir(output)) {
+  if (/^play-[a-f0-9]{16}\.(?:js|wasm|pck|audio(?:\.position)?\.worklet\.js)$/.test(name)) {
+    await rm(path.join(output, name));
+  }
+}
 for (const name of [
   'index.js', 'index.wasm', 'index.pck', 'index.png', 'index.icon.png',
   'index.apple-touch-icon.png', 'index.audio.worklet.js', 'index.audio.position.worklet.js',
@@ -32,7 +39,12 @@ for (const args of [
   if (result.status !== 0) process.exit(result.status || 1);
 }
 
-for (const name of ['index.html', 'site.css', 'game-loader.css', 'game-loader.mjs']) {
+const project = await readFile(path.join(root, 'project.godot'), 'utf8');
+const version = project.match(/^config\/version="([0-9]+\.[0-9]+\.[0-9]+)"$/m)?.[1];
+if (!version) throw new Error('project.godot에 올바른 application/config/version이 필요합니다.');
+const playerPath = path.join(output, 'play.html');
+await writeFile(playerPath, (await readFile(playerPath, 'utf8')).replaceAll('%GAME_VERSION%', version));
+for (const name of ['index.html', 'site.css', 'game-loader.css', 'game-loader.mjs', 'game-viewport.mjs']) {
   await copyFile(path.join(root, 'web', name), path.join(output, name));
 }
 for (const name of ['Pretendard-Regular.otf', 'Galmuri11-Bold.ttf', 'LICENSE-Galmuri.txt', 'LICENSE-Pretendard.txt']) {
@@ -42,6 +54,16 @@ await copyFile(
   path.join(root, 'assets', 'characters', 'warrior', 'warrior_key_art.svg'),
   path.join(output, 'assets', 'warrior_key_art.svg'),
 );
+await copyFile(
+  path.join(root, 'assets', 'characters', 'warrior', 'warrior_idle_walk.png'),
+  path.join(output, 'assets', 'warrior_idle_walk.png'),
+);
+const folding = await readFile(path.join(root, 'assets', 'ui', 'paper_fold.png'));
+await writeFile(path.join(output, 'assets', 'paper_fold.png'), folding);
+const foldHash = createHash('sha256').update(folding).digest('hex').slice(0, 16);
+const loaderCss = path.join(output, 'game-loader.css');
+await writeFile(loaderCss, (await readFile(loaderCss, 'utf8'))
+  .replace('assets/paper_fold.png', `assets/paper_fold.png?v=${foldHash}`));
 for (const name of [
   'logo_symbol.png', 'logo_wordmark.png', 'favicon_16.png', 'favicon_32.png',
   'favicon_48.png', 'apple_touch_icon.png',
@@ -50,4 +72,5 @@ for (const name of [
 }
 await copyFile(path.join(root, 'assets', 'branding', 'favicon.ico'), path.join(output, 'favicon.ico'));
 await writeFile(path.join(output, '.nojekyll'), '');
+await fingerprintWeb(output);
 console.log(`웹 빌드 완료: ${output}\n로컬 실행: node scripts\\web\\serve.mjs`);

@@ -1,6 +1,6 @@
 # 종이전사 (Paper Warrior)
 
-종이 접기 전사 한 명을 키우는 웹 우선 2D 픽셀 방치형 RPG의 Godot 4 프로토타입이다. 소개 랜딩페이지와 중앙의 작은 세로형 웹 게임 프레임을 제공한다. Splash → 실제 리소스 Loading → Title → Main Game 흐름에서 전사의 대기 연출, 초기 레벨·골드, 스테이지와 메뉴 안내를 확인할 수 있다. 전투·성장·보상·저장은 아직 구현하지 않았다.
+종이 접기 전사 한 명을 키우는 웹 우선 2D 픽셀 방치형 RPG의 Godot 4 프로토타입이다. 소개 랜딩페이지와 중앙의 작은 웹 게임 프레임을 제공한다. Splash → 실제 리소스 Loading → Title → Main Game 흐름에서 픽셀 전사의 대기/맵 이동 연출, 초기 레벨·골드, 스테이지와 메뉴 안내를 확인할 수 있다. 이동은 프레젠테이션이며 전투·성장·보상·저장은 아직 구현하지 않았다.
 
 | 저장소 | 역할 |
 |---|---|
@@ -52,16 +52,31 @@ node scripts\web\build.mjs "C:\Tools\Godot\Godot_v4.4.1-stable_win64_console.exe
 
 두 주소는 로컬 전용이다. 공개 배포는 별도 정적 호스팅에 `build\web\` 전체를 업로드한다. HTML은 HTTP(S)로 열고 `file://`로 직접 실행하지 않는다. 기본 포트가 사용 중이면 `$env:PORT = "8001"`로 변경한다.
 
-게임 프레임은 데스크톱에서 최대 420px 폭, 내부 게임은 480×640(3:4)이다. 모바일에서는 가로 폭에 맞춰 축소한다. Splash는 로고와 전사의 짧은 인사, Loading은 별도의 종이 공방 화면이다. 브라우저 다운로드는 실제 바이트, 게임 Loading은 Title/Game 씬과 종속 리소스의 실제 준비율을 표시한다. 준비가 빠르면 Loading도 짧게 표시된다.
+게임 프레임은 기본 최대 420px 폭의 세로형 3:4다. 높이가 짧은 가로 화면에서는 16:9와 맵/사이드 메뉴 배치로 전환한다. 방향을 바꿔도 같은 엔진과 씬을 유지해 열린 메뉴와 상태가 보존된다. 작업 브랜치에서는 웹 중앙 종이접기 → 독립 로고 Splash → 하늘색 중앙 종이접기 Loading → 기준 전사/시작 버튼 Title로 구분한다. 접기는 공통 PNG의 8프레임이며 모달 카드 없이 표시한다. 브라우저는 실제 다운로드 바이트와 엔진 초기화를 구분하고 게임은 Title/Game의 실제 준비율 또는 불확정 상태를 표시한다. 진행 중 요청은 최대 99%, 모두 준비돼야 100%다. 글자는 표시 크기×DPR 버퍼·대비와 절제된 크기로 보정하고 캐릭터 Nearest는 유지한다. 공개 배포는 승인 전까지 기존 v0.3.0을 유지한다.
 
-Title의 **모험 시작하기**를 누르면 종이 숲에서 대기 중인 전사, 스테이지 1-1, 레벨 1·골드 0과 전투 대기 영역을 볼 수 있다. 성장·장비·꾸미기 버튼은 각각 **준비 중** 안내만 열며 닫기 버튼이나 Escape로 돌아온다. 초기 수치는 변하지 않고 전투·보상·저장은 진행되지 않는다.
+Title의 **모험 시작하기**를 누르면 원본 픽셀 전사가 독립 레이어로 만든 종이 숲을 둘러보고 실제 스테이지 1-1, 레벨 1·골드 0이 표시된다. 프로필·스테이지 리본·목표 준비 패널·다섯 아이콘 메뉴를 분리하고 가로 화면에서는 메뉴를 우측에 배치한다. 성장·장비·꾸미기·상점·이벤트·미션·설정은 **준비 중** 안내만 열며 닫기나 Escape로 돌아온다. 경험치·처치·보상·보석 수치를 만들지 않는다. 모든 화면과 웹 셸은 `project.godot`의 버전을 표시한다. [리디자인 보고서와 전후 사진](docs/INGAME_REDESIGN.md)에서 이번 1차 UI·배경 범위를 확인한다.
+
+웹 부팅은 엔진 스크립트 다운로드부터 90초 제한을 적용하고 실패 시 실제 새로고침으로 재시도한다. 게임 Loading은 일반 실패와 20초 시간 초과를 구분한다. 일반 실패는 요청을 다시 수행하고 시간 초과는 **처음부터 다시 시작**으로 웹 새로고침/데스크톱 앱 재실행을 수행한다. 엔진이 UI까지 완전히 멈추거나 OS가 재실행을 차단하면 수동으로 다시 열어야 한다.
+
+## 캐릭터 에셋 제작
+
+[캐릭터 스프라이트 제작 지침](docs/CHARACTER_SPRITE_STANDARD.md)에 SVG/PNG·프레임·관절 기준을 기록했다. 사용자의 원래 컨셉 재제작 승인 후 Title/맵/프로필은 새 `concept_parts.svg` + `concept_warrior_animation.json`을 사용한다. 얼굴·종이 접힘·몸통과 다리 연결을 공통 부품으로 관리하고 프레임마다 다시 그리지 않는다. 기존 `warrior_key_art.svg`/구 프로필은 복구용으로 보존한다.
+
+```powershell
+godot --headless --path . --script res://scripts/art/build_concept_warrior.gd
+godot --headless --editor --path . --import --quit
+```
+
+생성기는 96px 공통 부품과 동작 데이터에서 16프레임 시트·투명 PNG·SpriteFrames 씬을 생성한다. Idle4/Walk6/Run6을 사용하고 전투 애니메이션은 미구현이다. 발밑 그림자는 별도 노드이며 PNG/Nearest는 유지한다. 구 `build_warrior_sprites.gd`는 복구용 원형만 재생성한다. [얼굴·관절 비교와 살아 있는 배경 기록](docs/CONCEPT_LIVING_WORLD.md)을 참고한다. 배경에는 느린 구름·수목 흔들림·물빛·독립 풍차 날개·작은 나비를 추가했고 제작용 원본/확대 미리보기는 패키지에서 제외한다.
 
 ## Web · Windows 릴리즈
 
-PowerShell 7에서 변경 사항을 검증·커밋한 뒤, 깨끗한 소스 작업 트리에서 버전 태그와 Godot 실행 파일을 지정해 빌드한다.
+[버전 정책](docs/VERSION_POLICY.md)과 [변경 이력](CHANGELOG.md)을 먼저 확인한다. 사용자 승인 없이 정식 버전을 확정하거나 배포하지 않는다. 아래 `v0.3.0`은 기존 명령 예시이며 같은 버전을 다시 게시하라는 지시가 아니다.
+
+PowerShell 7에서 변경 사항을 검증·커밋한 뒤, 승인받은 버전과 일치하는 깨끗한 소스 작업 트리에서 버전 태그와 Godot 실행 파일을 지정해 빌드한다.
 
 ```powershell
-.\scripts\release\build.ps1 -Version v0.2.0 -Godot "C:\Tools\Godot\Godot_v4.4.1-stable_win64_console.exe"
+.\scripts\release\build.ps1 -Version v0.3.0 -Godot "C:\Tools\Godot\Godot_v4.4.1-stable_win64_console.exe"
 ```
 
 `build\releases\`에 Web ZIP과 Windows x86_64 휴대용 ZIP, 버전·소스 커밋·ZIP SHA-256을 기록한 `manifest.json`이 생성된다. 게시 시 이 정보와 현재 커밋을 비교해 다른 버전의 빌드를 잘못 배포하지 않도록 한다. Windows ZIP은 압축을 풀고 `PaperWarrior.exe`를 실행하는 방식이며 설치 마법사와 코드 서명은 없다.
@@ -69,7 +84,7 @@ PowerShell 7에서 변경 사항을 검증·커밋한 뒤, 깨끗한 소스 작�
 소스를 커밋·푸시한 뒤 GitHub CLI로 인증된 배포 권한 계정에서 게시한다. 다음 명령은 **배포 저장소 main에 커밋·푸시하고 공개 사전 릴리즈를 생성**한다.
 
 ```powershell
-.\scripts\release\publish.ps1 -Version v0.2.0
+.\scripts\release\publish.ps1 -Version v0.3.0
 ```
 
 `build\release-repo\`에 배포 저장소를 별도로 복제한다. 빌드 산출물·글꼴 라이선스·Pages workflow·원본 커밋 추적용 `version.json`만 게시하며 소스 저장소 origin은 변경하지 않는다. 사용한 버전은 재사용하지 않는다. 최초 게시 시 배포 저장소 **Settings → Pages → Source: GitHub Actions**를 설정한다. 배포 저장소에 포함되는 workflow 원본은 `deployment\pages.yml`이다. 교차 저장소 PAT를 소스나 빌드 파일에 넣지 않는다.
@@ -80,15 +95,20 @@ PowerShell 7에서 변경 사항을 검증·커밋한 뒤, 깨끗한 소스 작�
 
 ```powershell
 godot --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a res://tests
-node --test tests\web\loader.test.mjs
+node --test tests\web\*.test.mjs
 ```
 
-GdUnit4 v5.1.1의 SceneRunner로 시작 화면의 글꼴·일러스트, 실제 게임 리소스 준비 후 Title 전환, 시작 버튼과 초기 HUD, 대기 애니메이션, 세 메뉴 안내의 열기·닫기와 Escape를 확인한다. Node 테스트는 웹 로더의 다운로드 진행률·성공·미지원 브라우저·실패 처리를 검증한다. Web/Windows 빌드는 패키지에서 리소스 캐시 없는 전체 시작 흐름을 실행한 뒤 게임 HUD/리소스/화면 경계를 검사한다. GitHub Actions의 `.github/workflows/test.yml`에 GUI·웹 로더 테스트 작업을 구성했다.
+GdUnit4 v5.1.1의 SceneRunner로 글꼴, 실제 리소스 준비, 로딩 실패/재시도/시간 초과, 중복 시작 방지, PNG 프레임과 맵 이동, 버전, 메뉴와 방향 변경 시 상태 보존을 검사한다. Node 테스트는 웹 부팅 진행률/실패/시간 초과/중복 방지와 같은 캔버스의 방향 전환을 검사한다. Web/Windows 빌드는 패키지의 콜드 시작과 양방향 레이아웃을 검사한다. 브라우저의 실제 다운로드 실패·재시도와 콘솔/시각 품질은 별도 실행 확인이 필요하다.
 
 ## 프로젝트 문서
 
+- [버전 관리 정책](docs/VERSION_POLICY.md)
+- [변경 이력](CHANGELOG.md)
+- [화면·캐릭터 품질 복구 조사 및 검증](docs/VISUAL_QUALITY_RECOVERY.md)
+- [인게임 UI·배경 리디자인 및 스크린샷](docs/INGAME_REDESIGN.md)
 - [종합 게임 기획서](docs/GAME_DESIGN.md)
 - [아트 가이드](docs/ART_GUIDE.md)
+- [캐릭터 스프라이트 제작 지침](docs/CHARACTER_SPRITE_STANDARD.md)
 - [기술 설계](docs/TECHNICAL_DESIGN.md)
 - [개발 로드맵](docs/TASKS.md)
 - [초기 기반 설계](docs/superpowers/specs/2026-11-11-paper-warrior-foundation-design.md)

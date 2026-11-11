@@ -20,24 +20,25 @@
       <a class="brand" href="./" aria-label="종이전사 소개">
         <img class="brand-logo" src="assets/logo_wordmark.png" width="704" height="224" alt="종이전사 · PAPER WARRIOR">
       </a>
-      <span class="prototype-badge">첫 번째 접힘</span>
+      <span class="prototype-badge">v%GAME_VERSION% · 개발 중</span>
     </header>
     <section class="game-window" id="game-area" aria-label="종이전사 게임">
       <div class="window-chrome"><span>한 장의 작은 모험</span><span aria-hidden="true">✦</span></div>
       <div class="game-viewport">
         <canvas id="canvas" width="480" height="640" tabindex="0" aria-label="종이전사 게임 화면">이 브라우저는 게임 캔버스를 지원하지 않습니다.</canvas>
         <div class="boot-screen" id="boot-screen">
-          <p class="boot-eyebrow">한 장의 종이가 용기가 되는 순간</p>
-          <h1>종이전사</h1>
-          <img src="assets/warrior_key_art.svg" width="480" height="420" alt="" class="boot-art">
-          <div class="boot-status">
-            <p id="boot-status" role="status" aria-live="polite">모험을 준비하고 있어요...</p>
-            <progress id="boot-progress" aria-label="게임 다운로드 진행률"></progress>
-            <button type="button" class="button button-outline" id="retry" hidden>다시 시도하기</button>
+          <div class="boot-panel">
+            <p class="boot-step">한 장으로 시작되는 모험</p>
+            <span class="boot-fold" aria-hidden="true"></span>
+            <h1>모험을 접고 있어요</h1>
+            <p class="boot-hint">작은 종이 한 장에 용기를 담는 중이에요.</p>
+            <p id="boot-status" role="status" aria-live="polite">종이 숲으로 가는 길을 열어요...</p>
+            <progress id="boot-progress" aria-label="웹 실행 파일 다운로드 진행률"></progress>
+            <button type="button" class="button button-outline" id="retry" hidden>다시 펼쳐 보기</button>
           </div>
         </div>
       </div>
-      <div class="window-footer"><span>차근차근 접어 가는 중이에요</span><span>초기 개발 버전</span></div>
+      <div class="window-footer"><span>차근차근 접어 가는 중이에요</span><span>v%GAME_VERSION%</span></div>
     </section>
     <aside class="play-description" aria-label="프로토타입 안내">
       <p class="play-tagline">한 장의 종이에서, 나만의 모험으로.</p>
@@ -47,9 +48,9 @@
     <footer class="play-footer"><span>© 종이전사</span><a href="./">게임 소개로 돌아가기 ↗</a></footer>
   </main>
   <noscript><p class="noscript-notice">게임을 실행하려면 브라우저에서 JavaScript를 허용해 주세요. <a href="./">소개로 돌아가기</a></p></noscript>
-  <script src="$GODOT_URL"></script>
   <script type="module">
     import { bootGame } from './game-loader.mjs';
+    import { bindGameViewport } from './game-viewport.mjs';
     const ui = {
       canvas: document.getElementById('canvas'),
       overlay: document.getElementById('boot-screen'),
@@ -57,8 +58,20 @@
       status: document.getElementById('boot-status'),
       retry: document.getElementById('retry'),
     };
-    ui.retry.addEventListener('click', () => window.location.reload());
-    await bootGame(window.Engine, $GODOT_CONFIG, ui);
+    bindGameViewport(ui.canvas);
+    ui.retry.addEventListener('click', () => {
+      if (ui.retry.disabled) return;
+      ui.retry.disabled = true;
+      window.location.reload();
+    });
+    const engineReady = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = '$GODOT_URL';
+      script.onload = () => resolve(window.Engine);
+      script.onerror = () => reject(new Error('게임 엔진 파일을 받지 못했어요. 네트워크를 확인해 주세요.'));
+      document.body.appendChild(script);
+    });
+    await bootGame(engineReady, $GODOT_CONFIG, ui);
   </script>
 </body>
 </html>

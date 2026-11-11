@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "asset_key": "warrior_idle_walk",
+  "reference_profile": "original_geometry_96",
+  "source_view_box": [64, 50, 336, 336],
+  "frame_size": {"width": 96, "height": 96},
+  "frame_count": 10,
+  "anchor": {"center_x": 48, "ground_baseline_y": 88},
+  "node": {
+    "name": "WarriorSprite",
+    "scale": [0.75, 0.75],
+    "default_animation": "idle"
+  },
+  "palette": {
+    "ink": "#263b50",
+    "left_leg": "#8fc8ca",
+    "right_leg": "#77aebd",
+    "torso": "#a5dcd3",
+    "torso_fold": "#78acba",
+    "left_arm": "#8dc4cd",
+    "left_arm_fold": "#aee3d9",
+    "right_arm": "#82bac6",
+    "head_back": "#73a5bd",
+    "head_fold": "#b8e4de",
+    "head_side": "#77a4bb",
+    "paper_start": "#b9ece2",
+    "paper_end": "#f8efc9",
+    "blade": "#f4f0db",
+    "blade_fold": "#a9c5d5",
+    "guard": "#efcb86",
+    "grip": "#a98464",
+    "shield_rim": "#edf0dc",
+    "shield_start": "#9fcce8",
+    "shield_end": "#677fbb",
+    "star": "#fff0bd"
+  },
+  "palette_order": [
+    "ink", "left_leg", "right_leg", "torso", "torso_fold", "left_arm",
+    "left_arm_fold", "right_arm", "head_back", "head_fold", "head_side",
+    "paper_start", "paper_end", "blade", "blade_fold", "guard", "grip",
+    "shield_rim", "shield_start", "shield_end", "star"
+  ],
+  "render_order": [
+    "left_leg", "right_leg", "torso", "left_arm", "right_arm",
+    "head", "face", "sword", "shield"
+  ],
+  "part_origins": {
+    "left_leg": "source viewBox origin",
+    "right_leg": "source viewBox origin",
+    "torso": "source viewBox origin",
+    "left_arm": "source viewBox origin",
+    "right_arm": "source viewBox origin",
+    "head": "source viewBox origin",
+    "face": "source viewBox origin",
+    "sword": "source viewBox origin",
+    "shield": "source viewBox origin"
+  },
+  "animation_order": ["idle", "walk"],
+  "animations": {
+    "idle": {
+      "fps": 4,
+      "loop": true,
+      "frames": [
+        {
+          "pose": "idle_0",
+          "parts": {
+            "left_leg": [0, 0], "right_leg": [0, 0],
+            "torso": [0, 0], "left_arm": [0, 0], "right_arm": [0, 0],
+            "head": [0, 0], "face": [0, 0], "sword": [0, 0], "shield": [0, 0]
+          }
+        },
+        {
+          "pose": "idle_1",
+          "parts": {
+            "left_leg": [0, 0], "right_leg": [0, 0],
+            "torso": [0, -1], "left_arm": [0, -1], "right_arm": [0, -1],
+            "head": [0, -1], "face": [0, -1], "sword": [0, -1], "shield": [0, -1]
+          }
+        },
+        {
+          "pose": "idle_2",
+          "parts": {
+            "left_leg": [0, 0], "right_leg": [0, 0],
+            "torso": [0, -1], "left_arm": [0, -1], "right_arm": [0, -1],
+            "head": [0, -1], "face": [0, -1], "sword": [0, -1], "shield": [0, -1]
+          }
+        },
+        {
+          "pose": "idle_3",
+          "parts": {
+            "left_leg": [0, 0], "right_leg": [0, 0],
+            "torso": [0, 0], "left_arm": [0, 0], "right_arm": [0, 0],
+            "head": [0, 0], "face": [0, 0], "sword": [0, 0], "shield": [0, 0]
+          }
+        }
+      ]
+    },
+    "walk": {
+      "fps": 8,
+      "loop": true,
+      "frames": [
+        {
+          "pose": "walk_0",
+          "parts": {
+            "left_leg": [-2, 0], "right_leg": [2, -1],
+            "torso": [0, 0], "left_arm": [-1, 0], "right_arm": [1, 0],
+            "head": [0, 0], "face": [0, 0], "sword": [-1, 0], "shield": [1, 0]
+          }
+        },
+        {
+          "pose": "walk_1",
+          "parts": {
+            "left_leg": [-1, 0], "right_leg": [1, -1],
+            "torso": [1, -1], "left_arm": [0, -1], "right_arm": [2, -1],
+            "head": [1, -1], "face": [1, -1], "sword": [0, -1], "shield": [2, -1]
+          }
+        },
+        {
+          "pose": "walk_2",
+          "parts": {
+            "left_leg": [1, -1], "right_leg": [-1, 0],
+            "torso": [1, 0], "left_arm": [1, 0], "right_arm": [1, 0],
+            "head": [1, 0], "face": [1, 0], "sword": [1, 0], "shield": [1, 0]
+          }
+        },
+        {
+          "pose": "walk_3",
+          "parts": {
+            "left_leg": [2, -1], "right_leg": [-2, 0],
+            "torso": [0, 0], "left_arm": [1, 0], "right_arm": [-1, 0],
+            "head": [0, 0], "face": [0, 0], "sword": [1, 0], "shield": [-1, 0]
+          }
+        },
+        {
+          "pose": "walk_4",
+          "parts": {
+            "left_leg": [1, -1], "right_leg": [-1, 0],
+            "torso": [-1, -1], "left_arm": [0, -1], "right_arm": [-2, -1],
+            "head": [-1, -1], "face": [-1, -1], "sword": [0, -1], "shield": [-2, -1]
+          }
+        },
+        {
+          "pose": "walk_5",
+          "parts": {
+            "left_leg": [-1, 0], "right_leg": [1, -1],
+            "torso": [-1, 0], "left_arm": [-1, 0], "right_arm": [-1, 0],
+            "head": [-1, 0], "face": [-1, 0], "sword": [-1, 0], "shield": [-1, 0]
+          }
+        }
+      ]
+    }
+  }
+}

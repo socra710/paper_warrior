@@ -1,45 +1,10 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Theme" path="res://assets/fonts/theme_ui.tres" id="1_ui"]
 [ext_resource type="Theme" path="res://assets/fonts/theme_galmuri.tres" id="2_heading"]
-[ext_resource type="Texture2D" path="res://assets/characters/warrior/warrior_key_art.svg" id="3_art"]
-
-[sub_resource type="StyleBoxFlat" id="ButtonNormal"]
-bg_color = Color(0.95, 0.8, 0.49, 1)
-border_width_bottom = 4
-border_color = Color(0.73, 0.58, 0.32, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_left = 4
-corner_radius_bottom_right = 4
-
-[sub_resource type="StyleBoxFlat" id="ButtonHover"]
-bg_color = Color(1, 0.87, 0.62, 1)
-border_width_bottom = 4
-border_color = Color(0.79, 0.65, 0.4, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_left = 4
-corner_radius_bottom_right = 4
-
-[sub_resource type="StyleBoxFlat" id="ButtonPressed"]
-bg_color = Color(0.88, 0.71, 0.39, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_left = 4
-corner_radius_bottom_right = 4
-
-[sub_resource type="StyleBoxFlat" id="ButtonFocus"]
-bg_color = Color(0, 0, 0, 0)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.29, 0.5, 0.47, 1)
-expand_margin_left = 4.0
-expand_margin_top = 4.0
-expand_margin_right = 4.0
-expand_margin_bottom = 4.0
+[ext_resource type="PackedScene" path="res://scenes/ui/warrior_idle.tscn" id="3_art"]
+[ext_resource type="Script" path="res://scripts/ui/version_label.gd" id="4_version"]
+[ext_resource type="Texture2D" path="res://assets/branding/logo_wordmark.png" id="5_logo"]
 
 [node name="StartScreen" type="Control"]
 layout_mode = 3
@@ -75,36 +40,33 @@ layout_mode = 1
 anchor_right = 1.0
 offset_top = 45.0
 offset_bottom = 66.0
-theme_override_colors/font_color = Color(0.29, 0.5, 0.47, 1)
-theme_override_font_sizes/font_size = 12
+theme = ExtResource("2_heading")
+theme_override_colors/font_color = Color(0.2, 0.37, 0.34, 1)
+theme_override_font_sizes/font_size = 16
 text = "한 장의 종이가 용기가 되는 순간"
 horizontal_alignment = 1
 
-[node name="GameTitle" type="Label" parent="."]
+[node name="GameTitle" type="TextureRect" parent="."]
 layout_mode = 1
 anchor_right = 1.0
 offset_top = 79.0
-offset_bottom = 154.0
-theme = ExtResource("2_heading")
-theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_colors/font_shadow_color = Color(0.75, 0.85, 0.79, 1)
-theme_override_constants/shadow_offset_x = 3
-theme_override_constants/shadow_offset_y = 5
-theme_override_font_sizes/font_size = 64
-text = "종이전사"
-horizontal_alignment = 1
+offset_bottom = 179.0
+mouse_filter = 2
+texture = ExtResource("5_logo")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Subtitle" type="Label" parent="."]
 layout_mode = 1
 anchor_right = 1.0
-offset_top = 157.0
-offset_bottom = 183.0
-theme_override_colors/font_color = Color(0.36, 0.48, 0.46, 1)
-theme_override_font_sizes/font_size = 17
+offset_top = 190.0
+offset_bottom = 216.0
+theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
+theme_override_font_sizes/font_size = 16
 text = "종이로 만든 작은 전사의, 커다란 모험"
 horizontal_alignment = 1
 
-[node name="WarriorArt" type="TextureRect" parent="."]
+[node name="WarriorArt" parent="." instance=ExtResource("3_art")]
 layout_mode = 1
 anchor_right = 1.0
 offset_left = 25.0
@@ -112,9 +74,6 @@ offset_top = 185.0
 offset_right = -25.0
 offset_bottom = 510.0
 mouse_filter = 2
-texture = ExtResource("3_art")
-expand_mode = 1
-stretch_mode = 5
 
 [node name="Footer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -130,8 +89,8 @@ alignment = 1
 
 [node name="PhaseLabel" type="Label" parent="Footer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.29, 0.5, 0.47, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.2, 0.37, 0.34, 1)
+theme_override_font_sizes/font_size = 16
 text = "한 장의 종이에서 시작되는 이야기"
 horizontal_alignment = 1
 
@@ -141,19 +100,27 @@ visible = false
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_colors/font_hover_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_colors/font_pressed_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_font_sizes/font_size = 19
-theme_override_styles/normal = SubResource("ButtonNormal")
-theme_override_styles/hover = SubResource("ButtonHover")
-theme_override_styles/pressed = SubResource("ButtonPressed")
-theme_override_styles/focus = SubResource("ButtonFocus")
+theme_override_font_sizes/font_size = 20
 text = "모험 시작하기"
 
 [node name="PrototypeNotice" type="Label" parent="Footer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.5, 0.45, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
+theme_override_font_sizes/font_size = 16
 text = "작게 접고, 크게 자라요."
 horizontal_alignment = 1
+
+[node name="VersionLabel" type="Label" parent="."]
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -124.0
+offset_top = -27.0
+offset_right = -12.0
+offset_bottom = -3.0
+theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 2
+script = ExtResource("4_version")

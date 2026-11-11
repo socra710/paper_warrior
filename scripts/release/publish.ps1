@@ -83,7 +83,8 @@ if ($LASTEXITCODE -ne 0) { throw 'Unable to push deployment output.' }
 
 $notes = @"
 Paper Warrior prototype: short logo/warrior Splash -> real resource Loading -> Title -> first game preview.
-Includes an animated idle warrior, stage/combat waiting area, initial level/gold HUD, and clearly labeled upcoming growth/equipment/decoration menus.
+Includes a shared-parts-generated pixel PNG warrior with idle/walk map presentation, version labels, stage/combat waiting area, initial level/gold HUD, and clearly labeled upcoming growth/equipment/decoration menus.
+Startup guards duplicate transitions, distinguishes loading failures/timeouts, and provides real retry. Portrait/landscape layout changes preserve the current scene and open menu.
 No combat, progression, rewards, or saves yet. Preview counters do not increase.
 
 Website: https://socra710.github.io/paper_warrior_releases/

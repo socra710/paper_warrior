@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="196" viewBox="0 0 150 196">
+  <defs>
+    <linearGradient id="stone"><stop stop-color="#f8efd3"/><stop offset="1" stop-color="#d9c99e"/></linearGradient>
+    <linearGradient id="roof"><stop stop-color="#729fb6"/><stop offset="1" stop-color="#386e8a"/></linearGradient>
+  </defs>
+  <path d="M53 67 100 67 109 145 45 145Z" fill="url(#stone)" stroke="#b09a72" stroke-width="1"/>
+  <path d="M91 68 100 67 109 145 93 145Z" fill="#caba94"/>
+  <path d="M42 73 76 25 110 74 75 82Z" fill="url(#roof)" stroke="#47758b" stroke-width="1"/>
+  <path d="M76 25 75 82 110 74Z" fill="#447d97"/>
+  <path d="M76 31 49 71 74 75Z" fill="#8bb4c5" opacity=".45"/>
+  <path d="M71 101Q71 91 78 91Q85 91 85 101V110H71Z" fill="#a69b7a"/>
+  <path d="M73 101Q73 94 78 94Q82 94 82 101V108H73Z" fill="#696c5c"/>
+  <path d="M65 145V129Q65 117 76 117Q87 117 87 129V145Z" fill="#aa936a"/>
+  <path d="M69 145V130Q69 121 76 121Q83 121 83 130V145Z" fill="#796f52"/>
+  <g stroke="#c9b98e" stroke-width="1" opacity=".65">
+    <path d="M54 88H64M86 89H98M51 112H62M90 118H104M49 134H60M57 99H64M93 100H99"/>
+  </g>
+  <g fill="#fff5db" opacity=".48">
+    <path d="M56 77H60V80H56ZM87 81H90V83H87ZM53 122H57V125H53ZM90 131H94V133H90ZM63 87H66V89H63Z"/>
+  </g>
+</svg>

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="384" height="48" viewBox="0 0 384 48">
+  <title>Pixel paper folding, eight 48px frames</title>
+  <defs>
+    <g id="sheet" stroke="#2d495b" stroke-width="2" stroke-linejoin="miter">
+      <path d="M8 9H40V39H8Z" fill="#f7f4e9"/>
+      <path d="M9 10H15V38H9Z" fill="#cce4d8" stroke="none"/>
+    </g>
+    <g id="corner" stroke="#2d495b" stroke-width="2" stroke-linejoin="miter">
+      <path d="M8 9H27L40 22V39H8Z" fill="#f7f4e9"/>
+      <path d="M27 9V22H40Z" fill="#8fbcae"/>
+      <path d="M9 10H15V38H9Z" fill="#cce4d8" stroke="none"/>
+    </g>
+    <g id="half" stroke="#2d495b" stroke-width="2" stroke-linejoin="miter">
+      <path d="M8 9L40 39H8Z" fill="#cce4d8"/>
+      <path d="M10 15L34 37H10Z" fill="#f7f4e9" stroke="none"/>
+      <path d="M8 39H40L33 32Z" fill="#8fbcae"/>
+    </g>
+    <g id="pressed" stroke="#2d495b" stroke-width="2" stroke-linejoin="miter">
+      <path d="M10 15L38 39H10Z" fill="#cce4d8"/>
+      <path d="M13 21L31 36H13Z" fill="#f7f4e9" stroke="none"/>
+      <path d="M10 39H38L32 33Z" fill="#8fbcae"/>
+    </g>
+  </defs>
+  <use href="#sheet"/>
+  <g transform="translate(48 0)">
+    <use href="#sheet"/>
+    <path d="M10 11L38 37" stroke="#8fbcae" stroke-width="2" stroke-dasharray="3 3"/>
+  </g>
+  <use href="#corner" x="96"/>
+  <use href="#half" x="144"/>
+  <use href="#pressed" x="192"/>
+  <use href="#half" x="240"/>
+  <use href="#corner" x="288"/>
+  <use href="#sheet" x="336"/>
+</svg>

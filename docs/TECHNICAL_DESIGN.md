@@ -2,7 +2,7 @@
 
 ## 초기 범위
 
-Godot 4와 GDScript를 사용하며 브라우저 우선으로 검증한다. 현재 프로토타입은 네 화면의 역할 분리, 실제 씬/리소스 준비, 캐릭터 대기 연출과 초기 게임 HUD를 제공한다. 전투·성장·보상·저장·오프라인 보상·Android Export는 포함하지 않는다.
+Godot 4와 GDScript를 사용하며 브라우저 우선으로 검증한다. 현재 프로토타입은 네 화면의 역할 분리, 실제 씬/리소스 준비, 픽셀 캐릭터 대기/맵 이동 연출과 초기 게임 HUD를 제공한다. 이동은 맵을 둘러보는 연출이며 전투·성장·보상·저장·오프라인 보상·Android Export는 포함하지 않는다.
 
 ## 시작 화면 흐름
 
@@ -16,33 +16,59 @@ project.godot
 
 | 씬 | 책임 | 스크립트 |
 |---|---|---|
-| `scenes/main/splash.tscn` | 로고와 캐릭터의 짧은 인트로 | `scripts/main/splash.gd` |
+| `scenes/main/splash.tscn` | 독립된 로고·종이 배경의 짧은 인트로, 전환 실패 안내 | `scripts/main/splash.gd` |
 | `scenes/main/loading.tscn` | 독립된 종이 공방 화면, 실제 준비율/오류 표시 | `scripts/main/loading.gd` |
-| `scenes/main/title.tscn` | 게임명과 시작 버튼 표시 | `scripts/main/title.gd` |
+| `scenes/main/title.tscn` | 로고·기준 캐릭터 대기·시작 버튼 표시 | `scripts/main/title.gd` |
 | `scenes/main/game.tscn` | 초기 레벨·골드·스테이지, 대기 전사와 준비 중인 메뉴 | `scripts/main/game.gd` |
 
-Splash의 1.2초는 인트로 표시 시간이다. Loading은 `ResourceLoader.load_threaded_request`로 Title/Game PackedScene을 요청하고 `load_threaded_get_status`의 실제 준비율 평균을 표시한다. 두 요청이 모두 완료된 경우에만 Title을 가져와 `change_scene_to_packed`로 이동한다. 완료 후 0.15초 페이드아웃 외에 가짜 진행 타이머는 없다. 로드 실패 시 진행을 멈추고 화면에 오류와 재시도 버튼을 표시한다.
+Splash의 1.2초는 인트로 표시 시간이며 씬 소유의 processing으로 관리해 화면 제거 후 타이머가 전환을 실행하지 않는다. 요청/실행 가드로 지연 전환이 중복 실행되지 않으며 실패 시 로고·오류를 유지한다. Loading은 `ResourceLoader.load_threaded_request`로 Title/Game PackedScene을 요청하고 `load_threaded_get_status`의 실제 준비율 평균을 표시한다. 알 수 없는 값은 불확정 상태이며 진행 중인 값은 최대 99%다. 두 요청이 모두 완료돼야 100%로 표시하고 Title을 가져와 `change_scene_to_packed`로 이동한다. 완료 후 0.15초 페이드아웃 외에 가짜 진행 타이머는 없다.
 
-Splash/Title만 `scenes/ui/start_screen.tscn`을 상속해 제목·일러스트·버튼 스타일을 공유한다. Loading은 캐릭터 원화를 반복하지 않고 접힌 종이, 진행 바, 백분율과 준비 상태를 배치한다. Game의 완료된 요청은 Title 시작 버튼에서 `load_threaded_get`으로 가져올 때까지 ResourceLoader가 유지한다. 시작하지 않고 Title을 닫으면 완료 요청을 회수해 리소스를 해제한다. Title을 단독 실행한 경우에만 일반 `load`를 사용한다. 시작 버튼의 씬 변경은 GUI 입력 처리와 충돌하지 않게 지연 호출한다.
+Loading 상태는 준비/전환/실패로 구분한다. 실패 또는 20초 응답 시간 초과 시 자동 진행을 멈추고 진단 메시지를 표시한다. 일반 실패의 재시도는 실패한 요청을 회수해 실제 요청을 다시 수행하고 다른 진행 중 요청은 유지한다. 시간 초과는 취소 불가능한 엔진 요청의 타이머만 초기화하지 않는다. **처음부터 다시 시작**으로 웹은 페이지를 새로고침하고 데스크톱은 새 앱 인스턴스를 실행한 후 기존 앱을 종료한다. 재실행이 차단되면 수동 재실행 안내를 표시한다. 중복 클릭은 잠근다. 테스트는 호환 로더와 재실행 콜백으로 실패/대기/재시작을 분리 검증한다.
+
+Splash는 독립 씬이며 `scenes/ui/start_screen.tscn`은 Title 전용 레이아웃이다. 화면 전체 구도를 공유하지 않고 Pretendard/공통 버튼 테마를 재사용한다. Loading은 하늘색 전체 배경, 카드 없는 중앙 종이접기와 실제 진행 바를 사용한다. 웹 부팅과 Godot은 같은 48px/8프레임 PNG를 사용하며, Godot은 SpriteFrames/8fps/Nearest, 웹은 steps(8)/1초로 재생한다. 실패하면 접기를 멈추고 재시도하면 재생한다. 종이 애니메이션은 진행률을 만들어내거나 최소 대기 시간을 추가하지 않는다. Game의 완료된 요청은 Title 시작 버튼에서 `load_threaded_get`으로 가져올 때까지 ResourceLoader가 유지한다. 시작하지 않고 Title을 닫으면 완료 요청을 회수해 리소스를 해제한다. Title을 단독 실행한 경우에만 일반 `load`를 사용한다. 시작 버튼은 첫 입력에서 즉시 잠그고 전환을 지연 호출하며 실패 시 안내와 함께 다시 활성화한다.
+
+웹 캔버스 버퍼는 `game-viewport.mjs`가 실제 CSS 크기×DPR로 계산한다. ResizeObserver와 창 resize/방향 변경은 같은 캔버스·엔진만 갱신하며 동일 크기에는 버퍼를 다시 초기화하지 않는다. 캔버스 전체에 pixelated를 적용하지 않고 개별 픽셀 스프라이트의 Nearest를 유지한다. 캔버스 외곽 클릭 포커스 선만 제거하며 키보드 입력과 Godot 버튼 포커스는 유지한다.
 
 ## 첫 게임 화면
 
 `PrototypeState`와 `data/growth/initial_preview.tres`는 초기 레벨 1, 골드 0, 스테이지 1-1 / 종이 숲의 입구를 제공한다. Game 씬의 exported Resource로 연결되어 씬과 함께 준비·패키징되며 런타임에서 변경하지 않는다. 저장 데이터나 실제 보상 시스템은 아니다.
 
-`scenes/ui/warrior_idle.tscn`은 키 아트의 위치를 2초 주기로 미세하게 움직이는 AnimationPlayer 대기 연출이다. 종이 숲 배경과 전투 대기 영역을 구분하고 전투/스테이지 진행은 준비 중이라고 표시한다. 첫 목표는 전사와 세 메뉴를 둘러보는 것이다.
+`scenes/characters/warrior_sprite.tscn`은 원본 보존 예외인 96×96 PNG 프레임을 Nearest로 표시하는 AnimatedSprite2D다. Idle 4프레임과 Walk 6프레임을 독립 관리한다. 공통 씬 기본 72px/Title 144px는 유지하고 새 인게임 맵 인스턴스만 96px로 표시한다. `scenes/ui/warrior_idle.tscn`은 Title 대기 미리보기이고 `scenes/ui/map_walker.tscn`은 전사를 정규화된 네 지점 사이로 이동시킨다. 맵 크기가 바뀌면 상대 위치를 유지하며 경계 안으로 제한한다. 전투/스테이지 진행은 준비 중으로 표시한다.
 
-성장·장비·꾸미기는 각각 준비 중인 기능을 설명하는 안내창만 연다. 안내창 표시 중 배경 메뉴는 비활성화하고 닫기/ESC로 원래 버튼에 포커스를 복원한다. 강화·구매·장착·색상 변경이나 가짜 수치 증가는 없다.
+`GameHUD`는 실제 Resource를 `bind_state`로 연결하고 `changed` 신호에서 표시를 갱신한다. 프로필·스테이지 리본·임무 패널은 독립 씬이며 `MainNavigation`은 다섯 버튼의 선택 상태만 관리한다. 긴 골드는 만/억으로 줄이고 툴팁에 전체 숫자를 보존한다. 경험치와 임무 바는 비활성 준비 상태이며 가짜 진행·보상·프리미엄 재화를 표시하지 않는다.
+
+성장·장비·꾸미기·상점·이벤트·미션·설정은 준비 중인 기능을 설명하는 안내창만 연다. 안내창 표시 중 배경 메뉴는 비활성화하고 닫기/ESC로 원래 버튼에 포커스를 복원한다. 강화·구매·장착·색상 변경이나 가짜 수치 증가는 없다.
+
+`PaperBackground`는 여섯 깊이 레이어에 독립 PNG 오브젝트를 배치하고 크기 변경 시 위치를 재계산한다. 원경 대비와 크기, 근경 수목으로 깊이를 표현하며 플레이 공간은 비워 둔다. 런타임은 `load(...) as Texture2D`로 import된 리소스를 사용한다. 원본 이미지의 `Image.load`는 제작 도구에서만 사용한다. `TextureRect.EXPAND_IGNORE_SIZE`로 계산한 크기가 원본 텍스처 최소 크기에 묶이지 않도록 한다. 자세한 파일·원본·검증은 [리디자인 기록](INGAME_REDESIGN.md)에 있다.
+
+## 버전과 화면 방향
+
+사용자 후속 승인 후 캐릭터는 별도 `concept_warrior.tscn`으로 연결한다. 공통 부품/JSON에서 96px Idle/Walk/Run을 생성하고 구 씬은 복구용으로 보존한다. Title·맵·프로필이 같은 새 PNG를 참조하며 기존 배율/위치는 유지한다. 허리와 허벅지는 겹쳐 연결하고 장비는 손의 변형을 따른다. `FootShadow`는 발 기준선의 자식 Node2D로 부모 뒤에 부드러운 타원을 그린다. `MapWalker`는 기존 경로에서 걷기·짧은 달리기·대기를 번갈아 보여주는 연출이며 전투/보상 상태를 변경하지 않는다.
+
+배경은 `_elapsed`를 유지하고 레이아웃 재계산 후 현재 위상에서 구름·수목·풍차를 계속 재생한다. 풍차 몸체와 날개는 독립 텍스처이며 허브 좌표에서 회전한다. `world_ambience.gd`는 강물의 작은 빛과 꽃 주변 나비만 그린다. 리사이즈 시 노드를 다시 배치해도 애니메이션 시간과 게임 상태는 초기화하지 않는다. [후속 기록](CONCEPT_LIVING_WORLD.md)에 실제 검증을 구분한다.
+
+버전은 `project.godot`의 `application/config/version`을 단일 기준으로 사용한다. 모든 Godot 화면과 웹 플레이 셸에 표시하고 웹 빌드 시 같은 값으로 치환한다. 공개 배포의 `version.json`은 릴리즈 태그와 실제 원본 커밋을 별도로 추적한다.
+
+[버전 정책](VERSION_POLICY.md)에 따라 기존 품질 복구만 배포하면 PATCH `0.3.1` 제안이었다. 신규 메뉴 진입점이 포함된 이번 UI 변경을 함께 배포할 경우 MINOR `0.4.0`을 제안한다. 사용자 승인 전 프로젝트·공개 버전 `0.3.0`은 바꾸지 않고 신규 배포를 하지 않는다. 미배포 변경은 CHANGELOG의 Unreleased와 각 작업 기록에서 관리한다.
+
+`responsive_screen.gd`는 세로 480×640, 가로 800×450의 논리 해상도를 선택한다. 시작 화면은 전사/버튼 배치를 재정렬하고 Game은 맵/사이드 메뉴로 재배치한다. 현재 씬을 재생성하지 않으므로 열린 메뉴와 초기 상태, 이동 경로가 유지된다.
+
+웹은 기본 중앙 세로 프레임을 유지하고 짧은 가로 화면에서만 16:9를 사용한다. `game-viewport.mjs`는 같은 캔버스의 내부 크기를 실제 CSS 크기×DPR로 바꾸고 resize를 알린다. Engine을 다시 생성하거나 페이지를 새로고침하지 않는다. 화면 방향 변경과 오류 후 명시적 재시도에 의한 새로고침은 서로 다른 동작이다.
 
 ## 웹사이트
 
 - `web/index.html`: 별도 설치가 필요 없는 정적 랜딩페이지. 소개, 기획 중인 특징, 현재 프로토타입 범위를 표시한다.
 - `web/play.html`: Godot 커스텀 HTML 셸. 제목 → 작은 중앙 게임 프레임 → 조작/프로토타입 안내 순서다.
 - `web/site.css`, `web/game-loader.css`: 공용 사이트 스타일과 플레이 프레임/부팅 화면 스타일.
-- `web/game-loader.mjs`: 실제 Godot 다운로드 진행률, 부팅 완료, 미지원 브라우저 및 다운로드 오류 처리. 오류는 화면에 출력하고 새로고침 재시도를 제공한다.
+- `web/game-loader.mjs`: 엔진 JavaScript 다운로드부터 실제 게임 시작까지 공유하는 90초 제한, 실제 다운로드 진행률과 실패 처리. 엔진 스크립트는 재시도 핸들러 설치 후 비동기로 요청한다. 같은 캔버스의 중복 부팅을 막고 실패 뒤 늦은 다운로드/진행 콜백을 무시한다. 재시도는 페이지 새로고침으로 부분 초기화 상태를 제거한다.
+- `web/game-viewport.mjs`: 페이지/엔진 재시작 없는 가로·세로 캔버스 변경.
 - `scripts/web/build.mjs`: Godot import/Export 후 정적 웹 파일과 에셋을 `build/web/`에 복사한다. Node 내장 기능만 사용한다.
+- `scripts/web/fingerprint.mjs`: JS/wasm/PCK/worklet 내용의 해시를 파일명에 넣고 엔진 executable/fileSizes 참조를 함께 변경한다. PCK 가상 파일명에 쿼리를 붙이지 않는다. 로더 모듈·CSS에는 내용별 쿼리를 붙여 이전 파일 캐시와 구분한다. 같은 런타임 묶음을 사용하므로 PCK 변경 시 wasm도 새 URL로 내려받는 비용이 있으며 세분화 최적화는 하지 않았다.
 - `scripts/web/serve.mjs`: MIME 형식을 지원하는 로컬 전용 HTTP 서버. 기본 주소는 `127.0.0.1:8000`, 포트는 `PORT`로 변경한다.
 
 랜딩페이지는 `/`, 플레이 페이지는 `/play.html`이다. 루트 경로를 하드코딩하지 않아 정적 호스팅의 하위 경로에서도 배포할 수 있다. Pages 배포와 다운로드 릴리즈는 별도 `socra710/paper_warrior_releases` 저장소에서 관리하고 Godot/웹 원본은 `socra710/paper_warrior`에서 관리한다. 계정/백엔드는 구성하지 않는다.
+
+웹 파일 준비 화면은 대형 게임명/캐릭터 없이 카드 없는 중앙 종이접기와 상태 문구를 표시한다. 다운로드가 끝났어도 엔진 시작 Promise가 완료되기 전에는 불확정 초기화 상태로 남는다. HTML 자체가 이전 배포로 캐시된 경우 새 파일 해시만으로 오래된 HTML을 교체할 수 없으므로 게시 후 HTML 재검증과 실제 버전 확인이 필요하다.
 
 ## 배포 저장소 분리
 
@@ -57,7 +83,7 @@ Splash/Title만 `scenes/ui/start_screen.tscn`을 상속해 제목·일러스트�
 | 경로 | 책임 |
 |---|---|
 | `scenes/main/` | 시작 화면과 이후 메인 화면 씬 |
-| `scenes/ui/` | 공용 시작 화면과 전사 대기 연출 |
+| `scenes/ui/` | 공용 시작 화면, 전사 연출, 인게임 HUD/내비게이션/풍경과 하위 패널 |
 | `scripts/main/` | 씬별 최소 화면 흐름 제어 |
 | `assets/characters/warrior/` | 종이 전사 원화와 애니메이션 |
 | `assets/monsters/` | 몬스터 아트 |
@@ -73,14 +99,14 @@ Splash/Title만 `scenes/ui/start_screen.tscn`을 상속해 제목·일러스트�
 | `docs/` | 기획, 아트, 기술, 작업 문서 |
 | `web/`, `scripts/web/` | 정적 랜딩/플레이 페이지와 빌드/서버 도구 |
 
-빈 콘텐츠 디렉터리는 `.gitkeep`으로 추적한다. 현재 애니메이션은 프레젠테이션용 대기 연출뿐이며 전투 스프라이트나 전투용 밸런스 데이터는 추가하지 않는다.
+빈 콘텐츠 디렉터리는 `.gitkeep`으로 추적한다. 현재 캐릭터 애니메이션은 프레젠테이션용 Idle/Walk이며 전투 스프라이트나 전투용 밸런스 데이터는 추가하지 않는다.
 
 ## 렌더링 및 웹 Export
 
 - 렌더링 방법은 Godot Compatibility (`gl_compatibility`)를 사용한다.
 - 뷰포트 시작 크기는 480×640이고 `canvas_items` 스트레치를 사용한다. 웹 프레임은 최대 420px 폭에서 3:4 비율로 표시하고 작은 화면에서는 화면 폭에 맞춘다.
 - Export preset 이름은 `Web`, 게임 출력은 `build/web/play.html`이며 `web/play.html`을 커스텀 HTML 셸로 사용한다.
-- `html/canvas_resize_policy=0`으로 Godot의 브라우저 전체 화면 맞춤을 끈다. 캔버스의 내부 크기는 HTML의 480×640, 표시 크기는 CSS의 3:4 부모 프레임이 관리한다.
+- `html/canvas_resize_policy=0`으로 Godot의 브라우저 전체 화면 맞춤을 끈다. HTML 초기 버퍼는 480×640이며 웹 뷰포트 모듈이 이후 CSS 크기×DPR로 갱신한다. 표시 비율은 CSS 부모 프레임이 관리한다.
 - Godot 4.4.1의 텍스트 리소스 바이너리 변환에서 상속한 Control 씬의 여백/테마 재정의가 유실되는 현상을 재현했으므로 `editor/export/convert_text_resources_to_binary=false`를 사용한다. `.tscn`/`.tres`를 보존하며 게임 기능에는 영향을 주지 않는다.
 - `build/`, `reports/`, `addons/gdUnit4/`, `tests/`, `web/`, `scripts/web/`, `docs/`는 게임 패키지에서 제외한다.
 - 현재 Godot 4 버전에 맞는 Web export templates가 필요하다.
@@ -97,7 +123,7 @@ Splash/Title만 `scenes/ui/start_screen.tscn`을 상속해 제목·일러스트�
 
 ```powershell
 godot --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a res://tests
-node --test tests\web\loader.test.mjs
+node --test tests\web\*.test.mjs
 ```
 
 ## 실행·검증
@@ -109,11 +135,11 @@ node scripts\web\build.mjs
 node scripts\web\serve.mjs
 ```
 
-로컬 서버가 준비된 후 `/`의 소개/플레이 링크와 `/play.html`의 Splash → Loading → Title → 시작 버튼 → 빈 Main Game 순서를 확인한다. 데스크톱/모바일에서 가로 넘침과 게임 비율도 확인한다. 브라우저나 Web Export 검사 결과는 실제 실행한 경우에만 성공으로 기록한다.
+로컬 서버가 준비된 후 `/`의 소개/플레이 링크와 `/play.html`의 Splash → Loading → Title → 시작 버튼 → HUD/작은 전사 Game 순서를 확인한다. 데스크톱/모바일에서 가로 넘침과 게임 비율도 확인한다. 브라우저나 Web Export 검사 결과는 실제 실행한 경우에만 성공으로 기록한다.
 
 ## 글꼴
 
-`assets/fonts/theme_ui.tres`는 일반 UI에 Pretendard Regular를 적용하고, `theme_galmuri.tres`는 게임 제목에 Galmuri 11 Bold 아웃라인 글꼴을 적용한다. Web 호환성을 위해 임베디드 비트맵 글리프가 아닌 스케일러블 글리프를 사용한다. Splash/Title의 제목은 Galmuri, 버튼과 Loading UI는 Pretendard를 사용한다. 두 글꼴의 라이선스 전문은 각 `LICENSE-*.txt` 파일에 보존한다.
+`assets/fonts/theme_ui.tres`는 일반 UI에 Pretendard Regular와 재사용 가능한 버튼 스타일을 적용하고, `theme_galmuri.tres`는 픽셀 강조에 Galmuri 11 Bold 아웃라인 글꼴을 적용한다. 로고 PNG의 글자도 기존 Galmuri 합성 원본이다. Web 호환성을 위해 임베디드 비트맵 글리프가 아닌 스케일러블 글리프를 사용한다. 두 글꼴의 라이선스 전문은 각 `LICENSE-*.txt` 파일에 보존한다.
 
 ## 향후 구조 원칙
 

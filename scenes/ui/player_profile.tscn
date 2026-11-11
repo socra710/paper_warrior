@@ -1,0 +1,54 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/characters/warrior/concept_idle_walk_run.png" id="1_warrior"]
+
+[sub_resource type="AtlasTexture" id="Portrait"]
+atlas = ExtResource("1_warrior")
+region = Rect2(20, 8, 56, 64)
+
+[node name="PlayerProfile" type="PanelContainer"]
+offset_right = 232.0
+offset_bottom = 70.0
+
+[node name="Row" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="PlayerPortrait" type="TextureRect" parent="Row"]
+texture_filter = 1
+custom_minimum_size = Vector2(42, 48)
+layout_mode = 2
+texture = SubResource("Portrait")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Information" type="VBoxContainer" parent="Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Identity" type="HBoxContainer" parent="Row/Information"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="GameTitle" type="Label" parent="Row/Information/Identity"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "종이전사"
+
+[node name="LevelValue" type="Label" parent="Row/Information/Identity"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Lv. —"
+
+[node name="ExperienceValue" type="Label" parent="Row/Information"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.32, 0.42, 0.38, 1)
+theme_override_font_sizes/font_size = 11
+text = "경험치 준비 중"
+
+[node name="ExperienceProgress" type="ProgressBar" parent="Row/Information"]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+tooltip_text = "경험치 시스템은 아직 준비 중이에요."
+show_percentage = false
