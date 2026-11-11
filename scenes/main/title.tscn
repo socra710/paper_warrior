@@ -13,4 +13,4 @@ visible = false
 visible = true
 
 [node name="PrototypeNotice" parent="Footer" index="2"]
-text = "개발 중인 프로토타입 · 시작하면 빈 게임 화면으로 이동해요"
+text = "프로토타입 · 대기 연출과 게임 UI를 만나보세요"

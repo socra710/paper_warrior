@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PrototypeState" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/prototype_state.gd" id="1_state"]
+
+[resource]
+script = ExtResource("1_state")
+level = 1
+gold = 0
+stage_id = "1-1"
+stage_name = "종이 숲의 입구"

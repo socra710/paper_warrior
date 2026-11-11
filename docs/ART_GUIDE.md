@@ -107,15 +107,17 @@ assets/
 
 웹 게임은 넓게 늘리지 않고 중앙의 세로형 3:4 프레임에 표시하며 위에는 제목, 아래에는 체험 범위와 설명을 둔다. 랜딩의 전사는 기술 정보 카드 안에 넣지 않고 밝은 민트/하늘색 종이 형태 위에 독립적으로 배치한다.
 
-`assets/characters/warrior/warrior_key_art.svg`는 종이전사의 큰 얼굴, 접힌 면, 작은 검과 별 방패를 표현한 직접 제작한 정적 SVG 키 아트다. 랜딩페이지·웹 다운로드 오버레이·Godot의 Splash/Loading/Title에서 공용으로 사용한다. 첨부 콘셉트 이미지를 잘라 게임 스프라이트로 사용하지 않는다. 픽셀 전투 애니메이션의 최종 규격과는 별개인 프레젠테이션 에셋이다.
+`assets/characters/warrior/warrior_key_art.svg`는 종이전사의 큰 얼굴, 접힌 면, 작은 검과 별 방패를 표현한 직접 제작한 정적 SVG 키 아트다. 랜딩페이지·웹 다운로드 오버레이·Godot의 Splash/Title과 게임 대기 연출에서 공용으로 사용한다. Loading은 캐릭터 원화 대신 종이 공방과 실제 진행 바를 사용해 인트로와 구분한다. 첨부 콘셉트 이미지를 잘라 게임 스프라이트로 사용하지 않는다. 픽셀 전투 애니메이션의 최종 규격과는 별개인 프레젠테이션 에셋이다.
+
+첫 게임 화면의 `assets/backgrounds/paper_forest_preview.svg`는 하늘색 바탕과 접힌 민트 종이 나무로 만든 독자적인 미리보기 배경이다. `scenes/ui/warrior_idle.tscn`은 기존 전사 키 아트에 2초 반복/최대 4px 상하 움직임을 적용한다. 실제 재생되는 대기 연출이지만 최종 픽셀 프레임 애니메이션으로 표기하지 않는다. 전투 진행 영역에는 가짜 적 HP나 보상 대신 **전투 준비 중** 상태를 표시한다.
 
 | 메타데이터 | 값 |
 |---|---|
 | `asset_key` | `warrior_key_art` |
 | `category` | 프레젠테이션 / 정적 키 아트 |
-| `slot` | 웹 히어로 및 시작 화면 |
+| `slot` | 웹 히어로, Splash/Title 및 게임 대기 연출 |
 | `frame_size` | SVG viewBox 480×420, 비율 유지 스케일링 |
-| `frame_count` | 1, 애니메이션 없음 |
+| `frame_count` | 원본 1장, 게임에서는 AnimationPlayer 위치 연출 |
 | `anchor` | 이미지 중앙 |
 | `layer_order` | 배경 위, 제목/버튼 아래 |
 | `rarity` | 해당 없음 |

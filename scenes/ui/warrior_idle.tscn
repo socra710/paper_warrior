@@ -1,0 +1,56 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/characters/warrior/warrior_key_art.svg" id="1_art"]
+
+[sub_resource type="Animation" id="Reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("WarriorVisual:position")
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Idle"]
+resource_name = "idle"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/path = NodePath("WarriorVisual:position")
+tracks/0/interp = 2
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -4), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="Library"]
+_data = {
+"RESET": SubResource("Reset"),
+"idle": SubResource("Idle")
+}
+
+[node name="IdleWarrior" type="Control"]
+custom_minimum_size = Vector2(252, 184)
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+
+[node name="WarriorVisual" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("1_art")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="IdleAnimation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("Library")
+}
+autoplay = "idle"
