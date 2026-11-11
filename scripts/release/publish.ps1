@@ -82,16 +82,28 @@ if ($stagedChanges -eq 1) {
 if ($LASTEXITCODE -ne 0) { throw 'Unable to push deployment output.' }
 
 $notes = @"
-Paper Warrior prototype: short logo/warrior Splash -> real resource Loading -> Title -> first game preview.
-Includes a shared-parts-generated pixel PNG warrior with idle/walk map presentation, version labels, stage/combat waiting area, initial level/gold HUD, and clearly labeled upcoming growth/equipment/decoration menus.
-Startup guards duplicate transitions, distinguishes loading failures/timeouts, and provides real retry. Portrait/landscape layout changes preserve the current scene and open menu.
-No combat, progression, rewards, or saves yet. Preview counters do not increase.
+## 새롭게 선보이는 모습
 
-Website: https://socra710.github.io/paper_warrior_releases/
-Source: https://github.com/socra710/paper_warrior/commit/$sourceCommit
+- 원래 컨셉을 참고해 전사의 얼굴과 몸통·다리 연결을 다듬고 대기·걷기·달리기 애니메이션을 추가했습니다.
+- 발밑 그림자와 또렷한 픽셀 외곽선, 천천히 움직이는 구름과 수목, 물빛·풍차·나비를 더했습니다.
+- 종이 숲 배경과 프로필, 스테이지 리본, 다섯 개의 메뉴를 새롭게 구성했습니다.
 
-Windows x86_64: unzip and run PaperWarrior.exe. Portable build, not a setup installer; unsigned.
-Web ZIP: static website and Godot Web build, requires an HTTP(S) server.
+## 시작 화면과 편의 개선
+
+- 스플래시·로딩·타이틀 화면을 구분하고 종이접기 연출과 읽기 편한 문구를 적용했습니다.
+- 리소스 로딩 상태와 오류·재시도를 구분하고 화면 전환 안정성을 보완했습니다.
+- 세로와 가로 화면에서 메뉴를 재배치하며 기존 화면 상태를 유지합니다.
+
+## 현재 이용 가능한 범위
+
+게임 화면에서 전사의 산책 연출과 초기 레벨·골드·스테이지를 볼 수 있습니다. 성장·장비·꾸미기·상점·이벤트·미션·설정은 준비 중 안내만 제공하며, 실제 전투·성장·보상·저장은 아직 구현되지 않았습니다.
+저장 기능이나 기존 저장 데이터 형식 변경은 없습니다.
+
+웹 게임: https://socra710.github.io/paper_warrior_releases/play.html
+소스: https://github.com/socra710/paper_warrior/commit/$sourceCommit
+
+Windows x86_64: 압축을 푼 뒤 PaperWarrior.exe를 실행합니다. 설치 프로그램이나 코드 서명이 없는 휴대용 빌드입니다.
+Web ZIP: 정적 웹사이트와 Godot 웹 빌드이며 HTTP(S) 서버가 필요합니다.
 "@
 & gh release create $Version $windowsZip $webZip --repo $repository --target main --title "종이전사 $Version · 첫 번째 접힘" --notes $notes --prerelease
 if ($LASTEXITCODE -ne 0) { throw 'Website pushed, but release asset upload failed.' }
