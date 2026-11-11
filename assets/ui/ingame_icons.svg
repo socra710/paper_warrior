@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="384" height="32" viewBox="0 0 384 32">
+  <g stroke="#304958" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <g>
+      <circle cx="16" cy="16" r="13" fill="#d5a155"/>
+      <circle cx="15" cy="14" r="10" fill="#f7d378"/>
+      <path d="M17 6L11 16H17L14 24L22 12H16Z" fill="#fff0b0" stroke="none"/>
+    </g>
+    <g transform="translate(32)">
+      <path d="M5 4L11 5L25 22L20 26L6 10Z" fill="#eaf7ed"/>
+      <path d="M24 4L27 10L10 26L6 21Z" fill="#b9dae5"/>
+      <path d="M4 20L12 28M19 20L27 27" stroke="#d7a45e" stroke-width="4"/>
+      <path d="M7 25L4 29M24 25L28 29"/>
+    </g>
+    <g transform="translate(64)">
+      <path d="M4 16L17 3L29 16H22V28H11V16Z" fill="#9fc796"/>
+      <path d="M17 5V24H13" fill="none" stroke="#d6e5ad"/>
+      <path d="M5 26H8M26 22V28M23 25H29" stroke="#e4b761"/>
+    </g>
+    <g transform="translate(96)">
+      <path d="M9 10V7Q16 1 23 7V11" fill="none"/>
+      <path d="M5 10Q16 6 27 10L29 28H3Z" fill="#c6a575"/>
+      <path d="M6 12H26L23 22H9Z" fill="#ead0a0"/>
+      <path d="M14 15H19V23H14Z" fill="#f5dc8e"/>
+    </g>
+    <g transform="translate(128)">
+      <path d="M28 17C28 4 9 2 4 12C-1 22 9 31 16 28C22 26 15 21 22 21C26 22 28 21 28 17Z" fill="#f2d89e"/>
+      <circle cx="11" cy="11" r="2" fill="#88b8c5" stroke="none"/>
+      <circle cx="7" cy="18" r="2" fill="#c6a7b3" stroke="none"/>
+      <circle cx="12" cy="24" r="2" fill="#94b897" stroke="none"/>
+      <path d="M18 22L28 5L31 7L21 25Z" fill="#c89964"/>
+    </g>
+    <g transform="translate(160)">
+      <path d="M5 15H27V29H5Z" fill="#eee7d0"/>
+      <path d="M2 14L7 3H25L30 14Z" fill="#dcae82"/>
+      <path d="M11 3L8 14M21 3L24 14" stroke="#fff1d2" stroke-width="5"/>
+      <path d="M13 21H20V29H13Z" fill="#8bb4bb"/>
+      <path d="M2 14Q6 19 10 14Q15 19 19 14Q25 19 30 14" fill="#fff0cd"/>
+    </g>
+    <g transform="translate(192)">
+      <path d="M12 3H20L21 8L26 7L30 14L26 18L27 23L20 28L16 25L11 29L5 24L7 19L3 15L7 8L12 9Z" fill="#e8e4d3"/>
+      <circle cx="16" cy="16" r="5" fill="#93b9c9"/>
+    </g>
+    <g transform="translate(224)">
+      <path d="M4 13H28V29H4Z" fill="#f1ca90"/>
+      <path d="M2 10H30V16H2Z" fill="#ffe2ad"/>
+      <path d="M14 11V29H19V11" fill="#cda58b"/>
+      <path d="M16 10C-1 7 11 -3 16 10C21 -3 33 7 16 10Z" fill="#a2cbb5"/>
+    </g>
+    <g transform="translate(256)">
+      <path d="M7 5H26V29H5V9Z" fill="#f8efd9"/>
+      <path d="M11 3H21V8H11Z" fill="#93bbbc"/>
+      <path d="M10 14L12 16L15 12M10 23L12 25L15 21" fill="none" stroke="#84ae98"/>
+      <path d="M19 14H23M19 23H23" stroke="#a9ab8e"/>
+    </g>
+    <g transform="translate(288)">
+      <path d="M10 15V10C10 1 23 1 23 10V15" fill="none" stroke="#8d8e78" stroke-width="3"/>
+      <rect x="6" y="13" width="22" height="17" rx="4" fill="#e9d8ae"/>
+      <path d="M17 19V24" stroke="#8d8e78"/>
+    </g>
+    <g transform="translate(320)">
+      <path d="M3 9L11 4L22 8L29 4V26L21 30L11 26L3 30Z" fill="#c7ddbc"/>
+      <path d="M11 5V25M22 9V28" stroke="#98b9ad"/>
+      <path d="M8 21Q14 11 22 18" fill="none" stroke="#f5e1ad" stroke-dasharray="2 3"/>
+    </g>
+    <g transform="translate(352)">
+      <path d="M16 2L20 11L30 14L21 19L18 30L12 21L2 18L11 12Z" fill="#f1d28c"/>
+      <path d="M16 6V16L7 18" fill="none" stroke="#fff0ba"/>
+    </g>
+  </g>
+</svg>

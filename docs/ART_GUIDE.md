@@ -109,7 +109,20 @@ assets/
 
 `assets/characters/warrior/warrior_key_art.svg`는 큰 얼굴, 접힌 면, 작은 검과 별 방패를 표현한 정상 정적 키 아트다. 원본 파일은 보호하고 랜딩페이지에 사용한다. 캐릭터 공통 부품은 이 원본의 도형/색상을 그대로 분리한 것이며 첨부 콘셉트 시트를 잘라 사용하지 않는다. 미배포 작업에서 Splash는 로고/종이 배경, 웹 부팅과 Loading은 하늘색 전체 배경의 중앙 종이접기, Title은 로고/기준 PNG 대기 전사와 시작 버튼으로 구분한다. 로딩 전용 모달 카드는 사용하지 않는다.
 
-`assets/backgrounds/paper_forest_preview.svg`는 하늘색과 접힌 민트 종이 나무로 만든 미리보기 배경이다. 작은 전사가 맵을 둘러보는 동안 가짜 적 HP나 보상 대신 **전투 준비 중** 상태를 표시한다.
+`assets/backgrounds/paper_forest_preview.svg`는 이전 단일 배경으로 복구용 보존한다. 새 인게임은 아래의 독립 종이 풍경을 사용하며 가짜 적 HP나 보상 대신 **전투 준비 중** 상태를 표시한다.
+
+### 인게임 종이 숲
+
+`assets/backgrounds/paper_forest_diorama/`의 하늘·구름·산·침엽수·둥근 나무·성·풍차·관목·꽃·바위·울타리·강·다리 13종을 사용한다. 하늘을 제외한 12종은 새로 생성한 투명 종이 소재 시트에서 개별 추출하며 UI나 캐릭터가 들어간 완성 화면을 배경으로 쓰지 않는다. 시안 자체는 런타임 에셋으로 복사하지 않았다.
+
+수정 가능한 원본은 `source/cutouts_master.png`와 `source/paper_forest_parts.svg`로 보존한다. `.gdignore`로 원본을 게임 패키지에서 제외한다. 아래 도구가 행 경계 보정, 분리된 저알파 잡티 제거, 투명 여백 정리와 비율 유지 축소를 수행한다. 원본 셀과 결과를 함께 검수하며 캐릭터 제작 도구와 섞지 않는다.
+
+```powershell
+godot --headless --path . --script res://scripts/art/build_paper_background.gd
+godot --headless --editor --path . --import --quit
+```
+
+`PaperBackground`의 여섯 깊이 레이어는 재배치 가능한 독립 오브젝트로 구성한다. 원경은 낮은 대비, 근경은 큰 수목/꽃과 일관된 그림자를 사용한다. 풍경은 Linear, 보호된 픽셀 전사는 Nearest로 구분한다. 메인 맵 전사의 표시 영역만 96px로 조정했고 원본·PNG·프레임은 변경하지 않았다. 전후 사진과 세로/가로 검증은 [인게임 리디자인 기록](INGAME_REDESIGN.md)을 참고한다.
 
 | 메타데이터 | 값 |
 |---|---|

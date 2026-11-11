@@ -1,0 +1,54 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/ui/ingame_icons.svg" id="1_icons"]
+
+[sub_resource type="AtlasTexture" id="Scroll"]
+atlas = ExtResource("1_icons")
+region = Rect2(256, 0, 32, 32)
+
+[node name="MissionProgressPanel" type="PanelContainer"]
+offset_right = 456.0
+offset_bottom = 66.0
+
+[node name="Row" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 9
+
+[node name="Scroll" type="TextureRect" parent="Row"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+texture = SubResource("Scroll")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Content" type="VBoxContainer" parent="Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="Header" type="HBoxContainer" parent="Row/Content"]
+layout_mode = 2
+
+[node name="MissionTitle" type="Label" parent="Row/Content/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "첫 임무를 접고 있어요"
+
+[node name="MissionStatus" type="Label" parent="Row/Content/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.34, 0.42, 0.38, 1)
+theme_override_font_sizes/font_size = 13
+text = "준비 중"
+
+[node name="MissionProgress" type="ProgressBar" parent="Row/Content"]
+modulate = Color(1, 1, 1, 0.55)
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+show_percentage = false
+
+[node name="MissionHint" type="Label" parent="Row/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.32, 0.42, 0.38, 1)
+theme_override_font_sizes/font_size = 12
+text = "목표와 보상은 전투가 열리면 만나요."

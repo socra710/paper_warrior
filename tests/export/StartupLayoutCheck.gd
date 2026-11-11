@@ -51,13 +51,24 @@ func _check() -> void:
 		and warrior.sprite_frames.get_frame_count("walk") == 6
 		and warrior.is_playing()
 		and warrior.scale.x <= 2.0
-		and (game.find_child("Forest") as TextureRect).texture != null
+		and game.find_child("BackgroundForest") != null
+		and game.find_child("BackgroundStructures") != null
 	)
 	for name in ["LevelValue", "GoldValue", "StageValue", "BattleArea", "GrowthButton", "EquipmentButton", "DecorationButton", "PrototypeNotice"]:
 		var control := game.find_child(name) as Control
 		var bounds := control.get_global_rect()
 		game_valid = game_valid and bounds.position.x >= 0.0 and bounds.position.y >= 0.0
 		game_valid = game_valid and bounds.end.x <= game.size.x and bounds.end.y <= game.size.y
+	var paintings := game.find_child("PaperBackground").find_children("*", "TextureRect", true, false)
+	game_valid = game_valid and not paintings.is_empty()
+	for painting in paintings:
+		var texture := (painting as TextureRect).texture
+		game_valid = game_valid and texture != null and not texture.resource_path.is_empty()
+	for layer_name in ["BackgroundSky", "BackgroundMountains", "BackgroundForest", "BackgroundStructures", "BattleGround", "ForegroundObjects"]:
+		var layer := game.find_child(layer_name)
+		game_valid = game_valid and layer != null
+		if layer:
+			game_valid = game_valid and not layer.find_children("*", "TextureRect", true, false).is_empty()
 	if not game_valid:
 		push_error("Exported game layout/resources are invalid: viewport=%s, arena=%s, warrior=%s, menus=%s" % [
 			game.size, arena.get_global_rect(), warrior.position,

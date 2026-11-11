@@ -1,87 +1,12 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/main/game.gd" id="1_script"]
-[ext_resource type="Theme" path="res://assets/fonts/theme_ui.tres" id="2_ui"]
+[ext_resource type="Theme" path="res://assets/fonts/theme_ingame.tres" id="2_ui"]
 [ext_resource type="Theme" path="res://assets/fonts/theme_galmuri.tres" id="3_heading"]
 [ext_resource type="Resource" path="res://data/growth/initial_preview.tres" id="4_state"]
 [ext_resource type="PackedScene" path="res://scenes/ui/map_walker.tscn" id="5_warrior"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/paper_forest_preview.svg" id="6_forest"]
-[ext_resource type="Texture2D" path="res://assets/branding/logo_symbol.png" id="7_logo"]
-[ext_resource type="Script" path="res://scripts/ui/version_label.gd" id="8_version"]
-
-[sub_resource type="StyleBoxFlat" id="PaperCard"]
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 8.0
-bg_color = Color(0.984, 0.977, 0.937, 1)
-border_width_bottom = 2
-border_color = Color(0.79, 0.84, 0.76, 1)
-corner_radius_top_left = 7
-corner_radius_top_right = 7
-corner_radius_bottom_left = 7
-corner_radius_bottom_right = 7
-
-[sub_resource type="StyleBoxFlat" id="ButtonNormal"]
-content_margin_left = 5.0
-content_margin_top = 7.0
-content_margin_right = 5.0
-content_margin_bottom = 7.0
-bg_color = Color(0.79, 0.89, 0.84, 1)
-border_width_bottom = 3
-border_color = Color(0.56, 0.72, 0.65, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_left = 5
-corner_radius_bottom_right = 5
-
-[sub_resource type="StyleBoxFlat" id="ButtonHover"]
-content_margin_left = 5.0
-content_margin_top = 7.0
-content_margin_right = 5.0
-content_margin_bottom = 7.0
-bg_color = Color(0.88, 0.95, 0.88, 1)
-border_width_bottom = 3
-border_color = Color(0.56, 0.72, 0.65, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_left = 5
-corner_radius_bottom_right = 5
-
-[sub_resource type="StyleBoxFlat" id="ButtonPressed"]
-content_margin_left = 5.0
-content_margin_top = 7.0
-content_margin_right = 5.0
-content_margin_bottom = 7.0
-bg_color = Color(0.65, 0.8, 0.72, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_left = 5
-corner_radius_bottom_right = 5
-
-[sub_resource type="StyleBoxFlat" id="ButtonFocus"]
-bg_color = Color(0, 0, 0, 0)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.18, 0.29, 0.36, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_left = 5
-corner_radius_bottom_right = 5
-
-[sub_resource type="Theme" id="MenuTheme"]
-default_font = null
-default_font_size = 16
-Button/colors/font_color = Color(0.18, 0.29, 0.36, 1)
-Button/colors/font_hover_color = Color(0.18, 0.29, 0.36, 1)
-Button/colors/font_pressed_color = Color(0.18, 0.29, 0.36, 1)
-Button/colors/font_focus_color = Color(0.18, 0.29, 0.36, 1)
-Button/styles/normal = SubResource("ButtonNormal")
-Button/styles/hover = SubResource("ButtonHover")
-Button/styles/pressed = SubResource("ButtonPressed")
-Button/styles/focus = SubResource("ButtonFocus")
+[ext_resource type="PackedScene" path="res://scenes/ui/paper_background.tscn" id="6_background"]
+[ext_resource type="PackedScene" path="res://scenes/ui/ingame_hud.tscn" id="7_hud"]
 
 [node name="MainGame" type="Control"]
 layout_mode = 3
@@ -94,221 +19,28 @@ theme = ExtResource("2_ui")
 script = ExtResource("1_script")
 initial_state = ExtResource("4_state")
 
-[node name="Background" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-color = Color(0.929, 0.957, 0.925, 1)
-
-[node name="Margin" type="MarginContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 14
-
-[node name="Layout" type="VBoxContainer" parent="Margin"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="Header" type="HBoxContainer" parent="Margin/Layout"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="Logo" type="TextureRect" parent="Margin/Layout/Header"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-texture = ExtResource("7_logo")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="GameTitle" type="Label" parent="Margin/Layout/Header"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("3_heading")
-theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_font_sizes/font_size = 22
-text = "종이전사"
-
-[node name="PreviewBadge" type="Label" parent="Margin/Layout/Header"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
-theme_override_font_sizes/font_size = 14
-script = ExtResource("8_version")
-prefix = "UI 미리보기 ·"
-
-[node name="PlayerState" type="HBoxContainer" parent="Margin/Layout"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="LevelCard" type="PanelContainer" parent="Margin/Layout/PlayerState"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("PaperCard")
-
-[node name="Row" type="HBoxContainer" parent="Margin/Layout/PlayerState/LevelCard"]
-layout_mode = 2
-
-[node name="LevelValue" type="Label" parent="Margin/Layout/PlayerState/LevelCard/Row"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_font_sizes/font_size = 19
-text = "Lv. —"
-
-[node name="Caption" type="Label" parent="Margin/Layout/PlayerState/LevelCard/Row"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
-theme_override_font_sizes/font_size = 14
-text = "초기 레벨"
-
-[node name="GoldCard" type="PanelContainer" parent="Margin/Layout/PlayerState"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("PaperCard")
-
-[node name="Row" type="HBoxContainer" parent="Margin/Layout/PlayerState/GoldCard"]
-layout_mode = 2
-
-[node name="GoldValue" type="Label" parent="Margin/Layout/PlayerState/GoldCard/Row"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_font_sizes/font_size = 19
-text = "골드 —"
-
-[node name="Caption" type="Label" parent="Margin/Layout/PlayerState/GoldCard/Row"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
-theme_override_font_sizes/font_size = 14
-text = "보상 준비 중"
-
-[node name="Body" type="BoxContainer" parent="Margin/Layout"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 8
-vertical = true
-
-[node name="StageCard" type="PanelContainer" parent="Margin/Layout/Body"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("PaperCard")
-
-[node name="StageLayout" type="VBoxContainer" parent="Margin/Layout/Body/StageCard"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="StageHeader" type="HBoxContainer" parent="Margin/Layout/Body/StageCard/StageLayout"]
-layout_mode = 2
-
-[node name="StageValue" type="Label" parent="Margin/Layout/Body/StageCard/StageLayout/StageHeader"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_font_sizes/font_size = 17
-text = "스테이지 준비 중"
-
-[node name="BattleStatus" type="Label" parent="Margin/Layout/Body/StageCard/StageLayout/StageHeader"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
-theme_override_font_sizes/font_size = 14
-text = "전투 준비 중"
-
-[node name="BattleArea" type="Control" parent="Margin/Layout/Body/StageCard/StageLayout"]
-custom_minimum_size = Vector2(0, 184)
-layout_mode = 2
-size_flags_vertical = 3
-clip_contents = true
-
-[node name="Forest" type="TextureRect" parent="Margin/Layout/Body/StageCard/StageLayout/BattleArea"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-texture = ExtResource("6_forest")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="MapWalker" parent="Margin/Layout/Body/StageCard/StageLayout/BattleArea" instance=ExtResource("5_warrior")]
+[node name="PaperBackground" parent="." instance=ExtResource("6_background")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="AreaCaption" type="Label" parent="Margin/Layout/Body/StageCard/StageLayout/BattleArea"]
+[node name="BattleArea" type="Control" parent="."]
 layout_mode = 0
-offset_left = 10.0
-offset_top = 6.0
-theme_override_colors/font_color = Color(0.25, 0.4, 0.36, 1)
-theme_override_font_sizes/font_size = 14
-text = "작은 용사의 첫 번째 무대"
+offset_left = 84.0
+offset_top = 304.0
+offset_right = 396.0
+offset_bottom = 488.0
+mouse_filter = 2
 
-[node name="BattleHint" type="Label" parent="Margin/Layout/Body/StageCard/StageLayout"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
-theme_override_font_sizes/font_size = 14
-text = "맵 둘러보기 연출 · 전투와 스테이지 진행은 준비 중"
-horizontal_alignment = 1
-autowrap_mode = 2
+[node name="MapWalker" parent="BattleArea" instance=ExtResource("5_warrior")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 
-[node name="Sidebar" type="VBoxContainer" parent="Margin/Layout/Body"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="FirstObjective" type="PanelContainer" parent="Margin/Layout/Body/Sidebar"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("PaperCard")
-
-[node name="Objective" type="Label" parent="Margin/Layout/Body/Sidebar/FirstObjective"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
-theme_override_font_sizes/font_size = 14
-text = "전사와 인사하고 메뉴를 둘러보세요."
-horizontal_alignment = 1
-autowrap_mode = 2
-
-[node name="Menus" type="BoxContainer" parent="Margin/Layout/Body/Sidebar"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 56)
-layout_mode = 2
-theme = SubResource("MenuTheme")
-theme_override_constants/separation = 8
-
-[node name="GrowthButton" type="Button" parent="Margin/Layout/Body/Sidebar/Menus"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "성장 · 준비 중"
-
-[node name="EquipmentButton" type="Button" parent="Margin/Layout/Body/Sidebar/Menus"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "장비 · 준비 중"
-
-[node name="DecorationButton" type="Button" parent="Margin/Layout/Body/Sidebar/Menus"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "꾸미기 · 준비 중"
-
-[node name="PrototypeNotice" type="Label" parent="Margin/Layout"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
-theme_override_font_sizes/font_size = 14
-text = "레벨·골드는 초기 상태예요. 전투·성장·보상·저장은 준비 중이에요."
-horizontal_alignment = 1
-autowrap_mode = 2
+[node name="GameHUD" parent="." instance=ExtResource("7_hud")]
+layout_mode = 1
 
 [node name="MenuNotice" type="Control" parent="."]
 unique_name_in_owner = true
@@ -334,17 +66,15 @@ anchor_bottom = 1.0
 [node name="NoticeCard" type="PanelContainer" parent="MenuNotice/Center"]
 custom_minimum_size = Vector2(380, 0)
 layout_mode = 2
-theme_override_styles/panel = SubResource("PaperCard")
 
 [node name="Content" type="VBoxContainer" parent="MenuNotice/Center/NoticeCard"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 12
 
 [node name="MenuNoticeTitle" type="Label" parent="MenuNotice/Center/NoticeCard/Content"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("3_heading")
-theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
 theme_override_font_sizes/font_size = 22
 text = "준비 중"
 horizontal_alignment = 1
@@ -353,22 +83,19 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(356, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.18, 0.29, 0.36, 1)
 theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="Status" type="Label" parent="MenuNotice/Center/NoticeCard/Content"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.29, 0.4, 0.37, 1)
 theme_override_font_sizes/font_size = 14
 text = "아직 능력치와 골드에 영향을 주지 않아요."
 horizontal_alignment = 1
 
 [node name="CloseNotice" type="Button" parent="MenuNotice/Center/NoticeCard/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
-theme = SubResource("MenuTheme")
 theme_override_font_sizes/font_size = 16
 text = "알겠어요"

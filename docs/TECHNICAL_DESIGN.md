@@ -33,19 +33,23 @@ Splash는 독립 씬이며 `scenes/ui/start_screen.tscn`은 Title 전용 레이�
 
 `PrototypeState`와 `data/growth/initial_preview.tres`는 초기 레벨 1, 골드 0, 스테이지 1-1 / 종이 숲의 입구를 제공한다. Game 씬의 exported Resource로 연결되어 씬과 함께 준비·패키징되며 런타임에서 변경하지 않는다. 저장 데이터나 실제 보상 시스템은 아니다.
 
-`scenes/characters/warrior_sprite.tscn`은 원본 보존 예외인 96×96 PNG 프레임을 Nearest로 표시하는 AnimatedSprite2D다. Idle 4프레임과 Walk 6프레임을 독립 관리한다. 맵 배율 0.75/Title 배율 1.5로 실제 표시 영역은 기존 72px/144px다. `scenes/ui/warrior_idle.tscn`은 Title 대기 미리보기이고 `scenes/ui/map_walker.tscn`은 작은 전사를 정규화된 네 지점 사이로 이동시킨다. 맵 크기가 바뀌면 상대 위치를 유지하며 경계 안으로 제한한다. 전투/스테이지 진행은 준비 중으로 표시한다.
+`scenes/characters/warrior_sprite.tscn`은 원본 보존 예외인 96×96 PNG 프레임을 Nearest로 표시하는 AnimatedSprite2D다. Idle 4프레임과 Walk 6프레임을 독립 관리한다. 공통 씬 기본 72px/Title 144px는 유지하고 새 인게임 맵 인스턴스만 96px로 표시한다. `scenes/ui/warrior_idle.tscn`은 Title 대기 미리보기이고 `scenes/ui/map_walker.tscn`은 전사를 정규화된 네 지점 사이로 이동시킨다. 맵 크기가 바뀌면 상대 위치를 유지하며 경계 안으로 제한한다. 전투/스테이지 진행은 준비 중으로 표시한다.
 
-성장·장비·꾸미기는 각각 준비 중인 기능을 설명하는 안내창만 연다. 안내창 표시 중 배경 메뉴는 비활성화하고 닫기/ESC로 원래 버튼에 포커스를 복원한다. 강화·구매·장착·색상 변경이나 가짜 수치 증가는 없다.
+`GameHUD`는 실제 Resource를 `bind_state`로 연결하고 `changed` 신호에서 표시를 갱신한다. 프로필·스테이지 리본·임무 패널은 독립 씬이며 `MainNavigation`은 다섯 버튼의 선택 상태만 관리한다. 긴 골드는 만/억으로 줄이고 툴팁에 전체 숫자를 보존한다. 경험치와 임무 바는 비활성 준비 상태이며 가짜 진행·보상·프리미엄 재화를 표시하지 않는다.
+
+성장·장비·꾸미기·상점·이벤트·미션·설정은 준비 중인 기능을 설명하는 안내창만 연다. 안내창 표시 중 배경 메뉴는 비활성화하고 닫기/ESC로 원래 버튼에 포커스를 복원한다. 강화·구매·장착·색상 변경이나 가짜 수치 증가는 없다.
+
+`PaperBackground`는 여섯 깊이 레이어에 독립 PNG 오브젝트를 배치하고 크기 변경 시 위치를 재계산한다. 원경 대비와 크기, 근경 수목으로 깊이를 표현하며 플레이 공간은 비워 둔다. 런타임은 `load(...) as Texture2D`로 import된 리소스를 사용한다. 원본 이미지의 `Image.load`는 제작 도구에서만 사용한다. `TextureRect.EXPAND_IGNORE_SIZE`로 계산한 크기가 원본 텍스처 최소 크기에 묶이지 않도록 한다. 자세한 파일·원본·검증은 [리디자인 기록](INGAME_REDESIGN.md)에 있다.
 
 ## 버전과 화면 방향
 
 버전은 `project.godot`의 `application/config/version`을 단일 기준으로 사용한다. 모든 Godot 화면과 웹 플레이 셸에 표시하고 웹 빌드 시 같은 값으로 치환한다. 공개 배포의 `version.json`은 릴리즈 태그와 실제 원본 커밋을 별도로 추적한다.
 
-[버전 정책](VERSION_POLICY.md)에 따라 이번 품질 복구는 PATCH `0.3.1` 제안이다. 사용자 승인 전 프로젝트·공개 버전 `0.3.0`은 바꾸지 않고 신규 배포를 하지 않는다. 미배포 변경은 CHANGELOG의 Unreleased와 [품질 복구 기록](VISUAL_QUALITY_RECOVERY.md)에서 관리한다.
+[버전 정책](VERSION_POLICY.md)에 따라 기존 품질 복구만 배포하면 PATCH `0.3.1` 제안이었다. 신규 메뉴 진입점이 포함된 이번 UI 변경을 함께 배포할 경우 MINOR `0.4.0`을 제안한다. 사용자 승인 전 프로젝트·공개 버전 `0.3.0`은 바꾸지 않고 신규 배포를 하지 않는다. 미배포 변경은 CHANGELOG의 Unreleased와 각 작업 기록에서 관리한다.
 
 `responsive_screen.gd`는 세로 480×640, 가로 800×450의 논리 해상도를 선택한다. 시작 화면은 전사/버튼 배치를 재정렬하고 Game은 맵/사이드 메뉴로 재배치한다. 현재 씬을 재생성하지 않으므로 열린 메뉴와 초기 상태, 이동 경로가 유지된다.
 
-웹은 기본 중앙 세로 프레임을 유지하고 짧은 가로 화면에서만 16:9를 사용한다. `game-viewport.mjs`는 같은 캔버스의 내부 크기를 480×640 ↔ 960×540으로 바꾸고 resize를 알린다. Engine을 다시 생성하거나 페이지를 새로고침하지 않는다. 화면 방향 변경과 오류 후 명시적 재시도에 의한 새로고침은 서로 다른 동작이다.
+웹은 기본 중앙 세로 프레임을 유지하고 짧은 가로 화면에서만 16:9를 사용한다. `game-viewport.mjs`는 같은 캔버스의 내부 크기를 실제 CSS 크기×DPR로 바꾸고 resize를 알린다. Engine을 다시 생성하거나 페이지를 새로고침하지 않는다. 화면 방향 변경과 오류 후 명시적 재시도에 의한 새로고침은 서로 다른 동작이다.
 
 ## 웹사이트
 
@@ -60,7 +64,7 @@ Splash는 독립 씬이며 `scenes/ui/start_screen.tscn`은 Title 전용 레이�
 
 랜딩페이지는 `/`, 플레이 페이지는 `/play.html`이다. 루트 경로를 하드코딩하지 않아 정적 호스팅의 하위 경로에서도 배포할 수 있다. Pages 배포와 다운로드 릴리즈는 별도 `socra710/paper_warrior_releases` 저장소에서 관리하고 Godot/웹 원본은 `socra710/paper_warrior`에서 관리한다. 계정/백엔드는 구성하지 않는다.
 
-웹 파일 준비 화면은 대형 게임명/캐릭터 없이 파일 패널만 표시한다. 다운로드가 끝났어도 엔진 시작 Promise가 완료되기 전에는 불확정 초기화 상태로 남는다. HTML 자체가 이전 배포로 캐시된 경우 새 파일 해시만으로 오래된 HTML을 교체할 수 없으므로 게시 후 HTML 재검증과 실제 버전 확인이 필요하다.
+웹 파일 준비 화면은 대형 게임명/캐릭터 없이 카드 없는 중앙 종이접기와 상태 문구를 표시한다. 다운로드가 끝났어도 엔진 시작 Promise가 완료되기 전에는 불확정 초기화 상태로 남는다. HTML 자체가 이전 배포로 캐시된 경우 새 파일 해시만으로 오래된 HTML을 교체할 수 없으므로 게시 후 HTML 재검증과 실제 버전 확인이 필요하다.
 
 ## 배포 저장소 분리
 
@@ -75,7 +79,7 @@ Splash는 독립 씬이며 `scenes/ui/start_screen.tscn`은 Title 전용 레이�
 | 경로 | 책임 |
 |---|---|
 | `scenes/main/` | 시작 화면과 이후 메인 화면 씬 |
-| `scenes/ui/` | 공용 시작 화면과 전사 대기 연출 |
+| `scenes/ui/` | 공용 시작 화면, 전사 연출, 인게임 HUD/내비게이션/풍경과 하위 패널 |
 | `scripts/main/` | 씬별 최소 화면 흐름 제어 |
 | `assets/characters/warrior/` | 종이 전사 원화와 애니메이션 |
 | `assets/monsters/` | 몬스터 아트 |
@@ -91,14 +95,14 @@ Splash는 독립 씬이며 `scenes/ui/start_screen.tscn`은 Title 전용 레이�
 | `docs/` | 기획, 아트, 기술, 작업 문서 |
 | `web/`, `scripts/web/` | 정적 랜딩/플레이 페이지와 빌드/서버 도구 |
 
-빈 콘텐츠 디렉터리는 `.gitkeep`으로 추적한다. 현재 애니메이션은 프레젠테이션용 대기 연출뿐이며 전투 스프라이트나 전투용 밸런스 데이터는 추가하지 않는다.
+빈 콘텐츠 디렉터리는 `.gitkeep`으로 추적한다. 현재 캐릭터 애니메이션은 프레젠테이션용 Idle/Walk이며 전투 스프라이트나 전투용 밸런스 데이터는 추가하지 않는다.
 
 ## 렌더링 및 웹 Export
 
 - 렌더링 방법은 Godot Compatibility (`gl_compatibility`)를 사용한다.
 - 뷰포트 시작 크기는 480×640이고 `canvas_items` 스트레치를 사용한다. 웹 프레임은 최대 420px 폭에서 3:4 비율로 표시하고 작은 화면에서는 화면 폭에 맞춘다.
 - Export preset 이름은 `Web`, 게임 출력은 `build/web/play.html`이며 `web/play.html`을 커스텀 HTML 셸로 사용한다.
-- `html/canvas_resize_policy=0`으로 Godot의 브라우저 전체 화면 맞춤을 끈다. 캔버스의 내부 크기는 HTML의 480×640, 표시 크기는 CSS의 3:4 부모 프레임이 관리한다.
+- `html/canvas_resize_policy=0`으로 Godot의 브라우저 전체 화면 맞춤을 끈다. HTML 초기 버퍼는 480×640이며 웹 뷰포트 모듈이 이후 CSS 크기×DPR로 갱신한다. 표시 비율은 CSS 부모 프레임이 관리한다.
 - Godot 4.4.1의 텍스트 리소스 바이너리 변환에서 상속한 Control 씬의 여백/테마 재정의가 유실되는 현상을 재현했으므로 `editor/export/convert_text_resources_to_binary=false`를 사용한다. `.tscn`/`.tres`를 보존하며 게임 기능에는 영향을 주지 않는다.
 - `build/`, `reports/`, `addons/gdUnit4/`, `tests/`, `web/`, `scripts/web/`, `docs/`는 게임 패키지에서 제외한다.
 - 현재 Godot 4 버전에 맞는 Web export templates가 필요하다.
