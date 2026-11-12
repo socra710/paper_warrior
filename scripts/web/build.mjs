@@ -58,6 +58,14 @@ await copyFile(
   path.join(root, 'assets', 'characters', 'warrior', 'warrior_idle_walk.png'),
   path.join(output, 'assets', 'warrior_idle_walk.png'),
 );
+const concept = await readFile(path.join(root, 'assets', 'characters', 'warrior', 'concept_idle_walk_run.png'));
+await writeFile(path.join(output, 'assets', 'concept_idle_walk_run.png'), concept);
+const conceptHash = createHash('sha256').update(concept).digest('hex').slice(0, 16);
+const landingPath = path.join(output, 'index.html');
+const siteHash = createHash('sha256').update(await readFile(path.join(output, 'site.css'))).digest('hex').slice(0, 16);
+await writeFile(landingPath, (await readFile(landingPath, 'utf8'))
+  .replace('assets/concept_idle_walk_run.png', `assets/concept_idle_walk_run.png?v=${conceptHash}`)
+  .replace('href="site.css"', `href="site.css?v=${siteHash}"`));
 const folding = await readFile(path.join(root, 'assets', 'ui', 'paper_fold.png'));
 await writeFile(path.join(output, 'assets', 'paper_fold.png'), folding);
 const foldHash = createHash('sha256').update(folding).digest('hex').slice(0, 16);

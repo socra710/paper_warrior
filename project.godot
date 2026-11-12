@@ -6,7 +6,7 @@ config_version=5
 [application]
 
 config/name="Paper Warrior"
-config/version="0.4.0"
+config/version="0.4.1"
 config/description="A web-first 2D pixel idle RPG about a tiny folded-paper warrior."
 config/icon="res://assets/branding/logo_symbol.png"
 boot_splash/show_image=false
